@@ -28,6 +28,12 @@
             :checked="maplayer.visible"
           ></v-checkbox>
         </v-list-item>
+        <v-list-item>
+          <v-btn @click="showUserLocation()">Show my location</v-btn>
+        </v-list-item>
+        <v-list-item>
+          <span>Message: {{ locationData }}</span>
+        </v-list-item>
 
         <!-- TODO debug, saa poistaa
           Pidemmän valikon testausta varten
@@ -87,6 +93,9 @@
 </template>
 
 <script>
+// TODO remove when geolocation api is not used anymore (but Oskari native requests instead)
+import proj4 from "../node_modules/proj4";
+
 //TODO should one always check for Oskari request availability / errors in order to make more general implementation
 // (= degrades or informs if Oskari backend version does not support used request etc.)
 
@@ -99,7 +108,9 @@ export default {
     // TODO rename
     selected: [],
     maplayers: [],
-    channel: {}
+    channel: {},
+    // TODO locationData only for debug (remove also from template)
+    locationData: []
   }),
   watch: {},
   methods: {
@@ -165,6 +176,89 @@ export default {
           ]);
         }
       }
+    },
+
+    // TODO reformat: pass argumets as object
+    addMarker: function(positionEPSG3067, id = "marker", color = "#0377fc") {
+      let channel = this.channel;
+      channel.handleEvent("AfterAddMarkerEvent", function(data) {
+        // TODO debug, remove
+        console.log("Marker added", data.id);
+      });
+
+      // TODO debug, remove
+      console.log("addMarker called");
+      channel.postRequest("MapModulePlugin.AddMarkerRequest", [
+        {
+          x: positionEPSG3067.coords.longitude,
+          y: positionEPSG3067.coords.latitude,
+          color,
+          msg: "",
+          shape: 2,
+          size: 2
+        },
+        id
+      ]);
+    },
+
+    moveMap: function(positionEPSG3067, zoomLevel = 7) {
+      let channel = this.channel;
+      // TODO debug, remove
+      console.log(positionEPSG3067);
+      channel.postRequest("MapMoveRequest", [
+        positionEPSG3067.coords.longitude,
+        positionEPSG3067.coords.latitude,
+        zoomLevel
+      ]);
+    },
+
+    // TODO not needed with Oskari native request
+    transformCoordinates: function(positionWGS84) {
+      let positionEPSG3067 = { coords: {} };
+      let transform = proj4("EPSG:3067", [
+        positionWGS84.coords.longitude,
+        positionWGS84.coords.latitude
+      ]);
+      positionEPSG3067.coords.longitude = transform[0];
+      positionEPSG3067.coords.latitude = transform[1];
+      return positionEPSG3067;
+    },
+
+    // TODO use Oskari native MyLocationPlugin.GetUserLocationRequest after Lounaisdata Oskari update
+    // let channel = this.channel;
+    //   var options = {
+    //     enableHighAccuracy: true,
+    //     timeout: 15000,
+    //     addToMap: true
+    //   };
+    //   channel.postRequest("MyLocationPlugin.GetUserLocationRequest", [
+    //     true,
+    //     options
+    //   ]);
+    showUserLocation: function() {
+      var locationData = this.locationData;
+      var transformCoordinates = this.transformCoordinates;
+      var moveMap = this.moveMap;
+      var addMarker = this.addMarker;
+      var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+
+      function success(positionWGS84) {
+        let positionEPSG3067 = transformCoordinates(positionWGS84);
+        locationData.push(transformCoordinates(positionWGS84));
+        moveMap(positionEPSG3067, 12);
+        addMarker(positionEPSG3067, "getLocationMarker");
+      }
+
+      function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+        locationData.push(err.message);
+      }
+
+      navigator.geolocation.getCurrentPosition(success, error, options);
     }
   },
 
@@ -172,6 +266,12 @@ export default {
     // TODO debug, remove
     console.log("App mounted!");
     this.initOskariChannel();
+
+    // TODO remove when geolocation api is not used anymore (but Oskari native requests instead)
+    proj4.defs(
+      "EPSG:3067",
+      "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    );
   }
 };
 </script>
