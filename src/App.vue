@@ -28,15 +28,45 @@
             :checked="maplayer.visible"
           ></v-checkbox>
         </v-list-item>
+        <v-divider></v-divider>
         <v-list-item>
-          <v-btn @click="showUserLocation()">Show my location</v-btn>
+          <v-switch
+            @change="showAndUpdatePosition()"
+            v-model="showPosition.status"
+            label="Show my position"
+          ></v-switch>
         </v-list-item>
         <v-list-item>
+          <v-switch
+            v-model="keepMapCenteredToPosition.status"
+            label="Follow my position"
+          ></v-switch>
+        </v-list-item>
+        <!-- <v-list-item>
+          <v-switch
+            v-model="keepMapRotationNorthUp"
+            label="Keep north up"
+          ></v-switch>
+        </v-list-item> -->
+        <!-- <v-divider></v-divider> -->
+        <!-- <v-list-item>
+          <v-btn @click="showUserLocation()">Show my location</v-btn>
+        </v-list-item> -->
+        <!-- <v-list-item>
           <span>Message: {{ locationData }}</span>
         </v-list-item>
+        <v-list-item>
+          <span>WATCH_ID: {{ showPosition.id }}</span>
+        </v-list-item>
+        <v-list-item>
+          <span>Show position: {{ showPosition.status }}</span>
+        </v-list-item>
+        <v-list-item>
+          <span>Keep centered: {{ keepMapCenteredToPosition.status }}</span>
+        </v-list-item> -->
 
-        <!-- TODO debug, saa poistaa
-          Pidemmän valikon testausta varten
+        <!-- TODO debug, remove
+          test for menu scrolling
         -->
         <!-- <v-list-item link v-for="maplayer in maplayers" :key="maplayer.id">
           <v-checkbox
@@ -105,14 +135,23 @@ export default {
   },
   data: () => ({
     drawer: null,
-    // TODO rename
+    // TODO rename selected
     selected: [],
     maplayers: [],
+    showPosition: { status: false, id: "" },
+    keepMapCenteredToPosition: { status: false },
+    keepMapRotationNorthUp: true,
     channel: {},
-    // TODO locationData only for debug (remove also from template)
+    // TODO remove locationData, only for debug (remove also from template)
     locationData: []
   }),
-  watch: {},
+  watch: {
+    // TODO remove if not needed in zoom once -feature in showAndUpdatePosition
+    // use closure instead?
+    "showPosition.status": function(oldValue, newValue) {
+      console.log("showPosition: " + oldValue + " -> " + newValue);
+    }
+  },
   methods: {
     initOskariChannel: function() {
       var IFRAME_DOMAIN = "https://karttapalvelu.lounaistieto.fi";
@@ -201,14 +240,18 @@ export default {
       ]);
     },
 
-    moveMap: function(positionEPSG3067, zoomLevel = 7) {
+    removeMarker: function(marker) {
+      let channel = this.channel;
+      channel.postRequest("MapModulePlugin.RemoveMarkersRequest", [marker]);
+    },
+
+    moveMap: function(positionEPSG3067) {
       let channel = this.channel;
       // TODO debug, remove
-      console.log(positionEPSG3067);
+      console.log("moveMap: " + positionEPSG3067);
       channel.postRequest("MapMoveRequest", [
         positionEPSG3067.coords.longitude,
-        positionEPSG3067.coords.latitude,
-        zoomLevel
+        positionEPSG3067.coords.latitude
       ]);
     },
 
@@ -235,6 +278,9 @@ export default {
     //     true,
     //     options
     //   ]);
+
+    // TODO remove showUserLocation? getCurrentPosition is not optimal for this, it can be very deaccurate
+    // now using showAndUpdatePosition instead (which can be refactored with Oskari native request after Oskari update)
     showUserLocation: function() {
       var locationData = this.locationData;
       var transformCoordinates = this.transformCoordinates;
@@ -259,6 +305,83 @@ export default {
       }
 
       navigator.geolocation.getCurrentPosition(success, error, options);
+    },
+
+    showAndUpdatePosition: function() {
+      if ("geolocation" in navigator) {
+        var transformCoordinates = this.transformCoordinates;
+        var moveMap = this.moveMap;
+        var addMarker = this.addMarker;
+        var removeMarker = this.removeMarker;
+        var showPosition = this.showPosition;
+        var keepMapCenteredToPosition = this.keepMapCenteredToPosition;
+        var keepMapRotationNorthUp = this.keepMapRotationNorthUp;
+        var moveOnce = (function() {
+          var zoomed = false;
+          return function(positionEPSG3067) {
+            if (!zoomed) {
+              zoomed = true;
+              moveMap(positionEPSG3067);
+            }
+          };
+        })();
+        const options = {
+          enableHighAccuracy: true,
+          maximumAge: 0,
+          timeout: 30000
+        };
+
+        // eslint-disable-next-line no-inner-declarations
+        function success(positionWGS84) {
+          let positionEPSG3067 = transformCoordinates(positionWGS84);
+          addMarker(positionEPSG3067, "trackLocationMarker", "#fc030f");
+          moveOnce(positionEPSG3067);
+
+          if (keepMapCenteredToPosition.status) {
+            moveMap(positionEPSG3067);
+            // TODO set keepMapCenteredToPosition to false if user moves map (more than xx m?)
+          }
+
+          if (keepMapRotationNorthUp) {
+            // TODO write body (get heading, rotate map)
+          }
+
+          // TODO remove console.logs
+          console.log(
+            positionWGS84.coords.latitude,
+            positionWGS84.coords.longitude
+          );
+          console.log(
+            `EPSG3067: ${positionEPSG3067.coords.longitude} ${positionEPSG3067.coords.latitude}`
+          );
+        }
+
+        // eslint-disable-next-line no-inner-declarations
+        function error() {
+          console.log("no position available");
+          alert("Sorry, no position available.");
+        }
+
+        showPosition.id = showPosition.status
+          ? navigator.geolocation.watchPosition(success, error, options)
+          : (navigator.geolocation.clearWatch(showPosition.id),
+            removeMarker("trackLocationMarker"),
+            console.log("trackLocationMarker"));
+      } else {
+        /* geolocation IS NOT available */
+        console.log("geolocation IS NOT available");
+      }
+
+      // Oskari native request can be used when Lounaispaikka Oskari has updated (instead of current browser geolocation api)
+      // let channel = this.channel;
+      // var options = {
+      //   centerMap: "update",
+      //   addToMap: "location",
+      //   enableHighAccuracy: true,
+      //   timeout: 5000,
+      //   maximumAge: 5000
+      // };
+      // channel.postRequest("StartUserLocationTrackingRequest", [options]);
     }
   },
 
