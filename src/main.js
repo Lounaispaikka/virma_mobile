@@ -21,6 +21,3 @@ new Vue({
   data: { sharedState: store.state },
   render: h => h(App)
 }).$mount("#app");
-
-// TODO debug, remove
-console.log("main.js valmis");
