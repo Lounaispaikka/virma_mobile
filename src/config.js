@@ -155,7 +155,7 @@ export let renderStructureTEST = {
     // Kohteet
     {
       name: "Varsinais-Suomen virkistyskohteet",
-      id: 1166, // 1049 ei toimi
+      id: 1049, //1166,
       type: "wms",
       visible: false,
       checked: null,

@@ -855,7 +855,7 @@
     </template>
 
     <!-- Show search results on map -dialog -->
-    <template>
+    <!-- <template>
       <v-dialog
         v-model="dialogShowSearchResultsOnMap"
         persistent
@@ -888,7 +888,7 @@
           </v-row>
         </v-card>
       </v-dialog>
-    </template>
+    </template> -->
   </v-app>
 </template>
 
@@ -1014,6 +1014,7 @@ export default {
         objects: [],
         visible: false,
         selected: [],
+        selectedResultsRouteTypes: [],
         search: "",
         expanded: []
       },
@@ -1021,6 +1022,7 @@ export default {
         objects: [],
         visible: false,
         selected: [],
+        selectedResultsPointTypes: [],
         search: "",
         expanded: []
       },
@@ -1468,6 +1470,8 @@ export default {
     searchRoutesAndPoints: async function() {
       // TODO handle no-geolocation (don't show any geolocation related components or show error (error is better?))
       this.resetSearchResults();
+      this.resetSelectedSearchResults();
+      this.removeFeaturesFromVectorLayers();
       this.searchResults.searchOngoing = true;
       this.dialogSearchTabs = 1;
 
@@ -1482,7 +1486,7 @@ export default {
             "Route"
           );
           //console.log(routesGeoJson);
-          this.parseAndReplaceSearchResults(routesGeoJson);
+          this.parseSearchResults(routesGeoJson);
         }
 
         if (
@@ -1495,7 +1499,7 @@ export default {
             "Point"
           );
           //console.log(pointsGeoJson);
-          this.parseAndReplaceSearchResults(pointsGeoJson);
+          this.parseSearchResults(pointsGeoJson);
         }
       } catch (e) {
         console.log(
@@ -1706,13 +1710,21 @@ export default {
       // TODO loading indicator also for fetchRoute
     },
 
-    // TODO JsDoc
+    /**
+     * @description Resets search form.
+     *
+     * @returns {Undefined} - Does not return anything
+     */
     resetSearchForm: function() {
       this.$refs.searchForm.reset();
       this.searchOptions.routeLengthRange = [0, 100];
     },
 
-    // TODO JsDoc
+    /**
+     * @description empties search results arrays (points and routes).
+     *
+     * @returns {Undefined} - Does not return anything
+     */
     resetSearchResults: function() {
       // Using splice here in order to Vue recalculating computed property hasSearchResults
       // (https://vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats)
@@ -1720,8 +1732,24 @@ export default {
       this.searchResults.routes.objects.splice(0);
     },
 
-    // TODO JsDoc
-    parseAndReplaceSearchResults: function(featureCollection) {
+    /**
+     * @description empties selected search results arrays (points and routes).
+     *
+     * @returns {Undefined} - Does not return anything
+     */
+    resetSelectedSearchResults: function() {
+      this.searchResults.points.selected.splice(0);
+      this.searchResults.routes.selected.splice(0);
+    },
+
+    /**
+     * @description Parse (point vs. routes) Feature collection GeoJSON returned by search.
+     * Push features to searchResults array.
+     *
+     * @param {Object} featureCollection Feature collection GeoJSON
+     * @returns {Undefined} - Does not return anything
+     */
+    parseSearchResults: function(featureCollection) {
       featureCollection.features.map(feature => {
         if (feature.geometry.type == "MultiPoint") {
           this.searchResults.points.objects.push(feature);
@@ -1730,6 +1758,201 @@ export default {
         if (feature.geometry.type == "MultiLineString") {
           this.searchResults.routes.objects.push(feature);
         }
+      });
+    },
+
+    /**
+     * @description Show selected search results on map as vector layers.
+     *
+     * @returns {Undefined} - Does not return anything
+     * @todo refactor to functions for clarity
+     */
+    showSearchResultsOnMap: function() {
+      this.removeFeaturesFromVectorLayers();
+      this.findTypesOfSelectedFeatures();
+      this.createVectorLayersForSelectedTypes();
+      this.addSelectedFeaturesToVectorLayers();
+      this.dialogSearch = false;
+      this.channel.postRequest("MapModulePlugin.ZoomToFeaturesRequest", []);
+    },
+
+    /**
+     * @description Removes spaces from strings.
+     *
+     * @param {String} input
+     * @returns {String} - input string without spaces
+     */
+    removeSpaces: function(input) {
+      return input.split(" ").join("");
+    },
+
+    /**
+     * @description Removes 'old' features from vector layers for each point and route type.
+     *
+     * @returns {Undefined} - Does not return anything
+     */
+    removeFeaturesFromVectorLayers: function() {
+      // Remove 'old' features from vector layers for each point and route type
+      // (at the time it's not possible to remove whole Oskari-vectorlayers,
+      // but there is a feature request ticket for it.)
+      // TODO Later it might be good to remove unneeded layers
+      this.searchResults.routes.selectedResultsRouteTypes.forEach(routeType => {
+        this.channel.postRequest(
+          "MapModulePlugin.RemoveFeaturesFromMapRequest",
+          [null, null, routeType]
+        );
+        console.log("RemoveFeaturesFromMapRequest " + routeType);
+      });
+
+      this.searchResults.points.selectedResultsPointTypes.forEach(pointType => {
+        this.channel.postRequest(
+          "MapModulePlugin.RemoveFeaturesFromMapRequest",
+          [null, null, pointType]
+        );
+        console.log("RemoveFeaturesFromMapRequest " + pointType);
+      });
+    },
+
+    /**
+     * @description Finds all point and route types of selected features
+     * and pushes them to point and route arrays
+     * (selectedResultsRouteTypes, selectedResultsPointTypes).
+     *
+     * @returns {Undefined} - Does not return anything
+     */
+    findTypesOfSelectedFeatures: function() {
+      this.searchResults.routes.selected.forEach(routeFeature => {
+        routeFeature.checked = true;
+        const routeFeatureNameWithoutSpaces = this.removeSpaces(
+          routeFeature.properties.class2_fi
+        );
+        if (
+          !this.searchResults.routes.selectedResultsRouteTypes.includes(
+            routeFeatureNameWithoutSpaces
+          )
+        ) {
+          this.searchResults.routes.selectedResultsRouteTypes.push(
+            routeFeatureNameWithoutSpaces
+          );
+        }
+      });
+
+      this.searchResults.points.selected.forEach(pointFeature => {
+        pointFeature.checked = true;
+        const pointFeatureNameWithoutSpaces = this.removeSpaces(
+          pointFeature.properties.class2_fi
+        );
+        if (
+          !this.searchResults.points.selectedResultsPointTypes.includes(
+            pointFeatureNameWithoutSpaces
+          )
+        ) {
+          this.searchResults.points.selectedResultsPointTypes.push(
+            pointFeatureNameWithoutSpaces
+          );
+        }
+      });
+    },
+
+    /**
+     * @description Creates vector layers for each point and route type
+     * (they may also already exist (because of previous searches),
+     * but propably(!? not documented) Oskari does not create several vector layers with same id...)
+     *
+     * @returns {Undefined} - Does not return anything
+     */
+    createVectorLayersForSelectedTypes: function() {
+      this.searchResults.routes.selectedResultsRouteTypes.forEach(routeType => {
+        this.channel.postRequest("VectorLayerRequest", [
+          {
+            layerId: routeType
+          }
+        ]);
+        console.log("Propably added layer " + routeType);
+      });
+
+      this.searchResults.points.selectedResultsPointTypes.forEach(pointType => {
+        this.channel.postRequest("VectorLayerRequest", [
+          {
+            layerId: pointType
+          }
+        ]);
+        console.log("Propably added layer " + pointType);
+      });
+    },
+
+    /**
+     * @description Add selected search result features to vector layers
+     *
+     * @returns {Undefined} - Does not return anything
+     */
+    addSelectedFeaturesToVectorLayers: function() {
+      this.searchResults.routes.selected.forEach(routeFeature => {
+        // Feature can not be removed (by Oskari...) later unless it has some
+        // identifying property at Object.properties
+        routeFeature.properties.id = routeFeature.id;
+
+        // Oskari needs FeatureCollection object (instead of Feature object)
+        const featureCollectionWrapper = {
+          type: "FeatureCollection",
+          features: [routeFeature]
+        };
+        console.log(featureCollectionWrapper);
+
+        this.channel.postRequest("MapModulePlugin.AddFeaturesToMapRequest", [
+          featureCollectionWrapper,
+          {
+            layerId: this.removeSpaces(routeFeature.properties.class2_fi),
+            featureStyle: {
+              stroke: {
+                color: "rgba(235, 174, 52,1)",
+                width: 4
+              }
+            }
+          }
+        ]);
+        console.log("Maybe added feature " + routeFeature);
+        console.log(
+          "... to layer " + this.removeSpaces(routeFeature.properties.class2_fi)
+        );
+      });
+
+      this.searchResults.points.selected.forEach(pointFeature => {
+        // Feature can not be removed (by Oskari...) later unless it has some
+        // identifying property at Object.properties
+        pointFeature.properties.id = pointFeature.id;
+
+        // Oskari needs FeatureCollection object (instead of Feature object)
+        const featureCollectionWrapper = {
+          type: "FeatureCollection",
+          features: [pointFeature]
+        };
+
+        this.channel.postRequest("MapModulePlugin.AddFeaturesToMapRequest", [
+          featureCollectionWrapper,
+          {
+            layerId: this.removeSpaces(pointFeature.properties.class2_fi),
+            featureStyle: {
+              image: {
+                shape: 0,
+                //shape: "https://mobile.virma.fi/symbols/Oskari-map-pin.svg",
+                size: 3 // Oskari icon size.
+                //sizePx: 80, // Exact icon px size. Used if 'size' not defined.
+                // offsetX: 0, // image offset x
+                // offsetY: 0, // image offset y
+                // opacity: 0.7, // image opacity
+                // radius: 2 // image radius
+                // fill: {
+                //   color: "#ff00ff" // image fill color
+                // }
+              }
+            }
+          }
+        ]);
+        console.log("Maybe added feature " + pointFeature);
+        console.log(
+          "... to layer " + this.removeSpaces(pointFeature.properties.class2_fi)
+        );
       });
     },
 
@@ -1762,7 +1985,7 @@ export default {
     },
 
     /**
-     * @description remove marker from map.
+     * @description Remove marker from map.
      *
      * @param {String} id id of marker, can be used to reference it later
      * @returns {Undefined} - Does not return anything
