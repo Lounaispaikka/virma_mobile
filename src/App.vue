@@ -696,6 +696,26 @@
                           class="ml-4 mt-0 py-0"
                           ><template v-slot:label>
                             <div>{{ item.name }}</div>
+                            <span v-if="item.hasOwnProperty('legend')">
+                              <svg
+                                width="400"
+                                height="10"
+                                v-if="item.legend.icon == 'route'"
+                              >
+                                <path
+                                  :d="mapLegendIcons.route"
+                                  :style="{
+                                    fill: 'none',
+                                    fillRule: 'evenodd',
+                                    stroke: item.legend.color,
+                                    strokeWidth: '2px',
+                                    strokeLinecap: 'butt',
+                                    strokeLinejoin: 'miter',
+                                    strokeOpacity: '1'
+                                  }"
+                                />
+                              </svg>
+                            </span>
                           </template>
                         </v-checkbox>
 
@@ -755,6 +775,28 @@
                                     class="ml-4 mt-0 py-0"
                                     ><template v-slot:label>
                                       <div>{{ subItem.name }}</div>
+                                      <span
+                                        v-if="subItem.hasOwnProperty('legend')"
+                                      >
+                                        <svg
+                                          width="400"
+                                          height="10"
+                                          v-if="subItem.legend.icon == 'route'"
+                                        >
+                                          <path
+                                            :d="mapLegendIcons.route"
+                                            :style="{
+                                              fill: 'none',
+                                              fillRule: 'evenodd',
+                                              stroke: subItem.legend.color,
+                                              strokeWidth: '2px',
+                                              strokeLinecap: 'butt',
+                                              strokeLinejoin: 'miter',
+                                              strokeOpacity: '1'
+                                            }"
+                                          />
+                                        </svg>
+                                      </span>
                                     </template>
                                   </v-checkbox>
 
@@ -919,6 +961,7 @@ import proj4 from "../node_modules/proj4";
 import { renderStructureTEST } from "./config.js";
 import { searchConfig } from "./config.js";
 import { mapConfig } from "./config.js";
+import { mapLegend } from "./config.js";
 
 //TODO should one always check for Oskari request availability / errors in order to make more general implementation
 // (= degrades or informs if Oskari backend version does not support used request etc.)
@@ -936,6 +979,9 @@ export default {
     zoomAfterPreviousMapMovement: "",
     channel: {},
     mapSrc: mapConfig.mapAddress,
+    mapLegendIcons: {
+      route: mapLegend.icons.route
+    },
     dialogLayers: false,
     dialogSearch: false,
     dialogShowSearchResultsOnMap: false,

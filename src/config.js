@@ -1,4 +1,10 @@
 /* eslint-disable no-unused-vars */
+export let mapLegend = {
+  icons: {
+    route: "m 10,7 c 6.6,-6.1 8.7,-3.5 13.8,-0.6 4.3,2.5 10.8,-5.43 10.8,-5.4"
+  }
+};
+
 export let mapConfig = {
   mapAddress:
     "https://karttapalvelu.lounaistieto.fi/?lang=fi&uuid=a953c872-e32a-4c0f-a364-2c97d64f31a6"
@@ -45,8 +51,8 @@ export let searchConfig = {
 
 export let renderStructureTEST = {
   logLayerInfoToConsole: true,
-  layersLoaded: false,
-  parentPointersSet: false, // use this in v-if instead of layersLoaded
+  layersLoaded: false, // TODO why these (layersLoaded and parentPointersSet) are here - they are not configs?
+  parentPointersSet: false, // TODO use this in v-if instead of layersLoaded
   layers: [
     // accordion either has or doesn't have subcontent.
     // Subcontent can be:
@@ -180,7 +186,11 @@ export let renderStructureTEST = {
           type: "wms",
           visible: true,
           checked: true,
-          renderAs: "checkbox"
+          renderAs: "checkbox",
+          legend: {
+            icon: "route",
+            color: "#369830"
+          }
         },
         {
           name: "Matkailureitti",
@@ -188,7 +198,11 @@ export let renderStructureTEST = {
           type: "wms",
           visible: true,
           checked: true,
-          renderAs: "checkbox"
+          renderAs: "checkbox",
+          legend: {
+            icon: "route",
+            color: "#d9500b"
+          }
         },
         {
           name: "Melontareitti",
@@ -196,7 +210,11 @@ export let renderStructureTEST = {
           type: "wms",
           visible: true,
           checked: true,
-          renderAs: "checkbox"
+          renderAs: "checkbox",
+          legend: {
+            icon: "route",
+            color: "#607aea"
+          }
         },
         {
           name: "Pyöräilyreitti",
@@ -204,7 +222,11 @@ export let renderStructureTEST = {
           type: "wms",
           visible: true,
           checked: true,
-          renderAs: "checkbox"
+          renderAs: "checkbox",
+          legend: {
+            icon: "route",
+            color: "#ff0000"
+          }
         },
         {
           name: "Retkeilyreitti",
@@ -212,7 +234,11 @@ export let renderStructureTEST = {
           type: "wms",
           visible: true,
           checked: true,
-          renderAs: "checkbox"
+          renderAs: "checkbox",
+          legend: {
+            icon: "route",
+            color: "#00be8c"
+          }
         },
         {
           name: "Retkilatu",
@@ -220,7 +246,11 @@ export let renderStructureTEST = {
           type: "wms",
           visible: true,
           checked: true,
-          renderAs: "checkbox"
+          renderAs: "checkbox",
+          legend: {
+            icon: "route",
+            color: "#41e3e3"
+          }
         },
         {
           name: "Kuntoreitti",
@@ -228,7 +258,11 @@ export let renderStructureTEST = {
           type: "wms",
           visible: true,
           checked: true,
-          renderAs: "checkbox"
+          renderAs: "checkbox",
+          legend: {
+            icon: "route",
+            color: "#2915fc"
+          }
         },
         {
           name: "Kulttuuriulkoilureitti",
@@ -236,7 +270,11 @@ export let renderStructureTEST = {
           type: "wms",
           visible: true,
           checked: true,
-          renderAs: "checkbox"
+          renderAs: "checkbox",
+          legend: {
+            icon: "route",
+            color: "#fdbf6f"
+          }
         }
       ]
     },
