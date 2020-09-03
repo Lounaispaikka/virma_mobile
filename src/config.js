@@ -281,8 +281,23 @@ export let renderStructureTEST = {
 
     // Pyörätiet
     {
-      name: "Turun pyörätiet",
+      name: "Turun seudun pyörätiet",
       id: 1202,
+      type: "wms",
+      visible: false,
+      checked: null,
+      renderAs: "accordion",
+      style: {
+        backgroundColor: "#e4effa",
+        class: ""
+      },
+      subContent: []
+    },
+
+    // Kuhankuono
+    {
+      name: "Kuhankuonon retkeilyreitistö",
+      id: 226,
       type: "wms",
       visible: false,
       checked: null,
