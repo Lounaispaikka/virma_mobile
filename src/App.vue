@@ -777,7 +777,7 @@
                             <div>{{ item.name }}</div>
                             <span v-if="item.hasOwnProperty('legend')">
                               <svg
-                                width="400"
+                                width="200"
                                 height="10"
                                 v-if="item.legend.icon == 'route'"
                               >
@@ -858,7 +858,7 @@
                                         v-if="subItem.hasOwnProperty('legend')"
                                       >
                                         <svg
-                                          width="400"
+                                          width="200"
                                           height="10"
                                           v-if="subItem.legend.icon == 'route'"
                                         >
