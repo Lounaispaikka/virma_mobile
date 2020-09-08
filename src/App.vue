@@ -472,7 +472,7 @@
                           itemsPerPageText: 'Rivejä yhdellä sivulla'
                         }"
                       >
-                        <template v-slot:footer.page-text="props">
+                        <template v-slot:[`footer.page-text`]="props">
                           {{ props.pageStart }}-{{ props.pageStop }} /
                           {{ props.itemsLength }}
                         </template>
@@ -545,7 +545,7 @@
                           itemsPerPageText: 'Rivejä yhdellä sivulla'
                         }"
                       >
-                        <template v-slot:footer.page-text="props">
+                        <template v-slot:[`footer.page-text`]="props">
                           {{ props.pageStart }}-{{ props.pageStop }} /
                           {{ props.itemsLength }}
                         </template>
