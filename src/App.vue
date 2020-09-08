@@ -1333,10 +1333,12 @@ export default {
       });
     },
 
+    // TODO JsDoc
     showInfoForVectorFeature: function(data) {
       // save data here and refer to it in dialog-template
       this.clickedVectorFeature = data.features[0].geojson.features[0];
       this.dialogVectorFeatureInfo = true;
+      // TODO remove console.logs
       console.log("FeatureEventId: " + data.features[0].id);
       console.log("FeatureLayer: " + data.features[0].layerId);
     },
@@ -1474,6 +1476,7 @@ export default {
             return;
           }
         } else if (item.type == "virtual" && item.subContent.length > 0) {
+          // TODO remove console.logs
           console.log(
             "VIRTUAL, going deeper..." +
               item.id +
@@ -1516,6 +1519,7 @@ export default {
         if (item.type == "wms") {
           if (item.renderAs == "checkbox" && item.checked) {
             if (this.allParentsVisible(item)) {
+              // TODO remove console.logs
               console.log(
                 "All Parents Visible, ToggleChecked: " + item.checked
               );
@@ -1526,6 +1530,7 @@ export default {
               item.visible = true;
             }
           } else if (item.renderAs == "checkbox" && !item.checked) {
+            // TODO remove console.logs
             console.log("ToggleChecked: " + item.checked);
             channel.postRequest("MapModulePlugin.MapLayerVisibilityRequest", [
               item.id,
@@ -1652,6 +1657,7 @@ export default {
           "MapModulePlugin.RemoveFeaturesFromMapRequest",
           ["id", feature.properties.id, featureLayer]
         );
+        // TODO remove console.logs
         console.log("Removed");
       }
     },
@@ -1719,7 +1725,6 @@ export default {
             encodeURIComponent(routeCQLFilter),
             "Route"
           );
-          //console.log(routesGeoJson);
           this.parseSearchResults(routesGeoJson);
         }
 
@@ -1732,10 +1737,10 @@ export default {
             encodeURIComponent(pointCQLFilter),
             "Point"
           );
-          //console.log(pointsGeoJson);
           this.parseSearchResults(pointsGeoJson);
         }
       } catch (e) {
+        // TODO remove console.logs
         console.log(
           // TODO handle network errors (handling now OK, but error message could be better (than eg "404"))
           // TODO handle geoserver errors (are these always actually network errors (404 etc))
@@ -1999,7 +2004,6 @@ export default {
      * @description Show selected search results on map as vector layers.
      *
      * @returns {Undefined} - Does not return anything
-     * @todo refactor to functions for clarity
      */
     showSearchResultsOnMap: function() {
       this.removeFeaturesFromVectorLayers();
@@ -2037,6 +2041,7 @@ export default {
           "MapModulePlugin.RemoveFeaturesFromMapRequest",
           [null, null, routeType]
         );
+        // TODO remove console.logs
         console.log("RemoveFeaturesFromMapRequest " + routeType);
       });
 
@@ -2045,6 +2050,7 @@ export default {
           "MapModulePlugin.RemoveFeaturesFromMapRequest",
           [null, null, pointType]
         );
+        // TODO remove console.logs
         console.log("RemoveFeaturesFromMapRequest " + pointType);
       });
     },
@@ -2113,6 +2119,7 @@ export default {
             layerId: pointType
           }
         ]);
+        // TODO remove console.logs
         console.log("Propably added layer " + pointType);
       });
     },
@@ -2133,6 +2140,7 @@ export default {
           type: "FeatureCollection",
           features: [routeFeature]
         };
+        // TODO remove console.logs
         console.log(featureCollectionWrapper);
 
         this.channel.postRequest("MapModulePlugin.AddFeaturesToMapRequest", [
@@ -2148,6 +2156,7 @@ export default {
             }
           }
         ]);
+        // TODO remove console.logs
         console.log("Maybe added feature " + routeFeature);
         console.log(
           "... to layer " + this.removeSpaces(routeFeature.properties.class2_fi)
@@ -2187,6 +2196,7 @@ export default {
             }
           }
         ]);
+        // TODO remove console.logs
         console.log("Maybe added feature " + pointFeature);
         console.log(
           "... to layer " + this.removeSpaces(pointFeature.properties.class2_fi)
@@ -2348,7 +2358,6 @@ export default {
      * or rejects with error
      * @todo add accuracy as parameter
      * @todo implement and document timeout and loading indicator
-     * @todo remove console.logs
      */
     getAccuratePositionOnce: function(options = {}) {
       return new Promise((resolve, reject) => {
@@ -2356,6 +2365,7 @@ export default {
           positionWGS84 => {
             if (positionWGS84.coords.accuracy < 200) {
               // TODO loading indicator for waiting position
+              // TODO remove console.logs
               console.log("Promise: Good accyracy");
               console.log("Promise: Clearing ID: " + id);
               navigator.geolocation.clearWatch(id);
@@ -2433,6 +2443,7 @@ export default {
         // eslint-disable-next-line no-inner-declarations
         function error() {
           // TODO handle errors (by throwing?)
+          // TODO remove console.logs
           console.log("no position available");
           alert("Sorry, no position available.");
         }
@@ -2444,6 +2455,8 @@ export default {
               self.removeMarker("trackLocationMarker"));
       } else {
         /* geolocation IS NOT available */
+        // TODO handle somehow
+        // TODO remove console.logs
         console.log("geolocation IS NOT available");
       }
 
