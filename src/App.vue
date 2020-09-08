@@ -2143,7 +2143,7 @@ export default {
             featureStyle: {
               stroke: {
                 color: "rgba(235, 174, 52,1)",
-                width: 4
+                width: 8
               }
             }
           }
