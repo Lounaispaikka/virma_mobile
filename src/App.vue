@@ -2139,6 +2139,7 @@ export default {
           featureCollectionWrapper,
           {
             layerId: this.removeSpaces(routeFeature.properties.class2_fi),
+            // TODO move to config.js
             featureStyle: {
               stroke: {
                 color: "rgba(235, 174, 52,1)",
@@ -2168,6 +2169,7 @@ export default {
           featureCollectionWrapper,
           {
             layerId: this.removeSpaces(pointFeature.properties.class2_fi),
+            // TODO move to config.js
             featureStyle: {
               image: {
                 shape: 0,
