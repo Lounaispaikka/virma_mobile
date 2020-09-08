@@ -933,26 +933,18 @@
       </v-dialog>
     </template>
 
-    <!-- Show search results on map -dialog -->
-    <!-- <template>
-      <v-dialog
-        v-model="dialogShowSearchResultsOnMap"
-        persistent
-        max-width="700"
-        :fullscreen="$vuetify.breakpoint.xsOnly"
-      >
-        <v-card
-          style="min-width:350px;"
-          :min-height="
-            $vuetify.breakpoint.smAndUp ? $vuetify.breakpoint.height - 200 : ''
-          "
-        >
+    <!-- Show vector-feature info -dialog -->
+    <template v-if="Object.entries(clickedVectorFeature).length > 0">
+      <v-dialog v-model="dialogVectorFeatureInfo" persistent max-width="700">
+        <v-card>
           <v-toolbar flat>
             <v-spacer></v-spacer>
-            <v-toolbar-title>Voi ei...</v-toolbar-title>
+            <v-toolbar-title>{{
+              clickedVectorFeature.properties.name_fi
+            }}</v-toolbar-title>
             <v-spacer></v-spacer>
 
-            <v-btn icon @click="dialogShowSearchResultsOnMap = false">
+            <v-btn icon @click="dialogVectorFeatureInfo = false">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-toolbar>
@@ -960,14 +952,31 @@
           <v-row justify="center" class="mx-0">
             <v-card width="100%" max-width="650px" flat class="ma-2">
               <v-card-text>
-                Pahoittelut<br />Tätä toimintoa ei ole vielä olemassa, mutta se
-                tulee seuraavaksi :)
+                <p>
+                  {{ clickedVectorFeature.properties.class2_fi }}<br />
+                  <span v-if="clickedVectorFeature.properties.address">
+                    {{ clickedVectorFeature.properties.address }},
+                    <span> </span>
+                    {{ clickedVectorFeature.properties.zip }}
+                    <span> </span>
+                  </span>
+                  {{ clickedVectorFeature.properties.municipali }}
+                </p>
+                <p>{{ clickedVectorFeature.properties.info_fi }}</p>
+                <p v-if="clickedVectorFeature.properties.www_fi">
+                  <a
+                    :href="clickedVectorFeature.properties.www_fi"
+                    target="_blank"
+                    >{{ clickedVectorFeature.properties.www_fi }}
+                  </a>
+                  <br />(avautuu uuteen ikkunaan)
+                </p>
               </v-card-text>
             </v-card>
           </v-row>
         </v-card>
       </v-dialog>
-    </template> -->
+    </template>
   </v-app>
 </template>
 
@@ -1063,7 +1072,8 @@ export default {
     },
     dialogLayers: false,
     dialogSearch: false,
-    dialogShowSearchResultsOnMap: false,
+    dialogVectorFeatureInfo: false,
+    clickedVectorFeature: {},
     dialogSearchTabs: null,
     virmaReititJson: {},
     searchOptions: {
@@ -1313,7 +1323,22 @@ export default {
           }
           self.zoomAfterPreviousMapMovement = dataAfterMapMovement.zoom;
         });
+
+        // Handle click events of vector features (show feature info box)
+        channel.handleEvent("FeatureEvent", function(data) {
+          if (data.operation == "click") {
+            self.showInfoForVectorFeature(data);
+          }
+        });
       });
+    },
+
+    showInfoForVectorFeature: function(data) {
+      // save data here and refer to it in dialog-template
+      this.clickedVectorFeature = data.features[0].geojson.features[0];
+      this.dialogVectorFeatureInfo = true;
+      console.log("FeatureEventId: " + data.features[0].id);
+      console.log("FeatureLayer: " + data.features[0].layerId);
     },
 
     /**
