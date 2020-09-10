@@ -87,29 +87,29 @@ export let renderStructureTEST = {
 
     // Level 0
     // Etsi-tulokset
-    {
-      name: "Etsi-tulokset",
-      id: null,
-      type: "wfs", // tämä on kai virtual niin kauan kunnes tulee tuloksia, jolloin täytetään id ja type
-      visible: false,
-      renderAs: "accordion",
-      style: {
-        backgroundColor: "#eedbad",
-        class: "mb-8"
-      },
-      subContent: [
-        // Level 1
-        {
-          name: "Ei vielä tuloksia, käytä <u>etsi-toimintoa</u>",
-          // if name empty, use what comes from server
-          id: null,
-          type: "text",
-          visible: false,
-          checked: false, // checked-attribuutti vain jos renderAs="checkbox"
-          renderAs: "text"
-        }
-      ]
-    },
+    // {
+    //   name: "Etsi-tulokset",
+    //   id: null,
+    //   type: "wfs", // tämä on kai virtual niin kauan kunnes tulee tuloksia, jolloin täytetään id ja type
+    //   visible: false,
+    //   renderAs: "accordion",
+    //   style: {
+    //     backgroundColor: "#eedbad",
+    //     class: "mb-8"
+    //   },
+    //   subContent: [
+    //     // Level 1
+    //     {
+    //       name: "Ei vielä tuloksia, käytä <u>etsi-toimintoa</u>",
+    //       // if name empty, use what comes from server
+    //       id: null,
+    //       type: "text",
+    //       visible: false,
+    //       checked: false, // checked-attribuutti vain jos renderAs="checkbox"
+    //       renderAs: "text"
+    //     }
+    //   ]
+    // },
 
     // Taustakartat
     {
