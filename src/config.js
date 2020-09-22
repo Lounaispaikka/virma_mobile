@@ -80,6 +80,7 @@ export let renderStructureTEST = {
   logLayerInfoToConsole: true,
   layersLoaded: false, // TODO why these (layersLoaded and parentPointersSet) are here - they are not configs?
   parentPointersSet: false, // TODO use this in v-if instead of layersLoaded
+  openOnStartUp: [], // Use the same way as in backGroundMaps
   layers: [
     // accordion either has or doesn't have subcontent.
     // Subcontent can be:
@@ -138,50 +139,23 @@ export let renderStructureTEST = {
     //   ]
     // },
 
-    // Taustakartat
-    {
-      name: "Taustakartat",
-      id: null,
-      type: "virtual",
-      visible: true,
-      checked: null,
-      renderAs: "accordion",
-      style: {
-        backgroundColor: "#e6e8dd",
-        class: "mb-4"
-      },
-      subContent: [
-        // Level 1
-        {
-          name: "Taustakartta",
-          id: 327,
-          type: "wms",
-          visible: true,
-          checked: true,
-          renderAs: "checkbox"
-        },
-        {
-          name: "Maastokartta",
-          id: 1175,
-          type: "wms",
-          visible: false,
-          checked: false,
-          renderAs: "checkbox"
-        },
-        {
-          name: "OpenStreetMap",
-          id: 329,
-          type: "wms",
-          visible: false,
-          checked: false,
-          renderAs: "checkbox"
-        }
-      ]
-    },
-
     // Kohteet
     {
       name: "Varsinais-Suomen virkistyskohteet",
+      id: 1049, //1166,
+      type: "wms",
+      visible: false,
+      checked: null,
+      renderAs: "accordion",
+      style: {
+        backgroundColor: "#e4effa",
+        class: ""
+      },
+      subContent: []
+    },
+
+    {
+      name: "Varsinais-Suomen luontomatkailupalvelut",
       id: 1049, //1166,
       type: "wms",
       visible: false,
@@ -204,7 +178,7 @@ export let renderStructureTEST = {
       renderAs: "accordion",
       style: {
         backgroundColor: "#e4effa",
-        class: ""
+        class: "mb-4"
       },
       subContent: [
         {
@@ -306,34 +280,96 @@ export let renderStructureTEST = {
       ]
     },
 
-    // Pyörätiet
+    // Reitistökokonaisuudet
     {
-      name: "Turun seudun pyörätiet",
-      id: 1202,
-      type: "wms",
+      name: "Reitistökokonaisuudet",
+      id: null,
+      type: "virtual",
       visible: false,
       checked: null,
       renderAs: "accordion",
       style: {
-        backgroundColor: "#e4effa",
-        class: ""
+        backgroundColor: "#edf8e9",
+        class: "mb-4"
       },
-      subContent: []
+      subContent: [
+        {
+          name: "Kuhankuonon retkeilyreitistö",
+          id: 226,
+          type: "wms",
+          visible: false,
+          checked: false,
+          renderAs: "checkbox",
+          style: {
+            backgroundColor: "",
+            class: ""
+          }
+        },
+        {
+          name: "Harjureitti",
+          id: 1202,
+          type: "wms",
+          visible: false,
+          checked: false,
+          renderAs: "checkbox",
+          style: {
+            backgroundColor: "",
+            class: ""
+          }
+        }
+      ]
     },
 
-    // Kuhankuono
+    // Muut tasot
     {
-      name: "Kuhankuonon retkeilyreitistö",
-      id: 226,
-      type: "wms",
+      name: "Muut tasot",
+      id: null,
+      type: "virtual",
       visible: false,
       checked: null,
       renderAs: "accordion",
       style: {
-        backgroundColor: "#e4effa",
-        class: ""
+        backgroundColor: "#f7f7f7",
+        class: "mb-4"
       },
-      subContent: []
+      subContent: [
+        {
+          name: "Turun seudun pyörätiet",
+          id: 1202,
+          type: "wms",
+          visible: false,
+          checked: false,
+          renderAs: "checkbox",
+          style: {
+            backgroundColor: "",
+            class: ""
+          }
+        },
+        {
+          name: "Turun bussipysäkit",
+          id: 1184,
+          type: "wms",
+          visible: false,
+          checked: false,
+          renderAs: "checkbox",
+          style: {
+            backgroundColor: "",
+            class: ""
+          }
+        },
+        {
+          name: "Turun bussireitit",
+          id: 1183,
+          type: "wms",
+          visible: false,
+          checked: false,
+          renderAs: "checkbox",
+          style: {
+            backgroundColor: "",
+            class: ""
+          }
+        }
+      ]
     }
 
     // Muut

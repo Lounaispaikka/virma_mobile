@@ -124,7 +124,7 @@
         <v-card style="min-width:350px;">
           <v-toolbar flat>
             <v-spacer></v-spacer>
-            <v-toolbar-title>Etsi reittejä ja kohteita</v-toolbar-title>
+            <v-toolbar-title>Hae reittejä ja kohteita</v-toolbar-title>
             <v-spacer></v-spacer>
 
             <v-btn icon @click="dialogSearch = false">
@@ -138,7 +138,7 @@
                 dark
                 centered
               >
-                <v-tab>Hakuehdot</v-tab>
+                <v-tab>Haku</v-tab>
                 <v-tab
                   >Hakutulokset (
                   {{
@@ -393,7 +393,7 @@
                       width="120px"
                       @click="searchRoutesAndPoints"
                     >
-                      Etsi
+                      Hae
                     </v-btn>
 
                     <v-btn
@@ -661,7 +661,14 @@
                                     class="d-inline-block text-truncate"
                                     style="max-width: 250px;"
                                   >
-                                    Etsi-tulokset
+                                    Hakutulokset (
+                                    {{
+                                      selectedSearchResultLayers.selectedPoints
+                                        .length +
+                                        selectedSearchResultLayers
+                                          .selectedRoutes.length
+                                    }}
+                                    )
                                   </span>
                                 </template>
                               </v-checkbox>
@@ -680,8 +687,23 @@
                       <v-expansion-panel-content>
                         <template v-if="!hasSelectedFeaturesInLayersMenu">
                           <div class="pl-8">
-                            Ei tuloksia, käytä Etsi-toimintoa ja valitse "Näytä
-                            valitut kartalla"
+                            Ei tuloksia, käytä Hakutoimintoa
+                            <v-btn
+                              color="#627f9a"
+                              dark
+                              fab
+                              small
+                              depressed
+                              class="mx-2"
+                              @click="
+                                {
+                                  dialogLayers = false;
+                                  dialogSearch = true;
+                                }
+                              "
+                              ><v-icon>mdi-magnify</v-icon></v-btn
+                            >
+                            ja valitse "Näytä valitut kartalla"
                           </div>
                         </template>
                         <template v-else>
@@ -721,7 +743,12 @@
                     </v-expansion-panel>
                   </v-expansion-panels>
                 </template>
-                <v-expansion-panels class="mb-4">
+                <!-- Menu-layers -->
+                <v-expansion-panels
+                  class="mb-4"
+                  v-model="renderStructureTEST.openOnStartUp"
+                  multiple
+                >
                   <!-- Level 0 -->
                   <v-expansion-panel
                     v-for="(layer, i) in renderStructureTEST.layers"
@@ -751,7 +778,7 @@
                                 <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                                 <span
                                   class="d-inline-block text-truncate"
-                                  style="max-width: 250px;"
+                                  style="max-width: 350px;"
                                 >
                                   {{ layer.name }}
                                 </span>
