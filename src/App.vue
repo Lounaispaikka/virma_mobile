@@ -926,6 +926,74 @@
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </v-expansion-panels>
+
+                <!-- Backgroundmaps -->
+                <template>
+                  <v-expansion-panels
+                    class="mb-4"
+                    v-model="backGroundMaps.openOnStartUp"
+                    multiple
+                  >
+                    <v-expansion-panel style="backgroundColor: #e6e8dd;">
+                      <v-expansion-panel-header class="my-0 py-0">
+                        <v-container fluid class="ma-0 pa-0">
+                          <v-row>
+                            <v-col cols="10">
+                              <v-checkbox
+                                @click.native.stop
+                                @change="toggleBackgroundMaps"
+                                v-model="backGroundMaps.visible"
+                                on-icon="mdi-eye"
+                                off-icon="mdi-eye-off"
+                                class="my-0 py-0"
+                                style="height: 20px;"
+                                ><template v-slot:label>
+                                  <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                                  <span
+                                    class="d-inline-block text-truncate"
+                                    style="max-width: 250px;"
+                                  >
+                                    Taustakartat
+                                  </span>
+                                </template>
+                              </v-checkbox>
+                            </v-col>
+                            <!-- <v-col
+                              cols="2"
+                              class="text-right pr-4"
+                              style="line-height:24px;"
+                              >1/3</v-col
+                            > -->
+                            <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                          </v-row>
+                        </v-container>
+                      </v-expansion-panel-header>
+
+                      <v-expansion-panel-content>
+                        <template>
+                          <v-radio-group
+                            v-model="backGroundMaps.selected"
+                            :mandatory="true"
+                            class="mt-0"
+                            @change="toggleBackgroundMaps"
+                          >
+                            <div
+                              v-for="item in backGroundMaps.layers"
+                              :key="item.id"
+                              max-width="100%"
+                              class="ml-4 pl-4 mt-0 pb-4"
+                            >
+                              <v-radio
+                                :label="item.name"
+                                :value="item.id"
+                              ></v-radio>
+                            </div>
+                          </v-radio-group>
+                        </template>
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+                </template>
               </template>
             </v-card>
           </v-row>
@@ -1046,6 +1114,7 @@ tbody tr:nth-of-type(odd) {
 <script>
 // TODO remove proj4 if / when geolocation api is not used anymore (but Oskari native requests instead)
 import proj4 from "../node_modules/proj4";
+import { backGroundMaps } from "./config.js";
 import { renderStructureTEST } from "./config.js";
 import { searchConfig } from "./config.js";
 import { mapConfig } from "./config.js";
@@ -1146,6 +1215,7 @@ export default {
       selectedPoints: [],
       selectedRoutes: []
     },
+    backGroundMaps: {},
     renderStructureTEST: {} // loaded from config.js
   }),
 
@@ -1214,6 +1284,7 @@ export default {
       /* global OskariRPC */
       var channel = OskariRPC.connect(iFrame, IFRAME_DOMAIN);
       this.channel = channel;
+      this.backGroundMaps = backGroundMaps;
       this.renderStructureTEST = renderStructureTEST;
       var findMatchingConfigLayer = this.findMatchingConfigLayer;
       var self = this;
@@ -1267,6 +1338,7 @@ export default {
               );
             } else {
               if (renderStructureTEST.logLayerInfoToConsole) {
+                // TODO add check for backgroundlayers
                 console.log(
                   `--- NO MATCH in config-layers for Oskarilayer: ${oskariLayer.id} ${oskariLayer.name}`
                 );
@@ -1274,6 +1346,8 @@ export default {
             }
           }
 
+          // Show selected background map
+          self.toggleBackgroundMaps();
           self.renderStructureTEST.layersLoaded = true;
         });
 
@@ -1659,6 +1733,43 @@ export default {
         );
         // TODO remove console.logs
         console.log("Removed");
+      }
+    },
+
+    /**
+     * @description Handles visibility ("eye icon") of backgroundmaps.
+     * Shows selected map and hides others on change of map.
+     *
+     * @returns {Undefined} - Does not return anything
+     */
+    toggleBackgroundMaps: function() {
+      if (!this.backGroundMaps.visible) {
+        // Hide all layers
+        // There are only few backgroundlayers so it's ok to do forEach
+        // even though we actually would only need to hide selected layer.
+        // This way we can be sure that visibility stays in sync.
+        this.backGroundMaps.layers.forEach(layer => {
+          this.channel.postRequest(
+            "MapModulePlugin.MapLayerVisibilityRequest",
+            [layer.id, false]
+          );
+        });
+      } else {
+        // Show selected layer, hide others
+        const selectedMapId = this.backGroundMaps.selected;
+        this.backGroundMaps.layers.forEach(layer => {
+          if (selectedMapId == layer.id) {
+            this.channel.postRequest(
+              "MapModulePlugin.MapLayerVisibilityRequest",
+              [layer.id, true]
+            );
+          } else {
+            this.channel.postRequest(
+              "MapModulePlugin.MapLayerVisibilityRequest",
+              [layer.id, false]
+            );
+          }
+        });
       }
     },
 

@@ -49,6 +49,33 @@ export let searchConfig = {
   }
 };
 
+export let backGroundMaps = {
+  visible: true,
+  // openOnStartUp-setting is an array of expansion-panels that are open by default.
+  // In case of background maps, there are no other panels, but logic (in Vuetify) is still the same.
+  // In other words: zero does not mean 'false' or 'closed', but first (and only) panel.
+  openOnStartUp: [0],
+  selected: 327, // also acts as "selected on startup"
+  layers: [
+    {
+      name: "Taustakartta",
+      id: 327
+    },
+    {
+      name: "Maastokartta",
+      id: 1175
+    },
+    {
+      name: "OpenStreetMap",
+      id: 329
+    },
+    {
+      name: "Ilmakuva",
+      id: 1165
+    }
+  ]
+};
+
 export let renderStructureTEST = {
   logLayerInfoToConsole: true,
   layersLoaded: false, // TODO why these (layersLoaded and parentPointersSet) are here - they are not configs?
