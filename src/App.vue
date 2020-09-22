@@ -3,7 +3,7 @@
     <v-app-bar
       fixed
       app
-      color="primary"
+      color="#627f9a"
       dark
       :bottom="$vuetify.breakpoint.xsOnly"
     >
@@ -11,8 +11,15 @@
         class="d-none d-sm-flex"
         @click.stop="drawer = !drawer"
       /> -->
+      <v-img
+        class="mx-2"
+        src="@/assets/virma_logo_green.png"
+        max-height="50"
+        max-width="100"
+        contain
+      ></v-img>
       <v-toolbar-title class="d-none d-sm-flex" style="overflow:visible;"
-        >Virma Mobile</v-toolbar-title
+        >Kartta</v-toolbar-title
       >
       <v-spacer></v-spacer>
       <!-- TODO add tooltip -->
@@ -59,10 +66,11 @@
           <v-row justify="end" class="ma-0">
             <v-col class="pr-1 pr-sm-3 mb-6">
               <!-- TODO add tooltip -->
+              <!-- TODO remove this comment if color scheme ok. Old color: 'darken-1' -->
               <v-btn
                 fab
                 class="mb-2 no-blur"
-                :color="keepMapCenteredToPosition ? 'success' : 'grey darken-1'"
+                :color="keepMapCenteredToPosition ? 'success' : '#627f9a'"
                 dark
                 style="display: block;"
                 @click="keepMapCenteredToPosition = !keepMapCenteredToPosition"
@@ -76,7 +84,7 @@
               <v-btn
                 fab
                 class="mb-2 no-blur"
-                :color="showPosition.status ? 'success' : 'grey darken-1'"
+                :color="showPosition.status ? 'success' : '#627f9a'"
                 dark
                 style="display: block;"
                 @click="
@@ -126,7 +134,7 @@
             <template v-slot:extension>
               <v-tabs
                 v-model="dialogSearchTabs"
-                background-color="primary"
+                background-color="#627f9a"
                 dark
                 centered
               >
