@@ -981,7 +981,7 @@
                     v-model="backGroundMaps.openOnStartUp"
                     multiple
                   >
-                    <v-expansion-panel style="backgroundColor: #e6e8dd;">
+                    <v-expansion-panel style="backgroundColor: #f7f7f7;">
                       <v-expansion-panel-header class="my-0 py-0">
                         <v-container fluid class="ma-0 pa-0">
                           <v-row>
@@ -1318,20 +1318,97 @@ export default {
         "Kulttuuriulkoilureitti",
         "Kuntoreitti",
         "Luontopolku",
-        "Matkailureitti"
+        "Matkailureitti",
+        "Melontareitti",
+        "Pyöräilyreitti",
+        "Retkeilyreitti",
+        "Retkilatu"
       ],
       selectedRouteTypes: [],
-      pointTypes: ["Laavu", "Uimaranta"], // TODO fetch types from geoserver, fill here
+      pointTypes: [
+        // TODO fetch types from geoserver, fill here
+        "Ankkuripaikka",
+        "Hätäsatama",
+        "Jätepiste",
+        "Kalastuspaikka",
+        "Käyntisatama",
+        "Keittokatos- / ruoanlaittopaikka",
+        "Kulttuuripalvelu",
+        "Lähde tai kaivo",
+        "Leirikeskus",
+        "Leirintä- tai caravanalue",
+        "Levähdyspaikka",
+        "Luonnonmuistomerkki tai näköalapaikka",
+        "Luonto- tai lintutorni",
+        "Majoituspalvelu",
+        "Moottorirata",
+        "Ohjelma- tai elämyspalvelu",
+        "Opaspalvelu",
+        "Opastuskeskus",
+        "Opastuspiste",
+        "Päivälaavu tai -kota",
+        "Palvelusatama",
+        "Polttopuusuoja",
+        "Rantautumispaikka",
+        "Retkeilyä palveleva parkkipaikka",
+        "Retki- tai luonnonsatama",
+        "Ruokapalvelu",
+        "Sauna",
+        "Suojasatama",
+        "Talviuimapaikka",
+        "Telttailupaikka",
+        "Tilavuokraus- tai kokouspalvelu",
+        "Tulipaikka",
+        "Tupa",
+        "Uimapaikka",
+        "Uimaranta",
+        "Ulkoilu- tai hiihtomaja",
+        "Varauslaavu tai -kota",
+        "Varaussauna",
+        "Veneenlaskupaikka",
+        "Vieraslaituri",
+        "Vierassatama",
+        "Virkistykseen liittyvä erityiskohde",
+        "Virkistysreitin lähtöpiste",
+        "Yhteysaluslaituri",
+        "Yleisö-wc tai -puucee",
+        "Yöpymislaavu tai -kota"
+      ],
       selectedPointTypes: [],
-      municipalities: ["Turku", "Raisio", "Naantali", "Rusko", "Uusikaupunki"], // TODO fetch municipalities from geoserver, order and fill here
+      municipalities: [
+        "Aura",
+        "Kaarina",
+        "Kemiönsaari",
+        "Koski Tl",
+        "Kustavi",
+        "Laitila",
+        "Lieto",
+        "Loimaa",
+        "Marttila",
+        "Masku",
+        "Mynämäki",
+        "Naantali",
+        "Nousiainen",
+        "Oripää",
+        "Paimio",
+        "Parainen",
+        "Pyhäranta",
+        "Pöytyä",
+        "Raisio",
+        "Rusko",
+        "Salo",
+        "Sauvo",
+        "Somero",
+        "Taivassalo",
+        "Turku",
+        "Uusikaupunki",
+        "Vehmaa"
+      ],
       selectedMunicipalities: [],
       maxDistanceFromCurrentLocation: "",
       routeLengthRange: [0, 100]
     },
     searchResults: {
-      // TODO when user does a search, fill this with results. Empty and fill again on new search.
-      // If user chooses "show route on map" -> deselect all but route in question, apply color etc, zoom to route
-      // If user chooses "show all on map" -> select all results, coloring?, zoom to bounding box
       routes: {
         objects: [],
         visible: false,

@@ -14,7 +14,8 @@ export let searchConfig = {
   // TODO separate base address for points?
   baseAddress:
     "https://geoserver.lounaistieto.fi/geoserver/virma/wfs?request=GetFeature&service=WFS&version=1.0.0&outputFormat=application%2Fjson&typeName=",
-  geoserverRoutesTypeName: "virma:virma_reitit_avoin",
+  //geoserverRoutesTypeName: "virma:virma_reitit_avoin",
+  geoserverRoutesTypeName: "virma:virma_reitit_kaikki",
   geoserverPointsTypeName: "virma:virma_kohteet_avoin",
 
   CQLFilters: {
@@ -194,10 +195,10 @@ export let renderStructureTEST = {
     // Kohteet
     {
       name: "Varsinais-Suomen virkistyskohteet",
-      id: 1049, //1166,
+      id: 1049, //1166, // layer id:s are logged to console when logLayerInfoToConsole = true
       type: "wms",
-      visible: false,
-      checked: null,
+      visible: false, // visibility on startup
+      checked: null, // null unless renderAs == "checkbox"
       renderAs: "accordion",
       style: {
         backgroundColor: "#e4effa",
@@ -208,7 +209,7 @@ export let renderStructureTEST = {
 
     {
       name: "Varsinais-Suomen luontomatkailupalvelut",
-      id: 1049, //1166,
+      id: 1049, //1166, // TODO Add layer in Karttapalvelu (and here...)
       type: "wms",
       visible: false,
       checked: null,
@@ -374,14 +375,14 @@ export let renderStructureTEST = {
 
     // Muut tasot
     {
-      name: "Muut tasot",
+      name: "Muut karttatasot",
       id: null,
       type: "virtual",
       visible: false,
       checked: null,
       renderAs: "accordion",
       style: {
-        backgroundColor: "#f7f7f7",
+        backgroundColor: "#e6e8dd",
         class: "mb-4"
       },
       subContent: [
