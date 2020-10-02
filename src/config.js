@@ -49,6 +49,58 @@ export let searchConfig = {
   }
 };
 
+export let welcomeContent = {
+  defaultBgColor: "#26c6da",
+  cardHeight: "200px",
+  items: [
+    {
+      name: "Retkeilyreitit",
+      id: 1304, // layer id:s are logged to console when logLayerInfoToConsole = true
+      columnWidth: 12, // on xs (<600px) always 12, this overrides when >600px
+      bgColor: "", // overrides defaultBgColor if set
+      imageName: "retkeilyreitti2.jpg", // place images to /src/assets/
+      internalFunction: "", // can be used to invoke a function in App.vue (like Ohjeet)
+      externalLink: "" // can be used to open external link in new tab
+    },
+    {
+      name: "Luontopolut",
+      id: 1300,
+      columnWidth: 6,
+      bgColor: "",
+      imageName: "luontopolku.jpg",
+      internalFunction: "",
+      externalLink: ""
+    },
+    {
+      name: "Virkistyskohteet",
+      id: 1049,
+      columnWidth: 6,
+      bgColor: "",
+      imageName: "uimaranta.jpg",
+      internalFunction: "",
+      externalLink: ""
+    },
+    {
+      name: "Ohjeet",
+      id: null,
+      columnWidth: 6,
+      bgColor: "",
+      imageName: "",
+      internalFunction: "showHelpDialog",
+      externalLink: ""
+    },
+    {
+      name: "Lue lisää Virmasta",
+      id: null,
+      columnWidth: 6,
+      bgColor: "#b8cf69",
+      imageName: "",
+      internalFunction: "",
+      externalLink: "https://spark.adobe.com/page/7z6hnUA4TWVul/"
+    }
+  ]
+};
+
 export let backGroundMaps = {
   visible: true,
   // openOnStartUp-setting is an array of expansion-panels that are open by default.

@@ -1080,6 +1080,120 @@
         </v-card>
       </v-dialog>
     </template>
+
+    <!-- Welcome-dialog -->
+    <template>
+      <v-dialog v-model="dialogWelcome" persistent max-width="700">
+        <v-card>
+          <v-toolbar flat>
+            <v-spacer></v-spacer>
+            <v-toolbar-title>
+              Tervetuloa käyttämään Virma Karttaa
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+
+            <v-btn icon @click="dialogWelcome = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+
+          <v-card-text class="">
+            Virma Kartta on sitä ja tätä...<br />
+            Tästä pääset suoraan suosituimpiin johonkin tai voit ...
+          </v-card-text>
+
+          <v-container fluid>
+            <v-row dense>
+              <v-col
+                v-for="(card, index) in welcomeContent.items"
+                :key="index"
+                cols="12"
+                :sm="card.columnWidth"
+              >
+                <v-card
+                  :color="
+                    card.bgColor == ''
+                      ? welcomeContent.defaultBgColor
+                      : card.bgColor
+                  "
+                  @click="handleWelcomeDialogClick(card)"
+                >
+                  <v-img
+                    :src="
+                      card.imageName.length == 0
+                        ? ''
+                        : require(`@/assets/${card.imageName}`)
+                    "
+                    :alt="card.name"
+                    class="white--text align-end"
+                    :height="welcomeContent.cardHeight"
+                  >
+                    <v-card-title v-text="card.name"></v-card-title>
+                  </v-img>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+      </v-dialog>
+    </template>
+
+    <!-- Help-dialog -->
+    <template>
+      <v-dialog v-model="dialogHelp" persistent max-width="700">
+        <v-card>
+          <v-toolbar flat>
+            <v-spacer></v-spacer>
+            <v-toolbar-title>
+              Ohjeet
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+
+            <v-btn icon @click="dialogHelp = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+
+          <v-card-text class="">
+            Pahoittelut!<br />
+            Ohjeet ovat vasta tulossa...
+          </v-card-text>
+
+          <!-- <v-container fluid>
+            <v-row dense>
+              <v-col
+                v-for="(card, index) in welcomeContent.items"
+                :key="index"
+                cols="12"
+                :sm="card.columnWidth"
+              >
+                <v-card
+                  :color="
+                    card.bgColor == ''
+                      ? welcomeContent.defaultBgColor
+                      : card.bgColor
+                  "
+                  @click="handleWelcomeDialogClick(card)"
+                >
+                  <v-img
+                    :src="
+                      card.imageName.length == 0
+                        ? ''
+                        : require(`@/assets/${card.imageName}`)
+                    "
+                    :alt="card.name"
+                    class="white--text align-end"
+                    height="200px"
+                  >
+                    <v-card-title v-text="card.name"></v-card-title>
+                  </v-img>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-container> -->
+        </v-card>
+      </v-dialog>
+    </template>
   </v-app>
 </template>
 
@@ -1154,6 +1268,7 @@ import { renderStructureTEST } from "./config.js";
 import { searchConfig } from "./config.js";
 import { mapConfig } from "./config.js";
 import { mapLegend } from "./config.js";
+import { welcomeContent } from "./config.js";
 
 //TODO should one always check for Oskari request availability / errors in order to make more general implementation
 // (= degrades or informs if Oskari backend version does not support used request etc.)
@@ -1179,6 +1294,8 @@ export default {
     dialogVectorFeatureInfo: false,
     clickedVectorFeature: {},
     dialogSearchTabs: null,
+    dialogWelcome: true,
+    dialogHelp: false,
     virmaReititJson: {},
     searchOptions: {
       searchText: "",
@@ -1250,8 +1367,9 @@ export default {
       selectedPoints: [],
       selectedRoutes: []
     },
-    backGroundMaps: {},
-    renderStructureTEST: {} // loaded from config.js
+    backGroundMaps: {}, // loaded from config.js
+    renderStructureTEST: {}, // loaded from config.js
+    welcomeContent: {} // loaded from config.js in mounted-property
   }),
 
   computed: {
@@ -1453,23 +1571,23 @@ export default {
     },
 
     /**
-     * @description Compare if Oskari-layer item and config-layer item id-properties have the same value.
+     * @description Find config-layer item whose id-property matches
+     * oskariLayer parameter (Object.id or number)
      *
-     * @param {Object} oskariLayerItem - layer item from Oskari iframe (channel.getAllLayers())
+     * @param {(Object|number)} oskariLayer - layer item from Oskari iframe (channel.getAllLayers())
+     * or layer id number.
      * @param {Object} configLayerItem - layer item from config.js renderStructureTEST.layers
      * @returns {(Object|null)} - configLayerItem if id-values are the same or null otherwise
-     *
-     * @todo remove debugs
      */
-    findMatchingConfigLayer: function(oskariLayerItem, configLayerItem) {
-      // TODO debug, remove
-      // console.log(
-      //   "findMatchingConfigLayer: " + configLayerItem.id + configLayerItem.name
-      // );
+    findMatchingConfigLayer: function(oskariLayer, configLayerItem) {
+      let id = undefined;
+      if (typeof oskariLayer === "object") {
+        id = oskariLayer.id;
+      } else if (typeof oskariLayer === "number") {
+        id = oskariLayer;
+      }
 
-      if (configLayerItem.id && configLayerItem.id == oskariLayerItem.id) {
-        // TODO debug, remove
-        // console.log("Found it! Returning...");
+      if (configLayerItem.id && configLayerItem.id == id) {
         return configLayerItem;
       } else if (
         configLayerItem.subContent &&
@@ -1477,28 +1595,16 @@ export default {
       ) {
         for (let j = 0; j < configLayerItem.subContent.length; j++) {
           const subItem = configLayerItem.subContent[j];
-
-          // TODO debug, remove
-          // console.log("recursive with: " + subItem.id + subItem.name);
-
           const matchResult = this.findMatchingConfigLayer(
-            oskariLayerItem,
+            oskariLayer,
             subItem
           );
           if (matchResult != null) {
             return matchResult;
           }
         }
-        // TODO debug, remove
-        // console.log("subcontent, but no match");
-
-        // Has subcontent, but no match
         return null;
       } else {
-        // TODO debug, remove
-        // console.log("No match, no subcontent");
-
-        // No match, no subcontent
         return null;
       }
     },
@@ -1541,19 +1647,100 @@ export default {
       }
     },
 
-    // TODO JsDoc
-    toggleVisibility: function(eventTarget) {
+    /**
+     * @description Handles functionality of welcome-dialog.
+     * Functionality may be (in this order):
+     * - open external webpage
+     * - call function in App.vue:methods
+     * - show wms-layer
+     * Welcome-dialog items (and their functionality) are defined in config.js:welcomeContent.items.
+     *
+     * @param {Object} clickTarget - object in config.js:welcomeContent.items
+     * @returns {Undefined} - Does not return anything
+     */
+    handleWelcomeDialogClick: function(clickTarget) {
+      function turnParentsVisible(parentLayer) {
+        if (parentLayer != null) {
+          parentLayer.visible = true;
+          turnParentsVisible(parentLayer.parent);
+        }
+      }
+
+      if (clickTarget.externalLink.length > 0) {
+        // Open external link
+        window.open(clickTarget.externalLink, "_blank");
+      } else if (clickTarget.internalFunction.length > 0) {
+        // Call internal function (like showHelpDialog etc.)
+        this[clickTarget.internalFunction]();
+        this.dialogWelcome = false;
+      } else {
+        // Normal wms-layers
+        // Turn off (not visible) and uncheck all items in menu structure
+        for (let i = 0; i < this.renderStructureTEST.layers.length; i++) {
+          const layer = this.renderStructureTEST.layers[i];
+          layer.visible = false;
+          this.toggleVisibility(layer, true);
+        }
+
+        // Find right menu-item (map layer)
+        var self = this;
+        const matchingConfigLayer = (function(oskariLayer) {
+          for (let i = 0; i < self.renderStructureTEST.layers.length; i++) {
+            const configLayer = self.renderStructureTEST.layers[i];
+            let result = self.findMatchingConfigLayer(oskariLayer, configLayer);
+            if (result != null) {
+              return result;
+            }
+          }
+          return null;
+        })(clickTarget.id);
+
+        // Turn it on (visible)
+        if (matchingConfigLayer != null) {
+          matchingConfigLayer.visible = true;
+          if (matchingConfigLayer.checked != null) {
+            matchingConfigLayer.checked = true;
+          }
+          this.channel.postRequest(
+            "MapModulePlugin.MapLayerVisibilityRequest",
+            [matchingConfigLayer.id, true]
+          );
+          // Turn also (all) parents on
+          turnParentsVisible(matchingConfigLayer.parent);
+        }
+        this.dialogWelcome = false;
+      }
+    },
+
+    // TODO remove or replace with Ohjeet-dialog logic
+    showHelpDialog: function() {
+      this.dialogWelcome = false;
+      this.dialogHelp = true;
+    },
+
+    /**
+     * @description Toggles visibility of layers-menu items ("eye-icon").
+     * Travels menu structure recursively downwards if needed.
+     *
+     * @param {Object} eventTarget item or sub-item in renderStructureTEST.layers (or .subContent)
+     * @param {boolean} [toggleCheckBox=false] If true, turns also all checkboxes off (checked=false)
+     * This can be used when turning all (or some) item(structure)(s) off programmatically
+     * @todo Implement "all checkboxes on" -functionality (toggleCheckBox=true) if needed
+     * @returns {Undefined} - Does not return anything
+     */
+    toggleVisibility: function(eventTarget, toggleCheckBox = false) {
       let channel = this.channel;
       let toggleToVisible = eventTarget.visible;
 
       function toggleVisibilityOrGoDeeper(item) {
         // NOTE! item refers to layer structure from config, which is separate from actual Oskari-layer items (objects)
         // this also means that item.visible != Oskari-layer item.visible
-        // item.visible is for state of application, Oskari-item.visible actually controls visibility
+        // item.visible is for state of application, Oskari-item.visible actually controls visibility (channel.postRequest())
         // Templates v-model also modifies .visible and .checked state
         // (because they control the rendering of eye-icon and checkbox)
 
         if (item.id) {
+          // "Simple items" which are layers themselves
           if (item.type == "wms") {
             if (toggleToVisible) {
               if (item.renderAs == "checkbox" && item.checked) {
@@ -1575,34 +1762,18 @@ export default {
                 false
               ]);
               item.visible = false;
+              if (toggleCheckBox && item.checked != null) {
+                item.checked = false;
+              }
             }
             return;
           } else if (item.type == "wfs") {
             // changeWFSLayerVisibility(layerId, item.visible) // (not implemented yet...)
-            // console.log(
-            //   "WFS: " + item.id + " " + item.name + ", visible:" + item.visible
-            // );
             return;
           }
         } else if (item.type == "virtual" && item.subContent.length > 0) {
-          // TODO remove console.logs
-          console.log(
-            "VIRTUAL, going deeper..." +
-              item.id +
-              " " +
-              item.name +
-              ", visible:" +
-              item.visible
-          );
+          // "Not so simple items" that has to be travelled
           item.subContent.forEach(function(subItem) {
-            console.log(
-              "SUBITEM: " +
-                subItem.id +
-                " " +
-                subItem.name +
-                ", visible:" +
-                subItem.visible
-            );
             toggleVisibilityOrGoDeeper(subItem);
             return;
           });
