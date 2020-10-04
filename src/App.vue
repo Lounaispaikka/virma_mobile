@@ -2922,6 +2922,7 @@ export default {
       layer.parent = null; // top-level nodes
       self.setParentPointer(layer);
     });
+    this.welcomeContent = welcomeContent;
   }
 };
 </script>
