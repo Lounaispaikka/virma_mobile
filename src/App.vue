@@ -1152,8 +1152,18 @@
 
     <!-- Help-dialog -->
     <template>
-      <v-dialog v-model="dialogHelp" persistent max-width="700">
-        <v-card>
+      <v-dialog
+        v-model="dialogHelp"
+        persistent
+        max-width="1000px"
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+      >
+        <v-card
+          style="min-width:350px;"
+          :min-height="
+            $vuetify.breakpoint.smAndUp ? $vuetify.breakpoint.height - 200 : ''
+          "
+        >
           <v-toolbar flat>
             <v-spacer></v-spacer>
             <v-toolbar-title>
@@ -1164,45 +1174,185 @@
             <v-btn icon @click="dialogHelp = false">
               <v-icon>mdi-close</v-icon>
             </v-btn>
+
+            <template v-slot:extension>
+              <v-tabs
+                v-model="dialogHelpTabs"
+                background-color="#627f9a"
+                dark
+                centered
+              >
+                <v-tab>Toiminnot</v-tab>
+                <v-tab>Karttasymbolit</v-tab>
+              </v-tabs>
+            </template>
           </v-toolbar>
 
-          <v-card-text class="">
-            Pahoittelut!<br />
-            Ohjeet ovat vasta tulossa...
-          </v-card-text>
+          <v-tabs-items v-model="dialogHelpTabs">
+            <!-- App functions -->
+            <v-tab-item class="py-4">
+              <v-container fluid>
+                <v-row class="d-flex align-start">
+                  <v-col cols="2" class="d-flex">
+                    <div class="mx-auto">
+                      <v-btn
+                        color="#627f9a"
+                        dark
+                        fab
+                        small
+                        depressed
+                        @click="
+                          dialogHelp = false;
+                          dialogSearch = true;
+                        "
+                      >
+                        <v-icon>mdi-magnify</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-col>
+                  <v-col cols="10">
+                    <p class="font-weight-bold mb-1">Hakutoiminto</p>
+                    Etsi reittejä ja kohteita eri hakuehdoilla.<br />
+                    Mikäli et rajoita hakua hakuehdoilla, etsitään kaikista
+                    Virma-aineiston reiteistä ja kohteista.<br />
+                    Halutut hakutulokset voit lisätä kartalle valitsemalla ne
+                    ('ruksi') ja painamalla "Näytä valitut hakutulokset
+                    kartalla".
+                  </v-col>
+                </v-row>
 
-          <!-- <v-container fluid>
-            <v-row dense>
-              <v-col
-                v-for="(card, index) in welcomeContent.items"
-                :key="index"
-                cols="12"
-                :sm="card.columnWidth"
-              >
-                <v-card
-                  :color="
-                    card.bgColor == ''
-                      ? welcomeContent.defaultBgColor
-                      : card.bgColor
-                  "
-                  @click="handleWelcomeDialogClick(card)"
-                >
-                  <v-img
-                    :src="
-                      card.imageName.length == 0
-                        ? ''
-                        : require(`@/assets/${card.imageName}`)
-                    "
-                    :alt="card.name"
-                    class="white--text align-end"
-                    height="200px"
-                  >
-                    <v-card-title v-text="card.name"></v-card-title>
-                  </v-img>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-container> -->
+                <v-row class="d-flex align-start">
+                  <v-col cols="2" class="d-flex">
+                    <div class="mx-auto">
+                      <v-btn
+                        color="#627f9a"
+                        dark
+                        fab
+                        small
+                        depressed
+                        @click="
+                          dialogHelp = false;
+                          dialogLayers = true;
+                        "
+                      >
+                        <v-icon>mdi-layers-triple</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-col>
+                  <v-col cols="10">
+                    <p class="font-weight-bold mb-1">Tasot-valikko</p>
+                    Valitse kartalla näkyvät karttatasot.<br />
+                    Valikko on jaettu kategorioihin, joista osa sisältää
+                    alitasoja ja on avattavissa oikeassa reunassa olevasta
+                    nuolikuvakkeesta.<br />
+                    Kategorian voi piilottaa / tuoda näkyviin
+                    silmäkuvakkeesta.<br />
+                    Kategoriassa näkyvät valittuna olevat alitasot ('ruksi').<br />
+                    Hakutoiminnon kautta kartalle lisätyt hakutulokset näkyvät
+                    kategoriassa "Hakutulokset"<br />
+                  </v-col>
+                </v-row>
+
+                <v-row class="d-flex align-start">
+                  <v-col cols="2" class="d-flex">
+                    <div class="mx-auto">
+                      <v-btn
+                        color="#627f9a"
+                        dark
+                        fab
+                        small
+                        depressed
+                        @click="
+                          dialogHelp = false;
+                          toggleFullScreen();
+                        "
+                      >
+                        <v-icon>mdi-overscan</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-col>
+                  <v-col cols="10">
+                    <p class="font-weight-bold mb-1">Kokoruututila</p>
+                    Suurenna sovellus täyttämään koko ruutu ja palauta se
+                    takaisin.
+                  </v-col>
+                </v-row>
+
+                <v-row class="d-flex align-start">
+                  <v-col cols="2" class="d-flex">
+                    <div class="mx-auto">
+                      <v-btn
+                        color="#627f9a"
+                        dark
+                        fab
+                        small
+                        depressed
+                        @click="
+                          dialogHelp = false;
+                          showPosition.status = !showPosition.status;
+                          toggleShowAndUpdatePosition();
+                        "
+                      >
+                        <v-icon>mdi-crosshairs-gps</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-col>
+                  <v-col cols="10">
+                    <p class="font-weight-bold mb-1">Näytä sijainti</p>
+                    Näyttää käyttäjän sijainnin kartalla. Toimii parhaiten
+                    älypuhelimilla ja muilla laitteilla joissa on
+                    gps-vastaanotin.<br />
+                    Vihreä: päällä, harmaa: pois päältä.
+                  </v-col>
+                </v-row>
+
+                <v-row class="d-flex align-start">
+                  <v-col cols="2" class="d-flex">
+                    <div class="mx-auto">
+                      <v-btn
+                        color="#627f9a"
+                        dark
+                        fab
+                        small
+                        depressed
+                        @click="
+                          dialogHelp = false;
+                          keepMapCenteredToPosition = !keepMapCenteredToPosition;
+                        "
+                      >
+                        <v-icon>mdi-image-filter-center-focus</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-col>
+                  <v-col cols="10">
+                    <p class="font-weight-bold mb-1">Seuraa sijaintia</p>
+                    Siirtää karttapohjaa käyttäjän liikkuessa niin että
+                    sijaintikuvake pysyy aina näytön keskellä. Mikäli liikutat
+                    karttaa, toiminto kytkeytyy automaattisesti pois päältä.<br />
+                    Vihreä: päällä, harmaa: pois päältä.
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-tab-item>
+
+            <!-- Map symbols / legend -->
+            <v-tab-item>
+              <v-container fluid>
+                <v-row class="d-flex align-start">
+                  <v-col cols="2" class="d-flex">
+                    <div class="mx-auto">
+                      <v-btn color="#627f9a" dark fab small depressed>
+                        <v-icon>mdi-dots</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-col>
+                  <v-col cols="10">
+                    <p class="font-weight-bold mb-1">Tulossa...</p>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-tab-item>
+          </v-tabs-items>
         </v-card>
       </v-dialog>
     </template>
@@ -1308,6 +1458,7 @@ export default {
     dialogSearchTabs: null,
     dialogWelcome: true,
     dialogHelp: false,
+    dialogHelpTabs: null,
     virmaReititJson: {},
     searchOptions: {
       searchText: "",
