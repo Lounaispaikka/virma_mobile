@@ -12,13 +12,13 @@
         @click.stop="drawer = !drawer"
       /> -->
       <v-img
-        class="mx-2"
+        class="mx-2 d-none d-sm-inline"
         src="@/assets/virma_logo_green.png"
         max-height="50"
         max-width="100"
         contain
       ></v-img>
-      <v-toolbar-title class="d-none d-sm-flex" style="overflow:visible;"
+      <v-toolbar-title class="d-none d-md-flex" style="overflow:visible;"
         >Kartta</v-toolbar-title
       >
       <v-spacer></v-spacer>
@@ -27,19 +27,23 @@
         style="width:100%; max-width:500px;"
         class="d-flex justify-space-around"
       >
-        <v-btn icon x-large @click.stop="dialogSearch = !dialogSearch">
+        <v-btn icon large @click.stop="dialogSearch = !dialogSearch">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
         <!-- <v-spacer></v-spacer> -->
 
         <!-- TODO add tooltip -->
-        <v-btn icon x-large @click.stop="dialogLayers = !dialogLayers">
+        <v-btn icon large @click.stop="dialogLayers = !dialogLayers">
           <v-icon>mdi-layers-triple</v-icon>
         </v-btn>
         <!-- <v-spacer></v-spacer> -->
 
-        <v-btn icon x-large @click="toggleFullScreen">
+        <v-btn icon large @click="toggleFullScreen">
           <v-icon>mdi-overscan</v-icon>
+        </v-btn>
+
+        <v-btn icon large @click.stop="dialogHelp = !dialogHelp">
+          <v-icon>mdi-help</v-icon>
         </v-btn>
       </span>
 
@@ -1275,6 +1279,20 @@
                     <p class="font-weight-bold mb-1">Kokoruututila</p>
                     Suurenna sovellus täyttämään koko ruutu ja palauta se
                     takaisin.
+                  </v-col>
+                </v-row>
+
+                <v-row class="d-flex align-start">
+                  <v-col cols="2" class="d-flex">
+                    <div class="mx-auto">
+                      <v-btn color="#627f9a" dark fab small depressed>
+                        <v-icon>mdi-help</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-col>
+                  <v-col cols="10">
+                    <p class="font-weight-bold mb-1">Ohjeet</p>
+                    Näyttää tämän ohje-valikon.
                   </v-col>
                 </v-row>
 
