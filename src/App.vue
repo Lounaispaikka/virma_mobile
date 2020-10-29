@@ -830,28 +830,26 @@
                           v-model="item.checked"
                           @change="toggleChecked(item)"
                           class="ml-4 mt-0 py-0"
-                          ><template v-slot:label>
-                            <div>{{ item.name }}</div>
-                            <span v-if="item.hasOwnProperty('legend')">
-                              <svg
-                                width="200"
-                                height="10"
-                                v-if="item.legend.icon == 'route'"
-                              >
-                                <path
-                                  :d="mapLegendIcons.route"
-                                  :style="{
-                                    fill: 'none',
-                                    fillRule: 'evenodd',
-                                    stroke: item.legend.color,
-                                    strokeWidth: '2px',
-                                    strokeLinecap: 'butt',
-                                    strokeLinejoin: 'miter',
-                                    strokeOpacity: '1'
-                                  }"
-                                />
-                              </svg>
-                            </span>
+                        >
+                          <template v-slot:label>
+                            <div>
+                              {{ item.name }}
+                            </div>
+                          </template>
+
+                          <template v-slot:append>
+                            <v-img
+                              v-if="item.hasOwnProperty('legend')"
+                              :src="
+                                item.legend.imageName.length == 0
+                                  ? ''
+                                  : require(`@/assets/mapsymbols/${item.legend.imageName}`)
+                              "
+                              :alt="item.name"
+                              max-width="40px"
+                              max-height="40px"
+                              class=""
+                            ></v-img>
                           </template>
                         </v-checkbox>
 
@@ -909,30 +907,26 @@
                                     v-model="subItem.checked"
                                     @change="toggleChecked(subItem)"
                                     class="ml-4 mt-0 py-0"
-                                    ><template v-slot:label>
-                                      <div>{{ subItem.name }}</div>
-                                      <span
+                                  >
+                                    <template v-slot:label>
+                                      <div>
+                                        {{ subItem.name }}
+                                      </div>
+                                    </template>
+
+                                    <template v-slot:append>
+                                      <v-img
                                         v-if="subItem.hasOwnProperty('legend')"
-                                      >
-                                        <svg
-                                          width="200"
-                                          height="10"
-                                          v-if="subItem.legend.icon == 'route'"
-                                        >
-                                          <path
-                                            :d="mapLegendIcons.route"
-                                            :style="{
-                                              fill: 'none',
-                                              fillRule: 'evenodd',
-                                              stroke: subItem.legend.color,
-                                              strokeWidth: '2px',
-                                              strokeLinecap: 'butt',
-                                              strokeLinejoin: 'miter',
-                                              strokeOpacity: '1'
-                                            }"
-                                          />
-                                        </svg>
-                                      </span>
+                                        :src="
+                                          subItem.legend.imageName.length == 0
+                                            ? ''
+                                            : require(`@/assets/mapsymbols/${subItem.legend.imageName}`)
+                                        "
+                                        :alt="subItem.name"
+                                        max-width="40px"
+                                        max-height="40px"
+                                        class=""
+                                      ></v-img>
                                     </template>
                                   </v-checkbox>
 

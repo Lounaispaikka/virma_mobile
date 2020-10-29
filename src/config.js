@@ -242,8 +242,7 @@ export let renderStructureTEST = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            icon: "route",
-            color: "#369830"
+            imageName: "luontopolku_60px.png"
           }
         },
         {
@@ -254,8 +253,7 @@ export let renderStructureTEST = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            icon: "route",
-            color: "#d9500b"
+            imageName: "matkailureitti_60px.png"
           }
         },
         {
@@ -266,8 +264,7 @@ export let renderStructureTEST = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            icon: "route",
-            color: "#607aea"
+            imageName: "melontareitti_60px.png"
           }
         },
         {
@@ -278,8 +275,7 @@ export let renderStructureTEST = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            icon: "route",
-            color: "#ff0000"
+            imageName: "pyöräilyreitti_60px.png"
           }
         },
         {
@@ -290,8 +286,7 @@ export let renderStructureTEST = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            icon: "route",
-            color: "#00be8c"
+            imageName: "retkeilyreitti_60px.png"
           }
         },
         {
@@ -302,8 +297,7 @@ export let renderStructureTEST = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            icon: "route",
-            color: "#41e3e3"
+            imageName: "retkilatu_60px.png"
           }
         },
         {
@@ -314,8 +308,7 @@ export let renderStructureTEST = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            icon: "route",
-            color: "#2915fc"
+            imageName: "kuntoreitti_60px.png"
           }
         },
         {
@@ -326,8 +319,7 @@ export let renderStructureTEST = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            icon: "route",
-            color: "#fdbf6f"
+            imageName: "kulttuuriulkoilureitti_60px.png"
           }
         }
       ]
