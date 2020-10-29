@@ -446,22 +446,28 @@
                   </template>
 
                   <template v-else>
-                    <v-card-actions class="my-4 justify-center">
-                      <v-btn
-                        color="success"
-                        class="mr-2"
-                        width="380px"
-                        @click="showSearchResultsOnMap"
-                        >Näytä valitut kartalla ja sulje ikkuna</v-btn
-                      >
-                      <!-- TODO implement btn-handler! -->
-                      <v-btn
-                        color="warning"
-                        width="380px"
-                        @click="resetSelectedSearchResults"
-                      >
-                        Tyhjennä valinnat
-                      </v-btn>
+                    <v-card-actions class="my-4">
+                      <v-row class="">
+                        <v-col>
+                          <v-btn
+                            color="success"
+                            class="mr-2 mb-4"
+                            width="380px"
+                            cols="12"
+                            @click="showSearchResultsOnMap"
+                            >Näytä valitut kartalla ja sulje ikkuna</v-btn
+                          >
+                          <v-btn
+                            color="warning"
+                            class="mb-4"
+                            width="380px"
+                            cols="12"
+                            @click="resetSelectedSearchResults"
+                          >
+                            Tyhjennä valinnat
+                          </v-btn>
+                        </v-col>
+                      </v-row>
                     </v-card-actions>
 
                     <!-- Points -->
