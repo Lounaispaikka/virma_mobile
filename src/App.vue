@@ -2593,6 +2593,7 @@ export default {
           features: [feature]
         };
         if (
+          featureCollectionWrapper.features[0].geometry.type == "Point" ||
           featureCollectionWrapper.features[0].geometry.type == "MultiPoint"
         ) {
           // Add MultiPoint
@@ -2611,7 +2612,8 @@ export default {
           ]);
         } else if (
           featureCollectionWrapper.features[0].geometry.type ==
-          "MultiLineString"
+            "MultiLineString" ||
+          featureCollectionWrapper.features[0].geometry.type == "LineString"
         ) {
           // Add MultiLineString
           this.channel.postRequest("MapModulePlugin.AddFeaturesToMapRequest", [
@@ -3004,11 +3006,17 @@ export default {
      */
     parseSearchResults: function(featureCollection) {
       featureCollection.features.map(feature => {
-        if (feature.geometry.type == "MultiPoint") {
+        if (
+          feature.geometry.type == "Point" ||
+          feature.geometry.type == "MultiPoint"
+        ) {
           this.searchResults.points.objects.push(feature);
         }
 
-        if (feature.geometry.type == "MultiLineString") {
+        if (
+          feature.geometry.type == "MultiLineString" ||
+          feature.geometry.type == "LineString"
+        ) {
           this.searchResults.routes.objects.push(feature);
         }
       });
