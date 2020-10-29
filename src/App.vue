@@ -1356,16 +1356,104 @@
             <!-- Map symbols / legend -->
             <v-tab-item>
               <v-container fluid>
+                <!-- Virkistysreitit -->
                 <v-row class="d-flex align-start">
+                  <v-col cols="12" class="d-flex">
+                    <div class="ml-10">
+                      <p class="text-h6 mb-1">Virkistysreitit</p>
+                    </div>
+                  </v-col>
+                </v-row>
+
+                <v-row
+                  class="d-flex align-start"
+                  v-for="route in helpDialogSymbols.routes"
+                  :key="route.key"
+                >
                   <v-col cols="2" class="d-flex">
                     <div class="mx-auto">
-                      <v-btn color="#627f9a" dark fab small depressed>
-                        <v-icon>mdi-dots</v-icon>
-                      </v-btn>
+                      <v-img
+                        :src="
+                          route.imageName.length == 0
+                            ? ''
+                            : require(`@/assets/mapsymbols/${route.imageName}`)
+                        "
+                        :alt="route.key"
+                        class="mt-4"
+                      ></v-img>
                     </div>
                   </v-col>
                   <v-col cols="10">
-                    <p class="font-weight-bold mb-1">Tulossa...</p>
+                    <p class="font-weight-bold mb-1">{{ route.key }}</p>
+                    {{ route.description }}
+                  </v-col>
+                </v-row>
+
+                <!-- Virkistyskohteet -->
+                <v-row class="d-flex align-start mt-8">
+                  <v-col cols="12" class="d-flex">
+                    <div class="ml-10">
+                      <p class="text-h6 mb-1">Virkistyskohteet</p>
+                    </div>
+                  </v-col>
+                </v-row>
+
+                <v-row
+                  class="d-flex align-start"
+                  v-for="point in helpDialogSymbols.pointsRecreation"
+                  :key="point.key"
+                >
+                  <v-col cols="2" class="d-flex">
+                    <div class="mx-auto">
+                      <v-img
+                        :src="
+                          point.imageName.length == 0
+                            ? ''
+                            : require(`@/assets/mapsymbols/${point.imageName}`)
+                        "
+                        :alt="point.key"
+                        max-width="40px"
+                        max-height="40px"
+                      ></v-img>
+                    </div>
+                  </v-col>
+                  <v-col cols="10">
+                    <p class="font-weight-bold mb-1">{{ point.key }}</p>
+                    {{ point.description }}
+                  </v-col>
+                </v-row>
+
+                <!-- Matkailukohteet -->
+                <v-row class="d-flex align-start mt-8">
+                  <v-col cols="12" class="d-flex">
+                    <div class="ml-10">
+                      <p class="text-h6 mb-1">Matkailukohteet</p>
+                    </div>
+                  </v-col>
+                </v-row>
+
+                <v-row
+                  class="d-flex align-start"
+                  v-for="point in helpDialogSymbols.pointsTravel"
+                  :key="point.key"
+                >
+                  <v-col cols="2" class="d-flex">
+                    <div class="mx-auto">
+                      <v-img
+                        :src="
+                          point.imageName.length == 0
+                            ? ''
+                            : require(`@/assets/mapsymbols/${point.imageName}`)
+                        "
+                        :alt="point.key"
+                        max-width="40px"
+                        max-height="40px"
+                      ></v-img>
+                    </div>
+                  </v-col>
+                  <v-col cols="10">
+                    <p class="font-weight-bold mb-1">{{ point.key }}</p>
+                    {{ point.description }}
                   </v-col>
                 </v-row>
               </v-container>
@@ -1627,7 +1715,358 @@ export default {
     },
     backGroundMaps: {}, // loaded from config.js
     renderStructureTEST: {}, // loaded from config.js
-    welcomeContent: {} // loaded from config.js in mounted-property
+    welcomeContent: {}, // loaded from config.js in mounted-property
+    helpDialogSymbols: {
+      // place images to assets/mapsymbols/
+      routes: [
+        {
+          key: "Retkeilyreitti",
+          description:
+            "Patikointiin tarkoitettu, yleensä vähintään useita kilometrejä pitkä reitti, joka on yleensä maastossa viitoitettu.",
+          imageName: "retkeilyreitti_60px.jpg"
+        },
+        {
+          key: "Luontopolku",
+          description:
+            "Suhteellisen lyhyt luonnossa kulkeva polku, jonka varrella on yleensä luontoon ja polun ympäristöön liittyviä opastauluja. Opastussisältö voi olla myös digitaalista mobiililaitteilla luettavaa.",
+          imageName: "luontopolku_60px.jpg"
+        },
+        {
+          key: "Kulttuuriulkoilureitti",
+          description:
+            "Yleisesti kulttuuriympäristöön, kulttuuriperintöön ja kulttuurimaisemaan pohjautuva reitti. Reitti voi kulkea paikoin myös hyvin urbaanissa ympäristössä.",
+          imageName: "kulttuuriulkoilureitti_60px.jpg"
+        },
+        {
+          key: "Hevosreitti",
+          description: "Ratsastuskäyttöön suunnattu virkistysreitti.",
+          imageName: ""
+        },
+        {
+          key: "Maastopyöräilyreitti",
+          description:
+            "Pääsääntöisesti tai kokonaan maastopyöräilyyn tarkoitettu reitti.",
+          imageName: ""
+        },
+        {
+          key: "Melontareitti",
+          description:
+            "Melontaan tarkoitettu reitti, jonka varrella on yleensä kanootin nosto- ja laskupaikkoja sekä mahdollisuus kantaa kanootti kosken tai padon ohi.",
+          imageName: "melontareitti_60px.jpg"
+        },
+        {
+          key: "Kuntoreitti",
+          description:
+            "Yleensä valaistu juoksuun tai hölkkäämiseen tarkoitettu reitti puru- tai sorapinnoitteella. ",
+          imageName: "kuntoreitti_60px.jpg"
+        },
+        {
+          key: "Retkilatu",
+          description:
+            "Retkihiihtoon tarkoitettu latupohja. Yleensä perinteisen tyylin latu. Retkiladun ura voi olla merkitty myös vesialueelle, jolloin latu tehdään jäätilanteen niin salliessa.",
+          imageName: "retkilatu_60px.jpg"
+        },
+        {
+          key: "Matkailureitti",
+          description:
+            "Yleensä kymmeniä kilometrejä pitkä reitti, joka on suunniteltu kuljettavan muulla tavoin kuin kävellen esim. autolla tai ryhmämatkailubussilla.",
+          imageName: "matkailureitti_60px.jpg"
+        },
+        {
+          key: "Pyöräilyreitti",
+          description: "Pyöräilyyn tarkoitettu tiepohjia noudattava reitti.",
+          imageName: "pyöräilyreitti_60px.jpg"
+        }
+      ],
+      pointsRecreation: [
+        {
+          key: "Luonto-tai lintutorni",
+          description: "Lintujen tai maiseman tarkasteluun tarkoitettu torni",
+          imageName: "lintutorni_40px.jpg"
+        },
+        {
+          key: "Kalastuspaikka",
+          description: "Erityisesti kalastukseen tarkoitettu paikka",
+          imageName: "kalastuspaikka_40px.jpg"
+        },
+        {
+          key: "Rantautumispaikka",
+          description:
+            "Paikka, jossa on mahdollisuus rantautua veneellä tai kanootilla",
+          imageName: "rantautumispaikka_40px.jpg"
+        },
+        {
+          key: "Veneenlaskupaikka",
+          description:
+            "Paikka, jossa on mahdollisuus laskea vene tai kanootti trailerilta veteen ramppia pitkin",
+          imageName: "veneenlaskupaikka_40px.jpg"
+        },
+        {
+          key: "Opastuspiste",
+          description:
+            "Piste, joka tarjoaa tietoa esim. reitistä tai kohteesta. Ei henkilökuntaa.",
+          imageName: "opastuspiste_40px.jpg"
+        },
+        {
+          key: "Opastuskeskus",
+          description:
+            "Piste, joka tarjoaa tietoa esim. reitistä tai kohteesta. Usein rakennus tai laajempi infokokonaisuus. Opastuskeskuksessa on yleensä myös henkilökuntaa ainakin osan ajasta.",
+          imageName: "opastuskeskus_40px.jpg"
+        },
+        {
+          key: "Yleisö-wc tai -puucee",
+          description:
+            "Retkeilijöitä tai kävijöitä palveleva yleisesti avoinna oleva wc",
+          imageName: "yleisöwc_40px.jpg"
+        },
+        {
+          key: "Levähdyspaikka",
+          description:
+            "Yleensä penkki tai penkkipöytäyhdistelmä, jossa voi levähtää reittiä kulkiessa. Ei tulentekomahdollisuutta.",
+          imageName: "levähdyspaikka_40px.jpg"
+        },
+        {
+          key: "Tulipaikka",
+          description:
+            "Yleensä reitin varrella tai virkistyskohteessa oleva paikka, jossa on mahdollisuus tehdä tulet. Tulipaikalla voi olla polttopuuhuolto, mutta voi myös olla että paikalle pitää ottaa omat polttopuut mukaan.",
+          imageName: "tulipaikka_40px.jpg"
+        },
+        {
+          key: "Keittokatos-/ruoanlaittopaikka",
+          description:
+            "Katettu tulipaikka, jossa on mahdollisuus grillata tai tehdä ruokaa",
+          imageName: "keittokatos_40px.jpg"
+        },
+        {
+          key: "Vesipiste",
+          description: "Juotavaksi kelpaavan veden jakelupiste. ",
+          imageName: ""
+        },
+        {
+          key: "Telttailupaikka",
+          description: "Erityisesti telttailuun tarkoitettu alue.",
+          imageName: "telttailupaikka_40px.jpg"
+        },
+        {
+          key: "Yöpymislaavu tai -kota",
+          description: "Yöpymiseen tarkoitettu makuulaavu tai -kota.",
+          imageName: "yöpymislaavu_40px.jpg"
+        },
+        {
+          key: "Päivälaavu tai -kota",
+          description: "Päiväkäyttöön tarkoitettu laavu tai kota.",
+          imageName: "päivälaavu_40px.jpg"
+        },
+        {
+          key: "Tupa",
+          description: "Yöpymiseen tai päiväkäyttöön tarkoitettu sisätila.",
+          imageName: "tupa_40px.jpg"
+        },
+        {
+          key: "Retkeilyä palveleva parkkipaikka",
+          description:
+            "Yleensä retkeilyreitin aloituspisteeseen tai virkistyskohteen yhteyteen sijoitettu parkkialue",
+          imageName: "retkeilyparkkipaikka_40px.jpg"
+        },
+        {
+          key: "Virkistysreitin lähtöpiste",
+          description:
+            "Piste joka on suunniteltu virkistysreitin lähtöpaikaksi.",
+          imageName: "virkistysreitin_lähtöpiste_40px.jpg"
+        },
+        {
+          key: "Melontareitin lähtöpiste",
+          description: "Piste joka on suunniteltu melontareitin lähtöpaikaksi.",
+          imageName: ""
+        },
+        {
+          key: "Retkiluistelureitin lähtöpiste",
+          description:
+            "Piste joka on suunniteltu retkiluistelureitin lähtöpaikaksi.",
+          imageName: ""
+        },
+        {
+          key: "Retkiladun lähtöpiste",
+          description:
+            "Piste joka on suunniteltu retkihiihtoladun lähtöpaikaksi.",
+          imageName: ""
+        },
+        {
+          key: "Uimapaikka",
+          description: "Yleinen uimapaikka.",
+          imageName: "uimapaikka_40px.jpg"
+        },
+        {
+          key: "Uimaranta",
+          description:
+            "Yleinen uimapaikka, jossa voi olla ajoittain uimavalvontaa ja muita palveluita.",
+          imageName: "uimaranta_40px.jpg"
+        },
+        {
+          key: "Sauna",
+          description:
+            "Yleinen sauna, jonne voi olla pieni saunamaksu. Yleensä tällaisella saunalla on tietyt ajat, jolloin saunaan voi mennä ilman varausta. Sauna voi toimia varaussaunana osan aikaa.",
+          imageName: "sauna_40px.jpg"
+        },
+        {
+          key: "Talviuimapaikka",
+          description:
+            "Yleinen uimapaikka myös talvikäyttöön. Yleensä talviuimapaikalla on myös sauna.",
+          imageName: "talviuimapaikka_40px.jpg"
+        },
+        {
+          key: "Luonnonmuistomerkki tai näköalapaikka",
+          description:
+            "Luonnon erityislaatuinen kohde tai luontainen näköalapaikka esim. linnavuori tai muu korkea paikka.",
+          imageName: "luonnonmuistomerkki_40px.jpg"
+        },
+        {
+          key: "Suojasatama",
+          description: "Tuulelta suojainen satamapaikka.",
+          imageName: "suojasatama_40px.jpg"
+        },
+        {
+          key: "Turvasatama",
+          description:
+            "Tuulelta suojainen satamapaikka, jonne voi tilapäisesti rantautua.",
+          imageName: ""
+        },
+        {
+          key: "Retki- tai luonnonsatama",
+          description:
+            "Yleinen, kaikille avoin satama, jossa ei yleensä ole palveluita.",
+          imageName: "retkisatama_40px.jpg"
+        },
+        {
+          key: "Ankkuripaikka",
+          description: "Suojainen paikka, jonne voi ankkuroitua.",
+          imageName: "ankkuripaikka.jpg"
+        },
+        {
+          key: "Hätäsatama",
+          description: "Hätätilassa käytettävä satamapaikka.",
+          imageName: "hätäsatama_40px.jpg"
+        },
+        {
+          key: "Lähde tai kaivo",
+          description:
+            "Vesipisteenä oleva lähde tai kaivo, jonka vesi on suoraan tai keittämällä turvallista juotavaksi.",
+          imageName: ""
+        },
+        {
+          key: "Jätepiste",
+          description:
+            "Retkeilijöiden käyttöön tarkoitettu jäte- tai kierrätyspiste.",
+          imageName: "jätepiste_40px.jpg"
+        },
+        {
+          key: "Polttopuusuoja",
+          description:
+            "Polttopuuhuollettujen tulipaikkojen ja laavujen polttopuiden säilytykseen tarkoitettu vaja.",
+          imageName: "polttopuusuoja_40px.jpg"
+        },
+        {
+          key: "Virkistykseen liittyvä erityiskohde",
+          description: "Muu erityinen virkistyskohde.",
+          imageName: "virkistyserityiskohde_40px.jpg"
+        }
+      ],
+      pointsTravel: [
+        {
+          key: "Palvelusatama",
+          description:
+            "Veneilyä palveleva satama, jossa on usein jokin palvelu, kuten kierrätyspiste.",
+          imageName: "palvelusatama_40px.jpg"
+        },
+        {
+          key: "Leirintä- tai caravanalue",
+          description:
+            "Alue, jossa voi leiriytyä tai yöpyä asuntovaunulla tai autolla. Maksulliset palvelut.",
+          imageName: "leirintäalue_40px.jpg"
+        },
+        {
+          key: "Kulttuuripalvelu",
+          description: "Matkailuun liittyvä kulttuuripalvelu.",
+          imageName: "kulttuuripalvelu_40px.jpg"
+        },
+        {
+          key: "Ulkoilu- tai hiihtomaja",
+          description:
+            "Ulkoiluun liittyvä kohde, jossa on sesongin aikana yleensä jotain palvelua.",
+          imageName: "ulkoiluhiihtomaja_40px.jpg"
+        },
+        {
+          key: "Ruokapalvelu",
+          description:
+            "Matkailijoille ruokapalveluita tarjoava yritys. Voi myös toimittaa catering-palveluita maastoon.",
+          imageName: ""
+        },
+        {
+          key: "Vieraslaituri",
+          description:
+            "Laituri, johon voi jättää veneen esim. kylässä asiointia varten. Yleensä ei muita palveluita.",
+          imageName: "vieraslaituri_40px.jpg"
+        },
+        {
+          key: "Käyntisatama",
+          description:
+            "Veneilyä palveleva satama, jossa on yleensä joitain palveluita, mutta vierassatamaa vähemmän. Veneilysesongin aikana satamassa voi olla henkilökuntaa.",
+          imageName: "käyntisatama_40px.jpg"
+        },
+        {
+          key: "Leirikeskus",
+          description:
+            "Varauksesta käyttöön saatava tai tietylle ryhmälle kuten seurakunnan jäsenille tarkoitettu leirikeskus.",
+          imageName: "leirikeskus_40px.jpg"
+        },
+        {
+          key: "Yhteysaluslaituri",
+          description: "Laituri, johon liikennöi yhteysalus.",
+          imageName: "yhteysaluslaituri_40px.jpg"
+        },
+        {
+          key: "Majoituspalvelu",
+          description:
+            "Majoituspalvelua retkeilijöille ja matkailijoille tarjoava kohde.",
+          imageName: "majoituspalvelu_40px.jpg"
+        },
+        {
+          key: "Opaspalvelu",
+          description:
+            "Retkeilijöille tai matkailijoille opastusta tarjoava palvelu. Usein opastusta on saatavissa palvelun lähiseudulle ja erilaisista teemoista esim. kulttuuriympäristö, historia tai luonto",
+          imageName: ""
+        },
+        {
+          key: "Ohjelma- tai elämyspalvelu",
+          description:
+            "Matkailijoille tai retkeilijöille ohjelmapalveluita tarjoava yritys tai yhteisö.",
+          imageName: ""
+        },
+        {
+          key: "Tilavuokraus- tai kokouspalvelu",
+          description:
+            "Matkailijoille tai retkeilijöille kokous- tai kokoontumistiloja vuokraava yritys tai yhteisö.",
+          imageName: "tilavuokraus_40px.jpg"
+        },
+        {
+          key: "Varauslaavu tai -kota",
+          description:
+            "Ennakkovarauksesta käyttöön saatava tai vuokrattava laavu tai kota. ",
+          imageName: "varauslaavu_40px.jpg"
+        },
+        {
+          key: "Vierassatama",
+          description:
+            "Veneilyä palveleva satama, jossa on erittäin hyvä palveluvarustus ja paikalla on henkilökuntaa veneilysesongin aikana. Yleensä ainakin  osa palveluista on maksullisia.",
+          imageName: "vierassatama_40px.jpg"
+        },
+        {
+          key: "Varaussauna",
+          description: "Varauksesta käyttöön saatava tai vuokrattava sauna.",
+          imageName: ""
+        }
+      ]
+    }
   }),
 
   computed: {
