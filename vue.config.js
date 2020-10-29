@@ -5,5 +5,8 @@ module.exports = {
       entry: "src/main.js",
       title: "Virma Kartta"
     }
+  },
+  configureWebpack: {
+    devtool: "source-map"
   }
 };
