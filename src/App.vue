@@ -1113,9 +1113,17 @@
             </v-btn>
           </v-toolbar>
 
-          <v-card-text class="">
-            Virma Kartta on sitä ja tätä...<br />
-            Tästä pääset suoraan suosituimpiin johonkin tai voit ...
+          <v-card-text style="color: rgba(0,0,0,1);">
+            <p>
+              Virma Kartan avulla voit tarkastella Varsinais-Suomen
+              virkistyskohteita ja -reittejä.<br />
+              Voit tutkia reaaliaikaisesti omaa sijaintiasi reitillä tai
+              esimerkiksi etsiä lähimmät uimarannat tai matkailupalvelut. Löydät
+              palvelusta jo yli 1000 kohdetta, ja määrä kasvaa koko ajan.
+            </p>
+            <p>
+              Tästä pääset suoraan suosituimpiin reitteihimme sekä kohteisiin!
+            </p>
           </v-card-text>
 
           <v-container fluid>

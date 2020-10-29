@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 export let mapLegend = {
+  // TODO not in use anymore?
   icons: {
     route: "m 10,7 c 6.6,-6.1 8.7,-3.5 13.8,-0.6 4.3,2.5 10.8,-5.43 10.8,-5.4"
   }
@@ -7,7 +8,7 @@ export let mapLegend = {
 
 export let mapConfig = {
   mapAddress:
-    "https://karttapalvelu.lounaistieto.fi/?lang=fi&uuid=a953c872-e32a-4c0f-a364-2c97d64f31a6"
+    "https://karttapalvelu.lounaistieto.fi/?lang=fi&uuid=f18aacd7-765a-4b08-8996-8aa0d27eb2a9"
 };
 
 export let searchConfig = {
@@ -16,7 +17,10 @@ export let searchConfig = {
     "https://geoserver.lounaistieto.fi/geoserver/virma/wfs?request=GetFeature&service=WFS&version=1.0.0&outputFormat=application%2Fjson&typeName=",
   //geoserverRoutesTypeName: "virma:virma_reitit_avoin",
   geoserverRoutesTypeName: "virma:virma_reitit_kaikki",
-  geoserverPointsTypeName: "virma:virma_kohteet_avoin",
+  //geoserverPointsTypeName: "virma:points_virkistyskohteet",
+  //geoserverPointsTypeName: "virma:points_matkailupalvelukohteet",
+  geoserverPointsTypeName: "virma:virma_kohteet_kaikki",
+  // geoserverPointsTypeName: "virma:virma_kohteet_avoin",
 
   CQLFilters: {
     freeTextFilter: function(searchText) {
@@ -59,7 +63,7 @@ export let welcomeContent = {
       id: 1304, // layer id:s are logged to console when logLayerInfoToConsole = true
       columnWidth: 12, // on xs (<600px) always 12, this overrides when >600px
       bgColor: "", // overrides defaultBgColor if set
-      imageName: "retkeilyreitti2.jpg", // place images to /src/assets/
+      imageName: "Hierkonpolku_DSC_9195_Terhi Ajosenpää_800px.jpg", // place images to /src/assets/
       internalFunction: "", // can be used to invoke a function in App.vue (like Ohjeet)
       externalLink: "" // can be used to open external link in new tab
     },
@@ -68,16 +72,16 @@ export let welcomeContent = {
       id: 1300,
       columnWidth: 6,
       bgColor: "",
-      imageName: "luontopolku.jpg",
+      imageName: "Kasberget_infotaulu_kalliolla_Lasse_Nurmi_800px.jpg",
       internalFunction: "",
       externalLink: ""
     },
     {
       name: "Virkistyskohteet",
-      id: 1049,
+      id: 1349,
       columnWidth: 6,
       bgColor: "",
-      imageName: "uimaranta.jpg",
+      imageName: "Hierkonpolku_DSC_9174_Terhi Ajosenpää_800px.jpg",
       internalFunction: "",
       externalLink: ""
     },
@@ -97,7 +101,7 @@ export let welcomeContent = {
       bgColor: "#b8cf69",
       imageName: "",
       internalFunction: "",
-      externalLink: "https://spark.adobe.com/page/7z6hnUA4TWVul/"
+      externalLink: "https://valonia.fi/virmaesite"
     }
   ]
 };
@@ -130,7 +134,7 @@ export let backGroundMaps = {
 };
 
 export let renderStructureTEST = {
-  logLayerInfoToConsole: true,
+  logLayerInfoToConsole: false,
   layersLoaded: false, // TODO why these (layersLoaded and parentPointersSet) are here - they are not configs?
   parentPointersSet: false, // TODO use this in v-if instead of layersLoaded
   openOnStartUp: [], // Use the same way as in backGroundMaps
@@ -195,7 +199,7 @@ export let renderStructureTEST = {
     // Kohteet
     {
       name: "Varsinais-Suomen virkistyskohteet",
-      id: 1049, //1166, // layer id:s are logged to console when logLayerInfoToConsole = true
+      id: 1349, //1166, // layer id:s are logged to console when logLayerInfoToConsole = true
       type: "wms",
       visible: false, // visibility on startup
       checked: null, // null unless renderAs == "checkbox"
@@ -209,7 +213,7 @@ export let renderStructureTEST = {
 
     {
       name: "Varsinais-Suomen luontomatkailupalvelut",
-      id: 1049, //1166, // TODO Add layer in Karttapalvelu (and here...)
+      id: 1355, //1166, // TODO Add layer in Karttapalvelu (and here...)
       type: "wms",
       visible: false,
       checked: null,
@@ -349,19 +353,19 @@ export let renderStructureTEST = {
             backgroundColor: "",
             class: ""
           }
-        },
-        {
-          name: "Harjureitti",
-          id: 1202,
-          type: "wms",
-          visible: false,
-          checked: false,
-          renderAs: "checkbox",
-          style: {
-            backgroundColor: "",
-            class: ""
-          }
         }
+        // {
+        //   name: "Harjureitti",
+        //   id: 1202, // TODO get right layer from Karttapalvelu
+        //   type: "wms",
+        //   visible: false,
+        //   checked: false,
+        //   renderAs: "checkbox",
+        //   style: {
+        //     backgroundColor: "",
+        //     class: ""
+        //   }
+        // }
       ]
     },
 
