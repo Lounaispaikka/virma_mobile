@@ -122,6 +122,7 @@
       <v-dialog
         v-model="dialogSearch"
         persistent
+        scrollable
         max-width="1600px"
         :fullscreen="$vuetify.breakpoint.xsOnly"
       >
@@ -154,26 +155,285 @@
               </v-tabs>
             </template>
           </v-toolbar>
+          <v-card-text>
+            <v-tabs-items v-model="dialogSearchTabs">
+              <!-- Search options -->
+              <v-tab-item class="py-4">
+                <v-row justify="center" class="mx-0">
+                  <v-card
+                    width="100%"
+                    max-width="650px"
+                    flat
+                    class="ma-2"
+                    :min-height="
+                      $vuetify.breakpoint.smAndUp
+                        ? $vuetify.breakpoint.height - 300
+                        : ''
+                    "
+                  >
+                    <v-container>
+                      <template v-if="!renderStructureTEST.layersLoaded">
+                        <div class="text-center">
+                          <h4 class="mb-4">Karttatasoja haetaan</h4>
+                          <v-progress-circular
+                            :size="50"
+                            color="primary"
+                            indeterminate
+                          ></v-progress-circular>
+                        </div>
+                      </template>
 
-          <v-tabs-items v-model="dialogSearchTabs">
-            <!-- Search options -->
-            <v-tab-item class="py-4">
-              <v-row justify="center" class="mx-0">
-                <v-card
-                  width="100%"
-                  max-width="650px"
-                  flat
-                  class="ma-2"
-                  :min-height="
-                    $vuetify.breakpoint.smAndUp
-                      ? $vuetify.breakpoint.height - 300
-                      : ''
-                  "
-                >
-                  <v-container>
-                    <template v-if="!renderStructureTEST.layersLoaded">
+                      <template v-else>
+                        <v-form ref="searchForm">
+                          <v-text-field
+                            v-model="searchOptions.searchText"
+                            hint="Esim. Kurjenrahka"
+                            label="Vapaasanahaku"
+                            clearable
+                            outlined
+                            class="mb-2"
+                          ></v-text-field>
+
+                          <v-select
+                            v-model="searchOptions.selectedRouteOrPoint"
+                            :items="searchOptions.routeOrPoint"
+                            :menu-props="{ bottom: true, offsetY: true }"
+                            label="Reitti / Kohde"
+                            multiple
+                            outlined
+                            style="min-height: 48px;"
+                            hint="placeholder for v-slot:message"
+                          >
+                            <template v-slot:selection="{ item }">
+                              <v-chip>
+                                <span>{{ item }}</span>
+                              </v-chip>
+                            </template>
+                            <template v-slot:message>
+                              <span
+                                >Rajoita haku vain valittuihin<br />
+                                (jos et rajoita hakua niin etsitään kaikista
+                                reiteistä ja kohteista)</span
+                              >
+                            </template>
+                          </v-select>
+
+                          <v-select
+                            v-if="
+                              searchOptions.selectedRouteOrPoint.length == 0 ||
+                                searchOptions.selectedRouteOrPoint.includes(
+                                  'Reitti'
+                                )
+                            "
+                            v-model="searchOptions.selectedRouteTypes"
+                            :items="searchOptions.routeTypes"
+                            :menu-props="{ bottom: true, offsetY: true }"
+                            label="Reittityyppi"
+                            multiple
+                            outlined
+                            style="min-height: 48px;"
+                            hint="placeholder for v-slot:message"
+                            class="mb-2"
+                          >
+                            <template v-slot:selection="{ item, index }">
+                              <v-chip v-if="index === 0">
+                                <span>{{ item }}</span>
+                              </v-chip>
+                              <span
+                                v-if="index === 1"
+                                class="grey--text caption"
+                                >(+{{
+                                  searchOptions.selectedRouteTypes.length - 1
+                                }}
+                                muuta)</span
+                              >
+                            </template>
+                            <template v-slot:message>
+                              <span
+                                >Rajoita haku vain valittuihin reittityyppeihin<br />
+                                (jos et rajoita hakua niin etsitään kaikista
+                                reittityypeistä)</span
+                              >
+                            </template>
+                          </v-select>
+
+                          <v-select
+                            v-if="
+                              searchOptions.selectedRouteOrPoint.length == 0 ||
+                                searchOptions.selectedRouteOrPoint.includes(
+                                  'Kohde'
+                                )
+                            "
+                            v-model="searchOptions.selectedPointTypes"
+                            :items="searchOptions.pointTypes"
+                            :menu-props="{ bottom: true, offsetY: true }"
+                            label="Kohdetyyppi"
+                            multiple
+                            outlined
+                            style="min-height: 48px;"
+                            hint="placeholder for v-slot:message"
+                            class="mb-2"
+                          >
+                            <template v-slot:selection="{ item, index }">
+                              <v-chip v-if="index === 0">
+                                <span>{{ item }}</span>
+                              </v-chip>
+                              <span v-if="index === 1" class="grey--text caption"
+                                >(+{{
+                                  searchOptions.selectedPointTypes.length - 1
+                                }}
+                                muuta)</span
+                              >
+                            </template>
+                            <template v-slot:message>
+                              <span
+                                >Rajoita haku vain valittuihin kohdetyyppeihin<br />
+                                (jos et rajoita hakua niin etsitään kaikista
+                                kohdetyypeistä)</span
+                              >
+                            </template>
+                          </v-select>
+
+                          <v-select
+                            v-model="searchOptions.selectedMunicipalities"
+                            :items="searchOptions.municipalities"
+                            :menu-props="{ bottom: true, offsetY: true }"
+                            label="Sijaintikunta"
+                            multiple
+                            outlined
+                            style="min-height: 48px;"
+                            hint="placeholder for v-slot:message"
+                            class="mb-2"
+                          >
+                            <template v-slot:selection="{ item, index }">
+                              <v-chip v-if="index === 0">
+                                <span>{{ item }}</span>
+                              </v-chip>
+                              <span v-if="index === 1" class="grey--text caption"
+                                >(+{{
+                                  searchOptions.selectedMunicipalities.length - 1
+                                }}
+                                muuta)</span
+                              >
+                            </template>
+                            <template v-slot:message>
+                              <span
+                                >Rajoita haku vain valittuihin kuntiin<br />
+                                (jos et rajoita hakua niin etsitään kaikista
+                                kunnista)</span
+                              >
+                            </template>
+                          </v-select>
+
+                          <v-subheader class="pl-0" style="font-size: 16px;">
+                            Etäisyys sijainnistani korkeintaan
+                            <span
+                              v-if="
+                                searchOptions.maxDistanceFromCurrentLocation != 0
+                              "
+                              style="white-space: pre-wrap;"
+                              >:
+                              {{ searchOptions.maxDistanceFromCurrentLocation }}
+                              km
+                            </span>
+                          </v-subheader>
+                          <v-slider
+                            v-model="searchOptions.maxDistanceFromCurrentLocation"
+                            thumb-label
+                          ></v-slider>
+
+                          <v-container
+                            class="pl-0"
+                            v-if="
+                              searchOptions.selectedRouteOrPoint.length == 0 ||
+                                searchOptions.selectedRouteOrPoint.includes(
+                                  'Reitti'
+                                )
+                            "
+                          >
+                            <v-subheader class="pl-0" style="font-size: 16px;">
+                              Reitin pituus
+                              <span
+                                v-if="
+                                  searchOptions.routeLengthRange[0] != 0 &&
+                                    searchOptions.routeLengthRange[1] != 100
+                                "
+                                style="white-space: pre-wrap;"
+                                >: {{ searchOptions.routeLengthRange[0] }} -
+                                {{ searchOptions.routeLengthRange[1] }} km
+                              </span>
+                              <span
+                                v-if="
+                                  searchOptions.routeLengthRange[0] == 0 &&
+                                    searchOptions.routeLengthRange[1] != 100
+                                "
+                                style="white-space: pre-wrap;"
+                                >: alle {{ searchOptions.routeLengthRange[1] }} km
+                              </span>
+                              <span
+                                v-if="
+                                  searchOptions.routeLengthRange[0] != 0 &&
+                                    searchOptions.routeLengthRange[1] == 100
+                                "
+                                style="white-space: pre-wrap;"
+                                >: yli {{ searchOptions.routeLengthRange[0] }} km
+                              </span>
+                            </v-subheader>
+                            <v-range-slider
+                              v-model="searchOptions.routeLengthRange"
+                              thumb-label
+                              min="0"
+                              max="100"
+                            ></v-range-slider>
+                          </v-container>
+                        </v-form>
+                      </template>
+                    </v-container>
+
+                    <v-card-actions
+                      v-if="renderStructureTEST.layersLoaded"
+                      class="justify-center"
+                    >
+                      <v-btn
+                        color="success"
+                        class="mr-2"
+                        width="120px"
+                        @click="searchRoutesAndPoints"
+                      >
+                        Hae
+                      </v-btn>
+
+                      <v-btn
+                        color="warning"
+                        width="120px"
+                        @click="
+                          resetSearchForm();
+                          resetSearchResults();
+                        "
+                      >
+                        Tyhjennä
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-row>
+              </v-tab-item>
+
+              <!-- Search results -->
+              <v-tab-item class="py-4">
+                <v-row justify="center" class="mx-0">
+                  <v-card
+                    width="100%"
+                    flat
+                    class="ma-2 px-2"
+                    :min-height="
+                      $vuetify.breakpoint.smAndUp
+                        ? $vuetify.breakpoint.height - 300
+                        : ''
+                    "
+                  >
+                    <template v-if="searchResults.searchOngoing">
                       <div class="text-center">
-                        <h4 class="mb-4">Karttatasoja haetaan</h4>
+                        <h4 class="mt-8 mb-4">Haku käynnissä</h4>
                         <v-progress-circular
                           :size="50"
                           color="primary"
@@ -182,436 +442,180 @@
                       </div>
                     </template>
 
-                    <template v-else>
-                      <v-form ref="searchForm">
-                        <v-text-field
-                          v-model="searchOptions.searchText"
-                          hint="Esim. Kurjenrahka"
-                          label="Vapaasanahaku"
-                          clearable
-                          outlined
-                          class="mb-2"
-                        ></v-text-field>
-
-                        <v-select
-                          v-model="searchOptions.selectedRouteOrPoint"
-                          :items="searchOptions.routeOrPoint"
-                          :menu-props="{ bottom: true, offsetY: true }"
-                          label="Reitti / Kohde"
-                          multiple
-                          outlined
-                          style="min-height: 48px;"
-                          hint="placeholder for v-slot:message"
-                        >
-                          <template v-slot:selection="{ item }">
-                            <v-chip>
-                              <span>{{ item }}</span>
-                            </v-chip>
-                          </template>
-                          <template v-slot:message>
-                            <span
-                              >Rajoita haku vain valittuihin<br />
-                              (jos et rajoita hakua niin etsitään kaikista
-                              reiteistä ja kohteista)</span
-                            >
-                          </template>
-                        </v-select>
-
-                        <v-select
-                          v-if="
-                            searchOptions.selectedRouteOrPoint.length == 0 ||
-                              searchOptions.selectedRouteOrPoint.includes(
-                                'Reitti'
-                              )
-                          "
-                          v-model="searchOptions.selectedRouteTypes"
-                          :items="searchOptions.routeTypes"
-                          :menu-props="{ bottom: true, offsetY: true }"
-                          label="Reittityyppi"
-                          multiple
-                          outlined
-                          style="min-height: 48px;"
-                          hint="placeholder for v-slot:message"
-                          class="mb-2"
-                        >
-                          <template v-slot:selection="{ item, index }">
-                            <v-chip v-if="index === 0">
-                              <span>{{ item }}</span>
-                            </v-chip>
-                            <span v-if="index === 1" class="grey--text caption"
-                              >(+{{
-                                searchOptions.selectedRouteTypes.length - 1
-                              }}
-                              muuta)</span
-                            >
-                          </template>
-                          <template v-slot:message>
-                            <span
-                              >Rajoita haku vain valittuihin reittityyppeihin<br />
-                              (jos et rajoita hakua niin etsitään kaikista
-                              reittityypeistä)</span
-                            >
-                          </template>
-                        </v-select>
-
-                        <v-select
-                          v-if="
-                            searchOptions.selectedRouteOrPoint.length == 0 ||
-                              searchOptions.selectedRouteOrPoint.includes(
-                                'Kohde'
-                              )
-                          "
-                          v-model="searchOptions.selectedPointTypes"
-                          :items="searchOptions.pointTypes"
-                          :menu-props="{ bottom: true, offsetY: true }"
-                          label="Kohdetyyppi"
-                          multiple
-                          outlined
-                          style="min-height: 48px;"
-                          hint="placeholder for v-slot:message"
-                          class="mb-2"
-                        >
-                          <template v-slot:selection="{ item, index }">
-                            <v-chip v-if="index === 0">
-                              <span>{{ item }}</span>
-                            </v-chip>
-                            <span v-if="index === 1" class="grey--text caption"
-                              >(+{{
-                                searchOptions.selectedPointTypes.length - 1
-                              }}
-                              muuta)</span
-                            >
-                          </template>
-                          <template v-slot:message>
-                            <span
-                              >Rajoita haku vain valittuihin kohdetyyppeihin<br />
-                              (jos et rajoita hakua niin etsitään kaikista
-                              kohdetyypeistä)</span
-                            >
-                          </template>
-                        </v-select>
-
-                        <v-select
-                          v-model="searchOptions.selectedMunicipalities"
-                          :items="searchOptions.municipalities"
-                          :menu-props="{ bottom: true, offsetY: true }"
-                          label="Sijaintikunta"
-                          multiple
-                          outlined
-                          style="min-height: 48px;"
-                          hint="placeholder for v-slot:message"
-                          class="mb-2"
-                        >
-                          <template v-slot:selection="{ item, index }">
-                            <v-chip v-if="index === 0">
-                              <span>{{ item }}</span>
-                            </v-chip>
-                            <span v-if="index === 1" class="grey--text caption"
-                              >(+{{
-                                searchOptions.selectedMunicipalities.length - 1
-                              }}
-                              muuta)</span
-                            >
-                          </template>
-                          <template v-slot:message>
-                            <span
-                              >Rajoita haku vain valittuihin kuntiin<br />
-                              (jos et rajoita hakua niin etsitään kaikista
-                              kunnista)</span
-                            >
-                          </template>
-                        </v-select>
-
-                        <v-subheader class="pl-0" style="font-size: 16px;">
-                          Etäisyys sijainnistani korkeintaan
-                          <span
-                            v-if="
-                              searchOptions.maxDistanceFromCurrentLocation != 0
-                            "
-                            style="white-space: pre-wrap;"
-                            >:
-                            {{ searchOptions.maxDistanceFromCurrentLocation }}
-                            km
-                          </span>
-                        </v-subheader>
-                        <v-slider
-                          v-model="searchOptions.maxDistanceFromCurrentLocation"
-                          thumb-label
-                        ></v-slider>
-
-                        <v-container
-                          class="pl-0"
-                          v-if="
-                            searchOptions.selectedRouteOrPoint.length == 0 ||
-                              searchOptions.selectedRouteOrPoint.includes(
-                                'Reitti'
-                              )
-                          "
-                        >
-                          <v-subheader class="pl-0" style="font-size: 16px;">
-                            Reitin pituus
-                            <span
-                              v-if="
-                                searchOptions.routeLengthRange[0] != 0 &&
-                                  searchOptions.routeLengthRange[1] != 100
-                              "
-                              style="white-space: pre-wrap;"
-                              >: {{ searchOptions.routeLengthRange[0] }} -
-                              {{ searchOptions.routeLengthRange[1] }} km
-                            </span>
-                            <span
-                              v-if="
-                                searchOptions.routeLengthRange[0] == 0 &&
-                                  searchOptions.routeLengthRange[1] != 100
-                              "
-                              style="white-space: pre-wrap;"
-                              >: alle {{ searchOptions.routeLengthRange[1] }} km
-                            </span>
-                            <span
-                              v-if="
-                                searchOptions.routeLengthRange[0] != 0 &&
-                                  searchOptions.routeLengthRange[1] == 100
-                              "
-                              style="white-space: pre-wrap;"
-                              >: yli {{ searchOptions.routeLengthRange[0] }} km
-                            </span>
-                          </v-subheader>
-                          <v-range-slider
-                            v-model="searchOptions.routeLengthRange"
-                            thumb-label
-                            min="0"
-                            max="100"
-                          ></v-range-slider>
-                        </v-container>
-                      </v-form>
+                    <template v-else-if="!hasSearchResults">
+                      <div class="text-center">
+                        <h4 class="mt-8">Ei hakutuloksia</h4>
+                      </div>
                     </template>
-                  </v-container>
 
-                  <v-card-actions
-                    v-if="renderStructureTEST.layersLoaded"
-                    class="justify-center"
-                  >
-                    <v-btn
-                      color="success"
-                      class="mr-2"
-                      width="120px"
-                      @click="searchRoutesAndPoints"
-                    >
-                      Hae
-                    </v-btn>
+                    <template v-else>
+                      <v-card-actions class="my-4">
+                        <v-row class="">
+                          <v-col>
+                            <v-btn
+                              color="success"
+                              class="mr-2 mb-4"
+                              width="380px"
+                              cols="12"
+                              @click="showSearchResultsOnMap"
+                              >Näytä valitut kartalla ja sulje ikkuna</v-btn
+                            >
+                            <v-btn
+                              color="warning"
+                              class="mb-4"
+                              width="380px"
+                              cols="12"
+                              @click="resetSelectedSearchResults"
+                            >
+                              Tyhjennä valinnat
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                      </v-card-actions>
 
-                    <v-btn
-                      color="warning"
-                      width="120px"
-                      @click="
-                        resetSearchForm();
-                        resetSearchResults();
-                      "
-                    >
-                      Tyhjennä
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-row>
-            </v-tab-item>
-
-            <!-- Search results -->
-            <v-tab-item class="py-4">
-              <v-row justify="center" class="mx-0">
-                <v-card
-                  width="100%"
-                  flat
-                  class="ma-2 px-2"
-                  :min-height="
-                    $vuetify.breakpoint.smAndUp
-                      ? $vuetify.breakpoint.height - 300
-                      : ''
-                  "
-                >
-                  <template v-if="searchResults.searchOngoing">
-                    <div class="text-center">
-                      <h4 class="mt-8 mb-4">Haku käynnissä</h4>
-                      <v-progress-circular
-                        :size="50"
-                        color="primary"
-                        indeterminate
-                      ></v-progress-circular>
-                    </div>
-                  </template>
-
-                  <template v-else-if="!hasSearchResults">
-                    <div class="text-center">
-                      <h4 class="mt-8">Ei hakutuloksia</h4>
-                    </div>
-                  </template>
-
-                  <template v-else>
-                    <v-card-actions class="my-4">
-                      <v-row class="">
-                        <v-col>
-                          <v-btn
-                            color="success"
-                            class="mr-2 mb-4"
-                            width="380px"
-                            cols="12"
-                            @click="showSearchResultsOnMap"
-                            >Näytä valitut kartalla ja sulje ikkuna</v-btn
-                          >
-                          <v-btn
-                            color="warning"
-                            class="mb-4"
-                            width="380px"
-                            cols="12"
-                            @click="resetSelectedSearchResults"
-                          >
-                            Tyhjennä valinnat
-                          </v-btn>
-                        </v-col>
-                      </v-row>
-                    </v-card-actions>
-
-                    <!-- Points -->
-                    <v-card
-                      color="#e4effa"
-                      class="px-2 pb-2"
-                      v-if="searchResults.points.objects.length > 0"
-                    >
-                      <v-card-title>
-                        Kohteet ( {{ searchResults.points.objects.length }} )
-                        <v-spacer></v-spacer>
-                        <v-text-field
-                          v-model="searchResults.points.search"
-                          append-icon="mdi-magnify"
-                          label="Suodata kohteista"
-                          single-line
-                          hide-details
-                        ></v-text-field>
-                      </v-card-title>
-                      <v-data-table
-                        :headers="searchResults.resultHeadersPoints"
-                        :items="searchResults.points.objects"
-                        :items-per-page="5"
-                        :search="searchResults.points.search"
-                        :expanded.sync="searchResults.points.expanded"
-                        show-select
-                        show-expand
-                        single-expand
-                        multi-sort
-                        v-model="searchResults.points.selected"
-                        :footer-props="{
-                          itemsPerPageText: 'Rivejä yhdellä sivulla'
-                        }"
+                      <!-- Points -->
+                      <v-card
+                        color="#e4effa"
+                        class="px-2 pb-2"
+                        v-if="searchResults.points.objects.length > 0"
                       >
-                        <template v-slot:[`footer.page-text`]="props">
-                          {{ props.pageStart }}-{{ props.pageStop }} /
-                          {{ props.itemsLength }}
-                        </template>
-
-                        <template v-slot:expanded-item="{ headers, item }">
-                          <td :colspan="headers.length" class="mb-2 pl-sm-14">
-                            <div class="pa-4">
-                              <p v-if="item.properties.info_fi">
-                                {{ item.properties.info_fi }}
-                              </p>
-                              <p v-if="item.properties.www_fi">
-                                <a
-                                  :href="item.properties.www_fi"
-                                  target="_blank"
-                                  >{{ item.properties.www_fi }}
-                                </a>
-                                <br />(avautuu uuteen ikkunaan)
-                              </p>
-                              <p
-                                v-if="
-                                  !item.properties.info_fi &&
-                                    !item.properties.www_fi
-                                "
-                              >
-                                Ei lisätietoja
-                              </p>
-                            </div>
-                          </td>
-                        </template>
-
-                        <!-- <template
-                          v-if="$vuetify.breakpoint.xsOnly"
-                          v-slot:item.properties.name_fi="{ item }"
+                        <v-card-title>
+                          Kohteet ( {{ searchResults.points.objects.length }} )
+                          <v-spacer></v-spacer>
+                          <v-text-field
+                            v-model="searchResults.points.search"
+                            append-icon="mdi-magnify"
+                            label="Suodata kohteista"
+                            single-line
+                            hide-details
+                          ></v-text-field>
+                        </v-card-title>
+                        <v-data-table
+                          :headers="searchResults.resultHeadersPoints"
+                          :items="searchResults.points.objects"
+                          :items-per-page="5"
+                          :search="searchResults.points.search"
+                          :expanded.sync="searchResults.points.expanded"
+                          show-select
+                          show-expand
+                          single-expand
+                          multi-sort
+                          v-model="searchResults.points.selected"
+                          :footer-props="{
+                            itemsPerPageText: 'Rivejä yhdellä sivulla'
+                          }"
                         >
-                         Buu: {{ item.properties.name_fi }}
-                        </template> -->
-                      </v-data-table>
-                    </v-card>
+                          <template v-slot:[`footer.page-text`]="props">
+                            {{ props.pageStart }}-{{ props.pageStop }} /
+                            {{ props.itemsLength }}
+                          </template>
 
-                    <!-- Routes -->
-                    <v-card
-                      color="#e4effa"
-                      class="px-2 pb-2 mt-4"
-                      v-if="searchResults.routes.objects.length > 0"
-                    >
-                      <v-card-title>
-                        <!-- TODO maybe a bit prettier with count smaller and grey? -->
-                        Reitit ( {{ searchResults.routes.objects.length }} )
-                        <v-spacer></v-spacer>
-                        <v-text-field
-                          v-model="searchResults.routes.search"
-                          append-icon="mdi-magnify"
-                          label="Suodata reiteistä"
-                          single-line
-                          hide-details
-                        ></v-text-field>
-                      </v-card-title>
-                      <v-data-table
-                        :headers="searchResults.resultHeadersRoutes"
-                        :items="searchResults.routes.objects"
-                        :items-per-page="5"
-                        :search="searchResults.routes.search"
-                        :expanded.sync="searchResults.routes.expanded"
-                        show-select
-                        show-expand
-                        single-expand
-                        multi-sort
-                        v-model="searchResults.routes.selected"
-                        :footer-props="{
-                          itemsPerPageText: 'Rivejä yhdellä sivulla'
-                        }"
+                          <template v-slot:expanded-item="{ headers, item }">
+                            <td :colspan="headers.length" class="mb-2 pl-sm-14">
+                              <div class="pa-4">
+                                <p v-if="item.properties.info_fi">
+                                  {{ item.properties.info_fi }}
+                                </p>
+                                <p v-if="item.properties.www_fi">
+                                  <a
+                                    :href="item.properties.www_fi"
+                                    target="_blank"
+                                    >{{ item.properties.www_fi }}
+                                  </a>
+                                  <br />(avautuu uuteen ikkunaan)
+                                </p>
+                                <p
+                                  v-if="
+                                    !item.properties.info_fi &&
+                                      !item.properties.www_fi
+                                  "
+                                >
+                                  Ei lisätietoja
+                                </p>
+                              </div>
+                            </td>
+                          </template>
+
+                          <!-- <template
+                            v-if="$vuetify.breakpoint.xsOnly"
+                            v-slot:item.properties.name_fi="{ item }"
+                          >
+                          Buu: {{ item.properties.name_fi }}
+                          </template> -->
+                        </v-data-table>
+                      </v-card>
+
+                      <!-- Routes -->
+                      <v-card
+                        color="#e4effa"
+                        class="px-2 pb-2 mt-4"
+                        v-if="searchResults.routes.objects.length > 0"
                       >
-                        <template v-slot:[`footer.page-text`]="props">
-                          {{ props.pageStart }}-{{ props.pageStop }} /
-                          {{ props.itemsLength }}
-                        </template>
+                        <v-card-title>
+                          <!-- TODO maybe a bit prettier with count smaller and grey? -->
+                          Reitit ( {{ searchResults.routes.objects.length }} )
+                          <v-spacer></v-spacer>
+                          <v-text-field
+                            v-model="searchResults.routes.search"
+                            append-icon="mdi-magnify"
+                            label="Suodata reiteistä"
+                            single-line
+                            hide-details
+                          ></v-text-field>
+                        </v-card-title>
+                        <v-data-table
+                          :headers="searchResults.resultHeadersRoutes"
+                          :items="searchResults.routes.objects"
+                          :items-per-page="5"
+                          :search="searchResults.routes.search"
+                          :expanded.sync="searchResults.routes.expanded"
+                          show-select
+                          show-expand
+                          single-expand
+                          multi-sort
+                          v-model="searchResults.routes.selected"
+                          :footer-props="{
+                            itemsPerPageText: 'Rivejä yhdellä sivulla'
+                          }"
+                        >
+                          <template v-slot:[`footer.page-text`]="props">
+                            {{ props.pageStart }}-{{ props.pageStop }} /
+                            {{ props.itemsLength }}
+                          </template>
 
-                        <template v-slot:expanded-item="{ headers, item }">
-                          <td :colspan="headers.length" class="mb-2 pl-sm-14">
-                            <div class="pa-4">
-                              <p v-if="item.properties.info_fi">
-                                {{ item.properties.info_fi }}
-                              </p>
-                              <p v-if="item.properties.www_fi">
-                                <a
-                                  :href="item.properties.www_fi"
-                                  target="_blank"
-                                  >{{ item.properties.www_fi }}
-                                </a>
-                                <br />(avautuu uuteen ikkunaan)
-                              </p>
-                              <p
-                                v-if="
-                                  !item.properties.info_fi &&
-                                    !item.properties.www_fi
-                                "
-                              >
-                                Ei lisätietoja
-                              </p>
-                            </div>
-                          </td>
-                        </template>
-                      </v-data-table>
-                    </v-card>
-                  </template>
-                </v-card>
-              </v-row>
-            </v-tab-item>
-          </v-tabs-items>
+                          <template v-slot:expanded-item="{ headers, item }">
+                            <td :colspan="headers.length" class="mb-2 pl-sm-14">
+                              <div class="pa-4">
+                                <p v-if="item.properties.info_fi">
+                                  {{ item.properties.info_fi }}
+                                </p>
+                                <p v-if="item.properties.www_fi">
+                                  <a
+                                    :href="item.properties.www_fi"
+                                    target="_blank"
+                                    >{{ item.properties.www_fi }}
+                                  </a>
+                                  <br />(avautuu uuteen ikkunaan)
+                                </p>
+                                <p
+                                  v-if="
+                                    !item.properties.info_fi &&
+                                      !item.properties.www_fi
+                                  "
+                                >
+                                  Ei lisätietoja
+                                </p>
+                              </div>
+                            </td>
+                          </template>
+                        </v-data-table>
+                      </v-card>
+                    </template>
+                  </v-card>
+                </v-row>
+              </v-tab-item>
+            </v-tabs-items>
+          </v-card-text>
         </v-card>
       </v-dialog>
     </template>
@@ -621,6 +625,7 @@
       <v-dialog
         v-model="dialogLayers"
         persistent
+        scrollable
         max-width="700"
         :fullscreen="$vuetify.breakpoint.xsOnly"
       >
@@ -646,354 +651,153 @@
             </v-btn>
           </v-toolbar>
 
-          <v-row justify="center" class="mx-0">
-            <v-card width="100%" max-width="650px" flat class="ma-2">
-              <template v-if="!renderStructureTEST.layersLoaded">
-                <div class="text-center">
-                  <h4 class="mb-4">Karttatasoja haetaan</h4>
-                  <v-progress-circular
-                    :size="50"
-                    color="primary"
-                    indeterminate
-                  ></v-progress-circular>
-                </div>
-              </template>
-
-              <template v-else>
-                <!-- Selected search results -->
-                <template>
-                  <v-expansion-panels class="mb-4">
-                    <v-expansion-panel style="backgroundColor: #eedbad;">
-                      <v-expansion-panel-header class="my-0 py-0">
-                        <v-container fluid class="ma-0 pa-0">
-                          <v-row>
-                            <v-col cols="10">
-                              <!-- v-model="layer.visible" -->
-                              <v-checkbox
-                                @click.native.stop
-                                @change="toggleVisibilityOfSearchResults"
-                                v-model="selectedSearchResultLayers.visible"
-                                on-icon="mdi-eye"
-                                off-icon="mdi-eye-off"
-                                class="my-0 py-0"
-                                style="height: 20px;"
-                                ><template v-slot:label>
-                                  <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
-                                  <span
-                                    class="d-inline-block text-truncate"
-                                    style="max-width: 250px;"
-                                  >
-                                    Hakutulokset (
-                                    {{
-                                      selectedSearchResultLayers.selectedPoints
-                                        .length +
-                                        selectedSearchResultLayers
-                                          .selectedRoutes.length
-                                    }}
-                                    )
-                                  </span>
-                                </template>
-                              </v-checkbox>
-                            </v-col>
-                            <!-- <v-col
-                              cols="2"
-                              class="text-right pr-4"
-                              style="line-height:24px;"
-                              >1/3</v-col
-                            > -->
-                            <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
-                          </v-row>
-                        </v-container>
-                      </v-expansion-panel-header>
-
-                      <v-expansion-panel-content>
-                        <template v-if="!hasSelectedFeaturesInLayersMenu">
-                          <div class="pl-8">
-                            Ei tuloksia, käytä Hakutoimintoa
-                            <v-btn
-                              color="#627f9a"
-                              dark
-                              fab
-                              small
-                              depressed
-                              class="mx-2"
-                              @click="
-                                {
-                                  dialogLayers = false;
-                                  dialogSearch = true;
-                                }
-                              "
-                              ><v-icon>mdi-magnify</v-icon></v-btn
-                            >
-                            ja valitse "Näytä valitut kartalla"
-                          </div>
-                        </template>
-                        <template v-else>
-                          <div
-                            v-for="pointItem in selectedSearchResultLayers.selectedPoints"
-                            :key="pointItem.id"
-                            max-width="100%"
-                            class="ml-4 mt-0 py-0"
-                          >
-                            <v-checkbox
-                              v-model="pointItem.checked"
-                              @change="toggleCheckedSearchResult(pointItem)"
-                              class="ml-4 mt-0 py-0"
-                              ><template v-slot:label>
-                                <div>{{ pointItem.properties.name_fi }}</div>
-                              </template>
-                            </v-checkbox>
-                          </div>
-
-                          <div
-                            v-for="routeItem in selectedSearchResultLayers.selectedRoutes"
-                            :key="routeItem.id"
-                            max-width="100%"
-                            class="ml-4 mt-0 py-0"
-                          >
-                            <v-checkbox
-                              v-model="routeItem.checked"
-                              @change="toggleCheckedSearchResult(routeItem)"
-                              class="ml-4 mt-0 py-0"
-                              ><template v-slot:label>
-                                <div>{{ routeItem.properties.name_fi }}</div>
-                              </template>
-                            </v-checkbox>
-                          </div>
-                        </template>
-                      </v-expansion-panel-content>
-                    </v-expansion-panel>
-                  </v-expansion-panels>
+          <v-card-text>
+            <v-row justify="center" class="mx-0">
+              <v-card width="100%" max-width="650px" flat class="ma-2">
+                <template v-if="!renderStructureTEST.layersLoaded">
+                  <div class="text-center">
+                    <h4 class="mb-4">Karttatasoja haetaan</h4>
+                    <v-progress-circular
+                      :size="50"
+                      color="primary"
+                      indeterminate
+                    ></v-progress-circular>
+                  </div>
                 </template>
-                <!-- Menu-layers -->
-                <v-expansion-panels
-                  class="mb-4"
-                  v-model="renderStructureTEST.openOnStartUp"
-                  multiple
-                >
-                  <!-- Level 0 -->
-                  <v-expansion-panel
-                    v-for="(layer, i) in renderStructureTEST.layers"
-                    :key="i"
-                    :style="layer.style"
-                    :class="layer.style.class"
-                  >
-                    <v-expansion-panel-header
-                      :expand-icon="
-                        layer.subContent.length == 0 ? '' : undefined
-                      "
-                      :disabled="layer.subContent.length == 0 ? true : false"
-                      class="my-0 py-0"
-                    >
-                      <v-container fluid class="ma-0 pa-0">
-                        <v-row>
-                          <v-col cols="10">
-                            <v-checkbox
-                              @click.native.stop
-                              @change="toggleVisibility(layer)"
-                              v-model="layer.visible"
-                              on-icon="mdi-eye"
-                              off-icon="mdi-eye-off"
-                              class="my-0 py-0"
-                              style="height: 20px;"
-                              ><template v-slot:label>
-                                <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
-                                <span
-                                  class="d-inline-block text-truncate"
-                                  style="max-width: 350px;"
-                                >
-                                  {{ layer.name }}
-                                </span>
-                              </template>
-                            </v-checkbox>
-                          </v-col>
-                          <!-- <v-col
-                            cols="2"
-                            class="text-right pr-4"
-                            style="line-height:24px;"
-                            >1/3</v-col
-                          > -->
-                          <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
-                        </v-row>
-                      </v-container>
-                    </v-expansion-panel-header>
 
-                    <v-expansion-panel-content>
-                      <div
-                        v-for="(item, i) in layer.subContent"
-                        :key="i"
-                        max-width="100%"
-                        class="ml-4 mt-0 py-0"
-                      >
-                        <v-checkbox
-                          v-if="item.renderAs == 'checkbox'"
-                          v-model="item.checked"
-                          @change="toggleChecked(item)"
-                          class="ml-4 mt-0 py-0"
-                        >
-                          <template v-slot:label>
-                            <div>
-                              {{ item.name }}
+                <template v-else>
+                  <!-- Selected search results -->
+                  <template>
+                    <v-expansion-panels class="mb-4">
+                      <v-expansion-panel style="backgroundColor: #eedbad;">
+                        <v-expansion-panel-header class="my-0 py-0">
+                          <v-container fluid class="ma-0 pa-0">
+                            <v-row>
+                              <v-col cols="10">
+                                <!-- v-model="layer.visible" -->
+                                <v-checkbox
+                                  @click.native.stop
+                                  @change="toggleVisibilityOfSearchResults"
+                                  v-model="selectedSearchResultLayers.visible"
+                                  on-icon="mdi-eye"
+                                  off-icon="mdi-eye-off"
+                                  class="my-0 py-0"
+                                  style="height: 20px;"
+                                  ><template v-slot:label>
+                                    <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                                    <span
+                                      class="d-inline-block text-truncate"
+                                      style="max-width: 250px;"
+                                    >
+                                      Hakutulokset (
+                                      {{
+                                        selectedSearchResultLayers.selectedPoints
+                                          .length +
+                                          selectedSearchResultLayers
+                                            .selectedRoutes.length
+                                      }}
+                                      )
+                                    </span>
+                                  </template>
+                                </v-checkbox>
+                              </v-col>
+                              <!-- <v-col
+                                cols="2"
+                                class="text-right pr-4"
+                                style="line-height:24px;"
+                                >1/3</v-col
+                              > -->
+                              <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                            </v-row>
+                          </v-container>
+                        </v-expansion-panel-header>
+
+                        <v-expansion-panel-content>
+                          <template v-if="!hasSelectedFeaturesInLayersMenu">
+                            <div class="pl-8">
+                              Ei tuloksia, käytä Hakutoimintoa
+                              <v-btn
+                                color="#627f9a"
+                                dark
+                                fab
+                                small
+                                depressed
+                                class="mx-2"
+                                @click="
+                                  {
+                                    dialogLayers = false;
+                                    dialogSearch = true;
+                                  }
+                                "
+                                ><v-icon>mdi-magnify</v-icon></v-btn
+                              >
+                              ja valitse "Näytä valitut kartalla"
                             </div>
                           </template>
+                          <template v-else>
+                            <div
+                              v-for="pointItem in selectedSearchResultLayers.selectedPoints"
+                              :key="pointItem.id"
+                              max-width="100%"
+                              class="ml-4 mt-0 py-0"
+                            >
+                              <v-checkbox
+                                v-model="pointItem.checked"
+                                @change="toggleCheckedSearchResult(pointItem)"
+                                class="ml-4 mt-0 py-0"
+                                ><template v-slot:label>
+                                  <div>{{ pointItem.properties.name_fi }}</div>
+                                </template>
+                              </v-checkbox>
+                            </div>
 
-                          <template v-slot:append>
-                            <v-img
-                              v-if="item.hasOwnProperty('legend')"
-                              :src="
-                                item.legend.imageName.length == 0
-                                  ? ''
-                                  : require(`@/assets/mapsymbols/${item.legend.imageName}`)
-                              "
-                              :alt="item.name"
-                              max-width="40px"
-                              max-height="40px"
-                              class=""
-                            ></v-img>
+                            <div
+                              v-for="routeItem in selectedSearchResultLayers.selectedRoutes"
+                              :key="routeItem.id"
+                              max-width="100%"
+                              class="ml-4 mt-0 py-0"
+                            >
+                              <v-checkbox
+                                v-model="routeItem.checked"
+                                @change="toggleCheckedSearchResult(routeItem)"
+                                class="ml-4 mt-0 py-0"
+                                ><template v-slot:label>
+                                  <div>{{ routeItem.properties.name_fi }}</div>
+                                </template>
+                              </v-checkbox>
+                            </div>
                           </template>
-                        </v-checkbox>
-
-                        <template v-else-if="item.renderAs == 'accordion'">
-                          <!-- Level 1 -->
-                          <v-expansion-panels>
-                            <v-expansion-panel>
-                              <v-expansion-panel-header
-                                :expand-icon="
-                                  item.subContent.length == 0 ? '' : undefined
-                                "
-                                :disabled="
-                                  item.subContent.length == 0 ? true : false
-                                "
-                                class="my-0 py-0"
-                              >
-                                <v-container fluid class="ma-0 pa-0">
-                                  <v-row>
-                                    <v-col cols="10">
-                                      <v-checkbox
-                                        @click.native.stop
-                                        @change="toggleVisibility(item)"
-                                        v-model="item.visible"
-                                        on-icon="mdi-eye"
-                                        off-icon="mdi-eye-off"
-                                        class="my-0 py-0"
-                                        style="height: 20px;"
-                                        ><template v-slot:label>
-                                          <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
-                                          <span
-                                            class="d-inline-block text-truncate"
-                                            style="max-width: 250px;"
-                                          >
-                                            {{ item.name }}
-                                          </span>
-                                        </template>
-                                      </v-checkbox>
-                                    </v-col>
-                                    <!-- <v-col cols="2" class="text-right" style="line-height:24px;">1/3</v-col> -->
-                                    <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
-                                  </v-row>
-                                </v-container>
-                              </v-expansion-panel-header>
-
-                              <v-expansion-panel-content>
-                                <!-- Level 2 -->
-                                <div
-                                  v-for="(subItem, i) in item.subContent"
-                                  :key="i"
-                                  max-width="100%"
-                                  class="ml-4 mt-0 py-0"
-                                >
-                                  <v-checkbox
-                                    v-if="subItem.renderAs == 'checkbox'"
-                                    v-model="subItem.checked"
-                                    @change="toggleChecked(subItem)"
-                                    class="ml-4 mt-0 py-0"
-                                  >
-                                    <template v-slot:label>
-                                      <div>
-                                        {{ subItem.name }}
-                                      </div>
-                                    </template>
-
-                                    <template v-slot:append>
-                                      <v-img
-                                        v-if="subItem.hasOwnProperty('legend')"
-                                        :src="
-                                          subItem.legend.imageName.length == 0
-                                            ? ''
-                                            : require(`@/assets/mapsymbols/${subItem.legend.imageName}`)
-                                        "
-                                        :alt="subItem.name"
-                                        max-width="40px"
-                                        max-height="40px"
-                                        class=""
-                                      ></v-img>
-                                    </template>
-                                  </v-checkbox>
-
-                                  <!-- Level 3 if needed -->
-                                  <!-- <template
-                                    v-else-if="subItem.renderAs == 'accordion'"
-                                  >
-                                    <v-expansion-panels>
-                                      <v-expansion-panel>
-                                        <v-expansion-panel-header>
-                                          {{ subItem.name }}
-                                        </v-expansion-panel-header>
-                                        <v-expansion-panel-content
-                                          max-width="100%"
-                                        >
-                                          <v-checkbox
-                                            v-for="(item, i) in 5"
-                                            :key="i"
-                                            :label="i + 1 + '. polku'"
-                                            checked
-                                            dense
-                                            class="ml-4 mt-0 pt-0"
-                                          ></v-checkbox>
-                                        </v-expansion-panel-content>
-                                      </v-expansion-panel>
-                                    </v-expansion-panels>
-                                  </template> -->
-
-                                  <template
-                                    v-else-if="subItem.renderAs == 'text'"
-                                  >
-                                    <p class="text-center">
-                                      <span v-html="subItem.name"></span>
-                                    </p>
-                                  </template>
-                                </div>
-                              </v-expansion-panel-content>
-                            </v-expansion-panel>
-                          </v-expansion-panels>
-                        </template>
-
-                        <template v-else-if="item.renderAs == 'text'">
-                          <p class="text-center">
-                            <span v-html="item.name"></span>
-                          </p>
-                        </template>
-                      </div>
-                    </v-expansion-panel-content>
-                  </v-expansion-panel>
-                </v-expansion-panels>
-
-                <!-- Backgroundmaps -->
-                <template>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                  </template>
+                  <!-- Menu-layers -->
                   <v-expansion-panels
                     class="mb-4"
-                    v-model="backGroundMaps.openOnStartUp"
+                    v-model="renderStructureTEST.openOnStartUp"
                     multiple
                   >
-                    <v-expansion-panel style="backgroundColor: #f7f7f7;">
-                      <v-expansion-panel-header class="my-0 py-0">
+                    <!-- Level 0 -->
+                    <v-expansion-panel
+                      v-for="(layer, i) in renderStructureTEST.layers"
+                      :key="i"
+                      :style="layer.style"
+                      :class="layer.style.class"
+                    >
+                      <v-expansion-panel-header
+                        :expand-icon="
+                          layer.subContent.length == 0 ? '' : undefined
+                        "
+                        :disabled="layer.subContent.length == 0 ? true : false"
+                        class="my-0 py-0"
+                      >
                         <v-container fluid class="ma-0 pa-0">
                           <v-row>
                             <v-col cols="10">
                               <v-checkbox
                                 @click.native.stop
-                                @change="toggleBackgroundMaps"
-                                v-model="backGroundMaps.visible"
+                                @change="toggleVisibility(layer)"
+                                v-model="layer.visible"
                                 on-icon="mdi-eye"
                                 off-icon="mdi-eye-off"
                                 class="my-0 py-0"
@@ -1002,9 +806,9 @@
                                   <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                                   <span
                                     class="d-inline-block text-truncate"
-                                    style="max-width: 250px;"
+                                    style="max-width: 350px;"
                                   >
-                                    Taustakartat
+                                    {{ layer.name }}
                                   </span>
                                 </template>
                               </v-checkbox>
@@ -1021,40 +825,248 @@
                       </v-expansion-panel-header>
 
                       <v-expansion-panel-content>
-                        <template>
-                          <v-radio-group
-                            v-model="backGroundMaps.selected"
-                            :mandatory="true"
-                            class="mt-0"
-                            @change="toggleBackgroundMaps"
+                        <div
+                          v-for="(item, i) in layer.subContent"
+                          :key="i"
+                          max-width="100%"
+                          class="ml-4 mt-0 py-0"
+                        >
+                          <v-checkbox
+                            v-if="item.renderAs == 'checkbox'"
+                            v-model="item.checked"
+                            @change="toggleChecked(item)"
+                            class="ml-4 mt-0 py-0"
                           >
-                            <div
-                              v-for="item in backGroundMaps.layers"
-                              :key="item.id"
-                              max-width="100%"
-                              class="ml-4 pl-4 mt-0 pb-4"
-                            >
-                              <v-radio
-                                :label="item.name"
-                                :value="item.id"
-                              ></v-radio>
-                            </div>
-                          </v-radio-group>
-                        </template>
+                            <template v-slot:label>
+                              <div>
+                                {{ item.name }}
+                              </div>
+                            </template>
+
+                            <template v-slot:append>
+                              <v-img
+                                v-if="item.hasOwnProperty('legend')"
+                                :src="
+                                  item.legend.imageName.length == 0
+                                    ? ''
+                                    : require(`@/assets/mapsymbols/${item.legend.imageName}`)
+                                "
+                                :alt="item.name"
+                                max-width="40px"
+                                max-height="40px"
+                                class=""
+                              ></v-img>
+                            </template>
+                          </v-checkbox>
+
+                          <template v-else-if="item.renderAs == 'accordion'">
+                            <!-- Level 1 -->
+                            <v-expansion-panels>
+                              <v-expansion-panel>
+                                <v-expansion-panel-header
+                                  :expand-icon="
+                                    item.subContent.length == 0 ? '' : undefined
+                                  "
+                                  :disabled="
+                                    item.subContent.length == 0 ? true : false
+                                  "
+                                  class="my-0 py-0"
+                                >
+                                  <v-container fluid class="ma-0 pa-0">
+                                    <v-row>
+                                      <v-col cols="10">
+                                        <v-checkbox
+                                          @click.native.stop
+                                          @change="toggleVisibility(item)"
+                                          v-model="item.visible"
+                                          on-icon="mdi-eye"
+                                          off-icon="mdi-eye-off"
+                                          class="my-0 py-0"
+                                          style="height: 20px;"
+                                          ><template v-slot:label>
+                                            <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                                            <span
+                                              class="d-inline-block text-truncate"
+                                              style="max-width: 250px;"
+                                            >
+                                              {{ item.name }}
+                                            </span>
+                                          </template>
+                                        </v-checkbox>
+                                      </v-col>
+                                      <!-- <v-col cols="2" class="text-right" style="line-height:24px;">1/3</v-col> -->
+                                      <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                                    </v-row>
+                                  </v-container>
+                                </v-expansion-panel-header>
+
+                                <v-expansion-panel-content>
+                                  <!-- Level 2 -->
+                                  <div
+                                    v-for="(subItem, i) in item.subContent"
+                                    :key="i"
+                                    max-width="100%"
+                                    class="ml-4 mt-0 py-0"
+                                  >
+                                    <v-checkbox
+                                      v-if="subItem.renderAs == 'checkbox'"
+                                      v-model="subItem.checked"
+                                      @change="toggleChecked(subItem)"
+                                      class="ml-4 mt-0 py-0"
+                                    >
+                                      <template v-slot:label>
+                                        <div>
+                                          {{ subItem.name }}
+                                        </div>
+                                      </template>
+
+                                      <template v-slot:append>
+                                        <v-img
+                                          v-if="subItem.hasOwnProperty('legend')"
+                                          :src="
+                                            subItem.legend.imageName.length == 0
+                                              ? ''
+                                              : require(`@/assets/mapsymbols/${subItem.legend.imageName}`)
+                                          "
+                                          :alt="subItem.name"
+                                          max-width="40px"
+                                          max-height="40px"
+                                          class=""
+                                        ></v-img>
+                                      </template>
+                                    </v-checkbox>
+
+                                    <!-- Level 3 if needed -->
+                                    <!-- <template
+                                      v-else-if="subItem.renderAs == 'accordion'"
+                                    >
+                                      <v-expansion-panels>
+                                        <v-expansion-panel>
+                                          <v-expansion-panel-header>
+                                            {{ subItem.name }}
+                                          </v-expansion-panel-header>
+                                          <v-expansion-panel-content
+                                            max-width="100%"
+                                          >
+                                            <v-checkbox
+                                              v-for="(item, i) in 5"
+                                              :key="i"
+                                              :label="i + 1 + '. polku'"
+                                              checked
+                                              dense
+                                              class="ml-4 mt-0 pt-0"
+                                            ></v-checkbox>
+                                          </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                      </v-expansion-panels>
+                                    </template> -->
+
+                                    <template
+                                      v-else-if="subItem.renderAs == 'text'"
+                                    >
+                                      <p class="text-center">
+                                        <span v-html="subItem.name"></span>
+                                      </p>
+                                    </template>
+                                  </div>
+                                </v-expansion-panel-content>
+                              </v-expansion-panel>
+                            </v-expansion-panels>
+                          </template>
+
+                          <template v-else-if="item.renderAs == 'text'">
+                            <p class="text-center">
+                              <span v-html="item.name"></span>
+                            </p>
+                          </template>
+                        </div>
                       </v-expansion-panel-content>
                     </v-expansion-panel>
                   </v-expansion-panels>
+
+                  <!-- Backgroundmaps -->
+                  <template>
+                    <v-expansion-panels
+                      class="mb-4"
+                      v-model="backGroundMaps.openOnStartUp"
+                      multiple
+                    >
+                      <v-expansion-panel style="backgroundColor: #f7f7f7;">
+                        <v-expansion-panel-header class="my-0 py-0">
+                          <v-container fluid class="ma-0 pa-0">
+                            <v-row>
+                              <v-col cols="10">
+                                <v-checkbox
+                                  @click.native.stop
+                                  @change="toggleBackgroundMaps"
+                                  v-model="backGroundMaps.visible"
+                                  on-icon="mdi-eye"
+                                  off-icon="mdi-eye-off"
+                                  class="my-0 py-0"
+                                  style="height: 20px;"
+                                  ><template v-slot:label>
+                                    <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                                    <span
+                                      class="d-inline-block text-truncate"
+                                      style="max-width: 250px;"
+                                    >
+                                      Taustakartat
+                                    </span>
+                                  </template>
+                                </v-checkbox>
+                              </v-col>
+                              <!-- <v-col
+                                cols="2"
+                                class="text-right pr-4"
+                                style="line-height:24px;"
+                                >1/3</v-col
+                              > -->
+                              <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                            </v-row>
+                          </v-container>
+                        </v-expansion-panel-header>
+
+                        <v-expansion-panel-content>
+                          <template>
+                            <v-radio-group
+                              v-model="backGroundMaps.selected"
+                              :mandatory="true"
+                              class="mt-0"
+                              @change="toggleBackgroundMaps"
+                            >
+                              <div
+                                v-for="item in backGroundMaps.layers"
+                                :key="item.id"
+                                max-width="100%"
+                                class="ml-4 pl-4 mt-0 pb-4"
+                              >
+                                <v-radio
+                                  :label="item.name"
+                                  :value="item.id"
+                                ></v-radio>
+                              </div>
+                            </v-radio-group>
+                          </template>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                  </template>
                 </template>
-              </template>
-            </v-card>
-          </v-row>
+              </v-card>
+            </v-row>
+          </v-card-text>
         </v-card>
       </v-dialog>
     </template>
 
     <!-- Show vector-feature info -dialog -->
     <template v-if="Object.entries(clickedVectorFeature).length > 0">
-      <v-dialog v-model="dialogVectorFeatureInfo" persistent max-width="700">
+      <v-dialog
+        v-model="dialogVectorFeatureInfo"
+        persistent
+        scrollable
+        max-width="700"
+      >
         <v-card>
           <v-toolbar flat>
             <v-spacer></v-spacer>
@@ -1068,38 +1080,45 @@
             </v-btn>
           </v-toolbar>
 
-          <v-row justify="center" class="mx-0">
-            <v-card width="100%" max-width="650px" flat class="ma-2">
-              <v-card-text>
-                <p>
-                  {{ clickedVectorFeature.properties.class2_fi }}<br />
-                  <span v-if="clickedVectorFeature.properties.address">
-                    {{ clickedVectorFeature.properties.address }},
-                    <span> </span>
-                    {{ clickedVectorFeature.properties.zip }}
-                    <span> </span>
-                  </span>
-                  {{ clickedVectorFeature.properties.municipali }}
-                </p>
-                <p>{{ clickedVectorFeature.properties.info_fi }}</p>
-                <p v-if="clickedVectorFeature.properties.www_fi">
-                  <a
-                    :href="clickedVectorFeature.properties.www_fi"
-                    target="_blank"
-                    >{{ clickedVectorFeature.properties.www_fi }}
-                  </a>
-                  <br />(avautuu uuteen ikkunaan)
-                </p>
-              </v-card-text>
-            </v-card>
-          </v-row>
+          <v-card-text>
+            <v-row justify="center" class="mx-0">
+              <v-card width="100%" max-width="650px" flat class="ma-2">
+                <v-card-text>
+                  <p>
+                    {{ clickedVectorFeature.properties.class2_fi }}<br />
+                    <span v-if="clickedVectorFeature.properties.address">
+                      {{ clickedVectorFeature.properties.address }},
+                      <span> </span>
+                      {{ clickedVectorFeature.properties.zip }}
+                      <span> </span>
+                    </span>
+                    {{ clickedVectorFeature.properties.municipali }}
+                  </p>
+                  <p>{{ clickedVectorFeature.properties.info_fi }}</p>
+                  <p v-if="clickedVectorFeature.properties.www_fi">
+                    <a
+                      :href="clickedVectorFeature.properties.www_fi"
+                      target="_blank"
+                      >{{ clickedVectorFeature.properties.www_fi }}
+                    </a>
+                    <br />(avautuu uuteen ikkunaan)
+                  </p>
+                </v-card-text>
+              </v-card>
+            </v-row>
+          </v-card-text>
         </v-card>
       </v-dialog>
     </template>
 
     <!-- Welcome-dialog -->
     <template>
-      <v-dialog v-model="dialogWelcome" persistent max-width="700">
+      <v-dialog
+        v-model="dialogWelcome"
+        persistent
+        scrollable
+        max-width="700"
+      >
         <v-card>
           <v-toolbar flat>
             <v-spacer></v-spacer>
@@ -1124,40 +1143,41 @@
             <p>
               Tästä pääset suoraan suosituimpiin reitteihimme sekä kohteisiin!
             </p>
-          </v-card-text>
+          
 
-          <v-container fluid>
-            <v-row dense>
-              <v-col
-                v-for="(card, index) in welcomeContent.items"
-                :key="index"
-                cols="12"
-                :sm="card.columnWidth"
-              >
-                <v-card
-                  :color="
-                    card.bgColor == ''
-                      ? welcomeContent.defaultBgColor
-                      : card.bgColor
-                  "
-                  @click="handleWelcomeDialogClick(card)"
+            <v-container fluid>
+              <v-row dense>
+                <v-col
+                  v-for="(card, index) in welcomeContent.items"
+                  :key="index"
+                  cols="12"
+                  :sm="card.columnWidth"
                 >
-                  <v-img
-                    :src="
-                      card.imageName.length == 0
-                        ? ''
-                        : require(`@/assets/${card.imageName}`)
+                  <v-card
+                    :color="
+                      card.bgColor == ''
+                        ? welcomeContent.defaultBgColor
+                        : card.bgColor
                     "
-                    :alt="card.name"
-                    class="white--text align-end"
-                    :height="welcomeContent.cardHeight"
+                    @click="handleWelcomeDialogClick(card)"
                   >
-                    <v-card-title v-text="card.name"></v-card-title>
-                  </v-img>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-container>
+                    <v-img
+                      :src="
+                        card.imageName.length == 0
+                          ? ''
+                          : require(`@/assets/${card.imageName}`)
+                      "
+                      :alt="card.name"
+                      class="white--text align-end"
+                      :height="welcomeContent.cardHeight"
+                    >
+                      <v-card-title v-text="card.name"></v-card-title>
+                    </v-img>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
         </v-card>
       </v-dialog>
     </template>
@@ -1167,6 +1187,7 @@
       <v-dialog
         v-model="dialogHelp"
         persistent
+        scrollable
         max-width="1000px"
         :fullscreen="$vuetify.breakpoint.xsOnly"
       >
@@ -1200,273 +1221,275 @@
             </template>
           </v-toolbar>
 
-          <v-tabs-items v-model="dialogHelpTabs">
-            <!-- App functions -->
-            <v-tab-item class="py-4">
-              <v-container fluid>
-                <v-row class="d-flex align-start">
-                  <v-col cols="2" class="d-flex">
-                    <div class="mx-auto">
-                      <v-btn
-                        color="#627f9a"
-                        dark
-                        fab
-                        small
-                        depressed
-                        @click="
-                          dialogHelp = false;
-                          dialogSearch = true;
-                        "
-                      >
-                        <v-icon>mdi-magnify</v-icon>
-                      </v-btn>
-                    </div>
-                  </v-col>
-                  <v-col cols="10">
-                    <p class="font-weight-bold mb-1">Hakutoiminto</p>
-                    Etsi reittejä ja kohteita eri hakuehdoilla.<br />
-                    Mikäli et rajoita hakua hakuehdoilla, etsitään kaikista
-                    Virma-aineiston reiteistä ja kohteista.<br />
-                    Halutut hakutulokset voit lisätä kartalle valitsemalla ne
-                    ('ruksi') ja painamalla "Näytä valitut hakutulokset
-                    kartalla".
-                  </v-col>
-                </v-row>
+          <v-card-text>
+            <v-tabs-items v-model="dialogHelpTabs">
+              <!-- App functions -->
+              <v-tab-item class="py-4">
+                <v-container fluid>
+                  <v-row class="d-flex align-start">
+                    <v-col cols="2" class="d-flex">
+                      <div class="mx-auto">
+                        <v-btn
+                          color="#627f9a"
+                          dark
+                          fab
+                          small
+                          depressed
+                          @click="
+                            dialogHelp = false;
+                            dialogSearch = true;
+                          "
+                        >
+                          <v-icon>mdi-magnify</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-col>
+                    <v-col cols="10">
+                      <p class="font-weight-bold mb-1">Hakutoiminto</p>
+                      Etsi reittejä ja kohteita eri hakuehdoilla.<br />
+                      Mikäli et rajoita hakua hakuehdoilla, etsitään kaikista
+                      Virma-aineiston reiteistä ja kohteista.<br />
+                      Halutut hakutulokset voit lisätä kartalle valitsemalla ne
+                      ('ruksi') ja painamalla "Näytä valitut hakutulokset
+                      kartalla".
+                    </v-col>
+                  </v-row>
 
-                <v-row class="d-flex align-start">
-                  <v-col cols="2" class="d-flex">
-                    <div class="mx-auto">
-                      <v-btn
-                        color="#627f9a"
-                        dark
-                        fab
-                        small
-                        depressed
-                        @click="
-                          dialogHelp = false;
-                          dialogLayers = true;
-                        "
-                      >
-                        <v-icon>mdi-layers-triple</v-icon>
-                      </v-btn>
-                    </div>
-                  </v-col>
-                  <v-col cols="10">
-                    <p class="font-weight-bold mb-1">Tasot-valikko</p>
-                    Valitse kartalla näkyvät karttatasot.<br />
-                    Valikko on jaettu kategorioihin, joista osa sisältää
-                    alitasoja ja on avattavissa oikeassa reunassa olevasta
-                    nuolikuvakkeesta.<br />
-                    Kategorian voi piilottaa / tuoda näkyviin
-                    silmäkuvakkeesta.<br />
-                    Kategoriassa näkyvät valittuna olevat alitasot ('ruksi').<br />
-                    Hakutoiminnon kautta kartalle lisätyt hakutulokset näkyvät
-                    kategoriassa "Hakutulokset"<br />
-                  </v-col>
-                </v-row>
+                  <v-row class="d-flex align-start">
+                    <v-col cols="2" class="d-flex">
+                      <div class="mx-auto">
+                        <v-btn
+                          color="#627f9a"
+                          dark
+                          fab
+                          small
+                          depressed
+                          @click="
+                            dialogHelp = false;
+                            dialogLayers = true;
+                          "
+                        >
+                          <v-icon>mdi-layers-triple</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-col>
+                    <v-col cols="10">
+                      <p class="font-weight-bold mb-1">Tasot-valikko</p>
+                      Valitse kartalla näkyvät karttatasot.<br />
+                      Valikko on jaettu kategorioihin, joista osa sisältää
+                      alitasoja ja on avattavissa oikeassa reunassa olevasta
+                      nuolikuvakkeesta.<br />
+                      Kategorian voi piilottaa / tuoda näkyviin
+                      silmäkuvakkeesta.<br />
+                      Kategoriassa näkyvät valittuna olevat alitasot ('ruksi').<br />
+                      Hakutoiminnon kautta kartalle lisätyt hakutulokset näkyvät
+                      kategoriassa "Hakutulokset"<br />
+                    </v-col>
+                  </v-row>
 
-                <v-row class="d-flex align-start">
-                  <v-col cols="2" class="d-flex">
-                    <div class="mx-auto">
-                      <v-btn
-                        color="#627f9a"
-                        dark
-                        fab
-                        small
-                        depressed
-                        @click="
-                          dialogHelp = false;
-                          toggleFullScreen();
-                        "
-                      >
-                        <v-icon>mdi-overscan</v-icon>
-                      </v-btn>
-                    </div>
-                  </v-col>
-                  <v-col cols="10">
-                    <p class="font-weight-bold mb-1">Kokoruututila</p>
-                    Suurenna sovellus täyttämään koko ruutu ja palauta se
-                    takaisin.
-                  </v-col>
-                </v-row>
+                  <v-row class="d-flex align-start">
+                    <v-col cols="2" class="d-flex">
+                      <div class="mx-auto">
+                        <v-btn
+                          color="#627f9a"
+                          dark
+                          fab
+                          small
+                          depressed
+                          @click="
+                            dialogHelp = false;
+                            toggleFullScreen();
+                          "
+                        >
+                          <v-icon>mdi-overscan</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-col>
+                    <v-col cols="10">
+                      <p class="font-weight-bold mb-1">Kokoruututila</p>
+                      Suurenna sovellus täyttämään koko ruutu ja palauta se
+                      takaisin.
+                    </v-col>
+                  </v-row>
 
-                <v-row class="d-flex align-start">
-                  <v-col cols="2" class="d-flex">
-                    <div class="mx-auto">
-                      <v-btn color="#627f9a" dark fab small depressed>
-                        <v-icon>mdi-help</v-icon>
-                      </v-btn>
-                    </div>
-                  </v-col>
-                  <v-col cols="10">
-                    <p class="font-weight-bold mb-1">Ohjeet</p>
-                    Näyttää tämän ohje-valikon.
-                  </v-col>
-                </v-row>
+                  <v-row class="d-flex align-start">
+                    <v-col cols="2" class="d-flex">
+                      <div class="mx-auto">
+                        <v-btn color="#627f9a" dark fab small depressed>
+                          <v-icon>mdi-help</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-col>
+                    <v-col cols="10">
+                      <p class="font-weight-bold mb-1">Ohjeet</p>
+                      Näyttää tämän ohje-valikon.
+                    </v-col>
+                  </v-row>
 
-                <v-row class="d-flex align-start">
-                  <v-col cols="2" class="d-flex">
-                    <div class="mx-auto">
-                      <v-btn
-                        color="#627f9a"
-                        dark
-                        fab
-                        small
-                        depressed
-                        @click="
-                          dialogHelp = false;
-                          showPosition.status = !showPosition.status;
-                          toggleShowAndUpdatePosition();
-                        "
-                      >
-                        <v-icon>mdi-crosshairs-gps</v-icon>
-                      </v-btn>
-                    </div>
-                  </v-col>
-                  <v-col cols="10">
-                    <p class="font-weight-bold mb-1">Näytä sijainti</p>
-                    Näyttää käyttäjän sijainnin kartalla. Toimii parhaiten
-                    älypuhelimilla ja muilla laitteilla joissa on
-                    gps-vastaanotin.<br />
-                    Vihreä: päällä, harmaa: pois päältä.
-                  </v-col>
-                </v-row>
+                  <v-row class="d-flex align-start">
+                    <v-col cols="2" class="d-flex">
+                      <div class="mx-auto">
+                        <v-btn
+                          color="#627f9a"
+                          dark
+                          fab
+                          small
+                          depressed
+                          @click="
+                            dialogHelp = false;
+                            showPosition.status = !showPosition.status;
+                            toggleShowAndUpdatePosition();
+                          "
+                        >
+                          <v-icon>mdi-crosshairs-gps</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-col>
+                    <v-col cols="10">
+                      <p class="font-weight-bold mb-1">Näytä sijainti</p>
+                      Näyttää käyttäjän sijainnin kartalla. Toimii parhaiten
+                      älypuhelimilla ja muilla laitteilla joissa on
+                      gps-vastaanotin.<br />
+                      Vihreä: päällä, harmaa: pois päältä.
+                    </v-col>
+                  </v-row>
 
-                <v-row class="d-flex align-start">
-                  <v-col cols="2" class="d-flex">
-                    <div class="mx-auto">
-                      <v-btn
-                        color="#627f9a"
-                        dark
-                        fab
-                        small
-                        depressed
-                        @click="
-                          dialogHelp = false;
-                          keepMapCenteredToPosition = !keepMapCenteredToPosition;
-                        "
-                      >
-                        <v-icon>mdi-image-filter-center-focus</v-icon>
-                      </v-btn>
-                    </div>
-                  </v-col>
-                  <v-col cols="10">
-                    <p class="font-weight-bold mb-1">Seuraa sijaintia</p>
-                    Siirtää karttapohjaa käyttäjän liikkuessa niin että
-                    sijaintikuvake pysyy aina näytön keskellä. Mikäli liikutat
-                    karttaa, toiminto kytkeytyy automaattisesti pois päältä.<br />
-                    Vihreä: päällä, harmaa: pois päältä.
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-tab-item>
+                  <v-row class="d-flex align-start">
+                    <v-col cols="2" class="d-flex">
+                      <div class="mx-auto">
+                        <v-btn
+                          color="#627f9a"
+                          dark
+                          fab
+                          small
+                          depressed
+                          @click="
+                            dialogHelp = false;
+                            keepMapCenteredToPosition = !keepMapCenteredToPosition;
+                          "
+                        >
+                          <v-icon>mdi-image-filter-center-focus</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-col>
+                    <v-col cols="10">
+                      <p class="font-weight-bold mb-1">Seuraa sijaintia</p>
+                      Siirtää karttapohjaa käyttäjän liikkuessa niin että
+                      sijaintikuvake pysyy aina näytön keskellä. Mikäli liikutat
+                      karttaa, toiminto kytkeytyy automaattisesti pois päältä.<br />
+                      Vihreä: päällä, harmaa: pois päältä.
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-tab-item>
 
-            <!-- Map symbols / legend -->
-            <v-tab-item>
-              <v-container fluid>
-                <!-- Virkistysreitit -->
-                <v-row class="d-flex align-start">
-                  <v-col cols="12" class="d-flex">
-                    <div class="ml-10">
-                      <p class="text-h6 mb-1">Virkistysreitit</p>
-                    </div>
-                  </v-col>
-                </v-row>
+              <!-- Map symbols / legend -->
+              <v-tab-item>
+                <v-container fluid>
+                  <!-- Virkistysreitit -->
+                  <v-row class="d-flex align-start">
+                    <v-col cols="12" class="d-flex">
+                      <div class="ml-10">
+                        <p class="text-h6 mb-1">Virkistysreitit</p>
+                      </div>
+                    </v-col>
+                  </v-row>
 
-                <v-row
-                  class="d-flex align-start"
-                  v-for="route in helpDialogSymbols.routes"
-                  :key="route.key"
-                >
-                  <v-col cols="2" class="d-flex">
-                    <div class="mx-auto">
-                      <v-img
-                        :src="
-                          route.imageName.length == 0
-                            ? ''
-                            : require(`@/assets/mapsymbols/${route.imageName}`)
-                        "
-                        :alt="route.key"
-                        class="mt-4"
-                      ></v-img>
-                    </div>
-                  </v-col>
-                  <v-col cols="10">
-                    <p class="font-weight-bold mb-1">{{ route.key }}</p>
-                    {{ route.description }}
-                  </v-col>
-                </v-row>
+                  <v-row
+                    class="d-flex align-start"
+                    v-for="route in helpDialogSymbols.routes"
+                    :key="route.key"
+                  >
+                    <v-col cols="2" class="d-flex">
+                      <div class="mx-auto">
+                        <v-img
+                          :src="
+                            route.imageName.length == 0
+                              ? ''
+                              : require(`@/assets/mapsymbols/${route.imageName}`)
+                          "
+                          :alt="route.key"
+                          class="mt-4"
+                        ></v-img>
+                      </div>
+                    </v-col>
+                    <v-col cols="10">
+                      <p class="font-weight-bold mb-1">{{ route.key }}</p>
+                      {{ route.description }}
+                    </v-col>
+                  </v-row>
 
-                <!-- Virkistyskohteet -->
-                <v-row class="d-flex align-start mt-8">
-                  <v-col cols="12" class="d-flex">
-                    <div class="ml-10">
-                      <p class="text-h6 mb-1">Virkistyskohteet</p>
-                    </div>
-                  </v-col>
-                </v-row>
+                  <!-- Virkistyskohteet -->
+                  <v-row class="d-flex align-start mt-8">
+                    <v-col cols="12" class="d-flex">
+                      <div class="ml-10">
+                        <p class="text-h6 mb-1">Virkistyskohteet</p>
+                      </div>
+                    </v-col>
+                  </v-row>
 
-                <v-row
-                  class="d-flex align-start"
-                  v-for="point in helpDialogSymbols.pointsRecreation"
-                  :key="point.key"
-                >
-                  <v-col cols="2" class="d-flex">
-                    <div class="mx-auto">
-                      <v-img
-                        :src="
-                          point.imageName.length == 0
-                            ? ''
-                            : require(`@/assets/mapsymbols/${point.imageName}`)
-                        "
-                        :alt="point.key"
-                        max-width="40px"
-                        max-height="40px"
-                      ></v-img>
-                    </div>
-                  </v-col>
-                  <v-col cols="10">
-                    <p class="font-weight-bold mb-1">{{ point.key }}</p>
-                    {{ point.description }}
-                  </v-col>
-                </v-row>
+                  <v-row
+                    class="d-flex align-start"
+                    v-for="point in helpDialogSymbols.pointsRecreation"
+                    :key="point.key"
+                  >
+                    <v-col cols="2" class="d-flex">
+                      <div class="mx-auto">
+                        <v-img
+                          :src="
+                            point.imageName.length == 0
+                              ? ''
+                              : require(`@/assets/mapsymbols/${point.imageName}`)
+                          "
+                          :alt="point.key"
+                          max-width="40px"
+                          max-height="40px"
+                        ></v-img>
+                      </div>
+                    </v-col>
+                    <v-col cols="10">
+                      <p class="font-weight-bold mb-1">{{ point.key }}</p>
+                      {{ point.description }}
+                    </v-col>
+                  </v-row>
 
-                <!-- Matkailukohteet -->
-                <v-row class="d-flex align-start mt-8">
-                  <v-col cols="12" class="d-flex">
-                    <div class="ml-10">
-                      <p class="text-h6 mb-1">Matkailukohteet</p>
-                    </div>
-                  </v-col>
-                </v-row>
+                  <!-- Matkailukohteet -->
+                  <v-row class="d-flex align-start mt-8">
+                    <v-col cols="12" class="d-flex">
+                      <div class="ml-10">
+                        <p class="text-h6 mb-1">Matkailukohteet</p>
+                      </div>
+                    </v-col>
+                  </v-row>
 
-                <v-row
-                  class="d-flex align-start"
-                  v-for="point in helpDialogSymbols.pointsTravel"
-                  :key="point.key"
-                >
-                  <v-col cols="2" class="d-flex">
-                    <div class="mx-auto">
-                      <v-img
-                        :src="
-                          point.imageName.length == 0
-                            ? ''
-                            : require(`@/assets/mapsymbols/${point.imageName}`)
-                        "
-                        :alt="point.key"
-                        max-width="40px"
-                        max-height="40px"
-                      ></v-img>
-                    </div>
-                  </v-col>
-                  <v-col cols="10">
-                    <p class="font-weight-bold mb-1">{{ point.key }}</p>
-                    {{ point.description }}
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-tab-item>
-          </v-tabs-items>
+                  <v-row
+                    class="d-flex align-start"
+                    v-for="point in helpDialogSymbols.pointsTravel"
+                    :key="point.key"
+                  >
+                    <v-col cols="2" class="d-flex">
+                      <div class="mx-auto">
+                        <v-img
+                          :src="
+                            point.imageName.length == 0
+                              ? ''
+                              : require(`@/assets/mapsymbols/${point.imageName}`)
+                          "
+                          :alt="point.key"
+                          max-width="40px"
+                          max-height="40px"
+                        ></v-img>
+                      </div>
+                    </v-col>
+                    <v-col cols="10">
+                      <p class="font-weight-bold mb-1">{{ point.key }}</p>
+                      {{ point.description }}
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-tab-item>
+            </v-tabs-items>
+          </v-card-text>
         </v-card>
       </v-dialog>
     </template>
