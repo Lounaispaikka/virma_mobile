@@ -1,6 +1,7 @@
 <template>
   <v-app id="inspire">
     <v-app-bar
+      clipped-left
       fixed
       app
       color="#627f9a"
@@ -116,6 +117,851 @@
         </v-row>
       </v-container>
     </v-main>
+
+    <!-- Layers-dialog Desktop -->
+    <!-- src="@/assets/Hierkonpolku_DSC_9195_Terhi Ajosenpää_800px.jpg" -->
+    <template v-if="!$vuetify.breakpoint.mobile">
+      <v-navigation-drawer
+        v-model="dialogLayers"
+        clipped
+        app
+        width="430"
+        class="pr-2 pt-2"
+      >
+        <template v-if="!renderStructureTEST.layersLoaded">
+          <div class="text-center">
+            <h4 class="mb-4">Karttatasoja haetaan</h4>
+            <v-progress-circular
+              :size="50"
+              color="primary"
+              indeterminate
+            ></v-progress-circular>
+          </div>
+        </template>
+
+        <template v-else>
+          <!-- Selected search results -->
+          <template>
+            <v-expansion-panels class="mb-4 ml-2">
+              <v-expansion-panel style="backgroundColor: #eedbad;">
+                <v-expansion-panel-header class="my-0 py-0">
+                  <v-container fluid class="ma-0 pa-0">
+                    <v-row>
+                      <v-col cols="10">
+                        <!-- v-model="layer.visible" -->
+                        <v-checkbox
+                          @click.native.stop
+                          @change="toggleVisibilityOfSearchResults"
+                          v-model="selectedSearchResultLayers.visible"
+                          on-icon="mdi-eye"
+                          off-icon="mdi-eye-off"
+                          class="my-0 py-0"
+                          style="height: 20px;"
+                          ><template v-slot:label>
+                            <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                            <span
+                              class="d-inline-block text-truncate"
+                              style="max-width: 250px;"
+                            >
+                              Hakutulokset (
+                              {{
+                                selectedSearchResultLayers.selectedPoints
+                                  .length +
+                                  selectedSearchResultLayers
+                                    .selectedRoutes.length
+                              }}
+                              )
+                            </span>
+                          </template>
+                        </v-checkbox>
+                      </v-col>
+                      <!-- <v-col
+                        cols="2"
+                        class="text-right pr-4"
+                        style="line-height:24px;"
+                        >1/3</v-col
+                      > -->
+                      <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                    </v-row>
+                  </v-container>
+                </v-expansion-panel-header>
+
+                <v-expansion-panel-content>
+                  <template v-if="!hasSelectedFeaturesInLayersMenu">
+                    <div class="pl-8">
+                      Ei tuloksia, käytä Hakutoimintoa
+                      <v-btn
+                        color="#627f9a"
+                        dark
+                        fab
+                        small
+                        depressed
+                        class="mx-2"
+                        @click="dialogSearch = true"
+                        ><v-icon>mdi-magnify</v-icon></v-btn
+                      >
+                      ja valitse "Näytä valitut kartalla"
+                    </div>
+                  </template>
+                  <template v-else>
+                    <div
+                      v-for="pointItem in selectedSearchResultLayers.selectedPoints"
+                      :key="pointItem.id"
+                      max-width="100%"
+                      class="ml-4 mt-0 py-0"
+                    >
+                      <v-checkbox
+                        v-model="pointItem.checked"
+                        @change="toggleCheckedSearchResult(pointItem)"
+                        class="ml-4 mt-0 py-0"
+                        ><template v-slot:label>
+                          <div>{{ pointItem.properties.name_fi }}</div>
+                        </template>
+                      </v-checkbox>
+                    </div>
+
+                    <div
+                      v-for="routeItem in selectedSearchResultLayers.selectedRoutes"
+                      :key="routeItem.id"
+                      max-width="100%"
+                      class="ml-4 mt-0 py-0"
+                    >
+                      <v-checkbox
+                        v-model="routeItem.checked"
+                        @change="toggleCheckedSearchResult(routeItem)"
+                        class="ml-4 mt-0 py-0"
+                        ><template v-slot:label>
+                          <div>{{ routeItem.properties.name_fi }}</div>
+                        </template>
+                      </v-checkbox>
+                    </div>
+                  </template>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </template>
+          <!-- Menu-layers -->
+          <v-expansion-panels
+            class="mb-4 ml-2"
+            v-model="renderStructureTEST.openOnStartUp"
+            multiple
+          >
+            <!-- Level 0 -->
+            <v-expansion-panel
+              v-for="(layer, i) in renderStructureTEST.layers"
+              :key="i"
+              :style="layer.style"
+              :class="layer.style.class"
+            >
+              <v-expansion-panel-header
+                :expand-icon="
+                  layer.subContent.length == 0 ? '' : undefined
+                "
+                :disabled="layer.subContent.length == 0 ? true : false"
+                class="my-0 py-0"
+              >
+                <v-container fluid class="ma-0 pa-0">
+                  <v-row>
+                    <v-col cols="10">
+                      <v-checkbox
+                        @click.native.stop
+                        @change="toggleVisibility(layer)"
+                        v-model="layer.visible"
+                        on-icon="mdi-eye"
+                        off-icon="mdi-eye-off"
+                        class="my-0 py-0"
+                        style="height: 20px;"
+                        ><template v-slot:label>
+                          <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                          <span
+                            class="d-inline-block text-truncate"
+                            style="max-width: 350px;"
+                          >
+                            {{ layer.name }}
+                          </span>
+                        </template>
+                      </v-checkbox>
+                    </v-col>
+                    <!-- <v-col
+                      cols="2"
+                      class="text-right pr-4"
+                      style="line-height:24px;"
+                      >1/3</v-col
+                    > -->
+                    <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                  </v-row>
+                </v-container>
+              </v-expansion-panel-header>
+
+              <v-expansion-panel-content>
+                <div
+                  v-for="(item, i) in layer.subContent"
+                  :key="i"
+                  max-width="100%"
+                  class="ml-4 mt-0 py-0"
+                >
+                  <v-checkbox
+                    v-if="item.renderAs == 'checkbox'"
+                    v-model="item.checked"
+                    @change="toggleChecked(item)"
+                    class="ml-4 mt-0 py-0"
+                  >
+                    <template v-slot:label>
+                      <div>
+                        {{ item.name }}
+                      </div>
+                    </template>
+
+                    <template v-slot:append>
+                      <v-img
+                        v-if="item.hasOwnProperty('legend')"
+                        :src="
+                          item.legend.imageName.length == 0
+                            ? ''
+                            : require(`@/assets/mapsymbols/${item.legend.imageName}`)
+                        "
+                        :alt="item.name"
+                        max-width="40px"
+                        max-height="40px"
+                        class=""
+                      ></v-img>
+                    </template>
+                  </v-checkbox>
+
+                  <template v-else-if="item.renderAs == 'accordion'">
+                    <!-- Level 1 -->
+                    <v-expansion-panels>
+                      <v-expansion-panel>
+                        <v-expansion-panel-header
+                          :expand-icon="
+                            item.subContent.length == 0 ? '' : undefined
+                          "
+                          :disabled="
+                            item.subContent.length == 0 ? true : false
+                          "
+                          class="my-0 py-0"
+                        >
+                          <v-container fluid class="ma-0 pa-0">
+                            <v-row>
+                              <v-col cols="10">
+                                <v-checkbox
+                                  @click.native.stop
+                                  @change="toggleVisibility(item)"
+                                  v-model="item.visible"
+                                  on-icon="mdi-eye"
+                                  off-icon="mdi-eye-off"
+                                  class="my-0 py-0"
+                                  style="height: 20px;"
+                                  ><template v-slot:label>
+                                    <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                                    <span
+                                      class="d-inline-block text-truncate"
+                                      style="max-width: 250px;"
+                                    >
+                                      {{ item.name }}
+                                    </span>
+                                  </template>
+                                </v-checkbox>
+                              </v-col>
+                              <!-- <v-col cols="2" class="text-right" style="line-height:24px;">1/3</v-col> -->
+                              <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                            </v-row>
+                          </v-container>
+                        </v-expansion-panel-header>
+
+                        <v-expansion-panel-content>
+                          <!-- Level 2 -->
+                          <div
+                            v-for="(subItem, i) in item.subContent"
+                            :key="i"
+                            max-width="100%"
+                            class="ml-4 mt-0 py-0"
+                          >
+                            <v-checkbox
+                              v-if="subItem.renderAs == 'checkbox'"
+                              v-model="subItem.checked"
+                              @change="toggleChecked(subItem)"
+                              class="ml-4 mt-0 py-0"
+                            >
+                              <template v-slot:label>
+                                <div>
+                                  {{ subItem.name }}
+                                </div>
+                              </template>
+
+                              <template v-slot:append>
+                                <v-img
+                                  v-if="subItem.hasOwnProperty('legend')"
+                                  :src="
+                                    subItem.legend.imageName.length == 0
+                                      ? ''
+                                      : require(`@/assets/mapsymbols/${subItem.legend.imageName}`)
+                                  "
+                                  :alt="subItem.name"
+                                  max-width="40px"
+                                  max-height="40px"
+                                  class=""
+                                ></v-img>
+                              </template>
+                            </v-checkbox>
+
+                            <!-- Level 3 if needed -->
+                            <!-- <template
+                              v-else-if="subItem.renderAs == 'accordion'"
+                            >
+                              <v-expansion-panels>
+                                <v-expansion-panel>
+                                  <v-expansion-panel-header>
+                                    {{ subItem.name }}
+                                  </v-expansion-panel-header>
+                                  <v-expansion-panel-content
+                                    max-width="100%"
+                                  >
+                                    <v-checkbox
+                                      v-for="(item, i) in 5"
+                                      :key="i"
+                                      :label="i + 1 + '. polku'"
+                                      checked
+                                      dense
+                                      class="ml-4 mt-0 pt-0"
+                                    ></v-checkbox>
+                                  </v-expansion-panel-content>
+                                </v-expansion-panel>
+                              </v-expansion-panels>
+                            </template> -->
+
+                            <template
+                              v-else-if="subItem.renderAs == 'text'"
+                            >
+                              <p class="text-center">
+                                <span v-html="subItem.name"></span>
+                              </p>
+                            </template>
+                          </div>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                  </template>
+
+                  <template v-else-if="item.renderAs == 'text'">
+                    <p class="text-center">
+                      <span v-html="item.name"></span>
+                    </p>
+                  </template>
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+
+          <!-- Backgroundmaps -->
+          <template>
+            <v-expansion-panels
+              class="mb-4 ml-2"
+              v-model="backGroundMaps.openOnStartUp"
+              multiple
+            >
+              <v-expansion-panel style="backgroundColor: #f7f7f7;">
+                <v-expansion-panel-header class="my-0 py-0">
+                  <v-container fluid class="ma-0 pa-0">
+                    <v-row>
+                      <v-col cols="10">
+                        <v-checkbox
+                          @click.native.stop
+                          @change="toggleBackgroundMaps"
+                          v-model="backGroundMaps.visible"
+                          on-icon="mdi-eye"
+                          off-icon="mdi-eye-off"
+                          class="my-0 py-0"
+                          style="height: 20px;"
+                          ><template v-slot:label>
+                            <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                            <span
+                              class="d-inline-block text-truncate"
+                              style="max-width: 250px;"
+                            >
+                              Taustakartat
+                            </span>
+                          </template>
+                        </v-checkbox>
+                      </v-col>
+                      <!-- <v-col
+                        cols="2"
+                        class="text-right pr-4"
+                        style="line-height:24px;"
+                        >1/3</v-col
+                      > -->
+                      <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                    </v-row>
+                  </v-container>
+                </v-expansion-panel-header>
+
+                <v-expansion-panel-content>
+                  <template>
+                    <v-radio-group
+                      v-model="backGroundMaps.selected"
+                      :mandatory="true"
+                      class="mt-0"
+                      @change="toggleBackgroundMaps"
+                    >
+                      <div
+                        v-for="item in backGroundMaps.layers"
+                        :key="item.id"
+                        max-width="100%"
+                        class="ml-4 pl-4 mt-0 pb-4"
+                      >
+                        <v-radio
+                          :label="item.name"
+                          :value="item.id"
+                        ></v-radio>
+                      </div>
+                    </v-radio-group>
+                  </template>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </template>
+        </template>
+      </v-navigation-drawer>
+    </template>
+
+    <!-- Layers-dialog Mobile -->
+    <template v-else>
+      <v-dialog
+        v-model="dialogLayers"
+        persistent
+        scrollable
+        max-width="700"
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+      >
+        <!--
+        :retain-focus="false" for fixing Uncaught RangeError: Maximum call stack size exceeded.
+        https://forum.vuejs.org/t/too-much-recursion-maximum-call-stack-size-exceeded/66277/4
+        https://github.com/vuetifyjs/vuetify/issues/8459
+          -->
+
+        <v-card
+          style="min-width:350px;"
+          :min-height="
+            $vuetify.breakpoint.smAndUp ? $vuetify.breakpoint.height - 200 : ''
+          "
+        >
+          <v-toolbar flat>
+            <v-spacer></v-spacer>
+            <v-toolbar-title>Kartalla näkyvät tasot</v-toolbar-title>
+            <v-spacer></v-spacer>
+
+            <v-btn icon @click="dialogLayers = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+
+          <v-card-text>
+            <v-row justify="center" class="mx-0">
+              <v-card width="100%" max-width="650px" flat class="ma-2">
+                <template v-if="!renderStructureTEST.layersLoaded">
+                  <div class="text-center">
+                    <h4 class="mb-4">Karttatasoja haetaan</h4>
+                    <v-progress-circular
+                      :size="50"
+                      color="primary"
+                      indeterminate
+                    ></v-progress-circular>
+                  </div>
+                </template>
+
+                <template v-else>
+                  <!-- Selected search results -->
+                  <template>
+                    <v-expansion-panels class="mb-4">
+                      <v-expansion-panel style="backgroundColor: #eedbad;">
+                        <v-expansion-panel-header class="my-0 py-0">
+                          <v-container fluid class="ma-0 pa-0">
+                            <v-row>
+                              <v-col cols="10">
+                                <!-- v-model="layer.visible" -->
+                                <v-checkbox
+                                  @click.native.stop
+                                  @change="toggleVisibilityOfSearchResults"
+                                  v-model="selectedSearchResultLayers.visible"
+                                  on-icon="mdi-eye"
+                                  off-icon="mdi-eye-off"
+                                  class="my-0 py-0"
+                                  style="height: 20px;"
+                                  ><template v-slot:label>
+                                    <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                                    <span
+                                      class="d-inline-block text-truncate"
+                                      style="max-width: 250px;"
+                                    >
+                                      Hakutulokset (
+                                      {{
+                                        selectedSearchResultLayers.selectedPoints
+                                          .length +
+                                          selectedSearchResultLayers
+                                            .selectedRoutes.length
+                                      }}
+                                      )
+                                    </span>
+                                  </template>
+                                </v-checkbox>
+                              </v-col>
+                              <!-- <v-col
+                                cols="2"
+                                class="text-right pr-4"
+                                style="line-height:24px;"
+                                >1/3</v-col
+                              > -->
+                              <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                            </v-row>
+                          </v-container>
+                        </v-expansion-panel-header>
+
+                        <v-expansion-panel-content>
+                          <template v-if="!hasSelectedFeaturesInLayersMenu">
+                            <div class="pl-8">
+                              Ei tuloksia, käytä Hakutoimintoa
+                              <v-btn
+                                color="#627f9a"
+                                dark
+                                fab
+                                small
+                                depressed
+                                class="mx-2"
+                                @click="
+                                  {
+                                    dialogLayers = false;
+                                    dialogSearch = true;
+                                  }
+                                "
+                                ><v-icon>mdi-magnify</v-icon></v-btn
+                              >
+                              ja valitse "Näytä valitut kartalla"
+                            </div>
+                          </template>
+                          <template v-else>
+                            <div
+                              v-for="pointItem in selectedSearchResultLayers.selectedPoints"
+                              :key="pointItem.id"
+                              max-width="100%"
+                              class="ml-4 mt-0 py-0"
+                            >
+                              <v-checkbox
+                                v-model="pointItem.checked"
+                                @change="toggleCheckedSearchResult(pointItem)"
+                                class="ml-4 mt-0 py-0"
+                                ><template v-slot:label>
+                                  <div>{{ pointItem.properties.name_fi }}</div>
+                                </template>
+                              </v-checkbox>
+                            </div>
+
+                            <div
+                              v-for="routeItem in selectedSearchResultLayers.selectedRoutes"
+                              :key="routeItem.id"
+                              max-width="100%"
+                              class="ml-4 mt-0 py-0"
+                            >
+                              <v-checkbox
+                                v-model="routeItem.checked"
+                                @change="toggleCheckedSearchResult(routeItem)"
+                                class="ml-4 mt-0 py-0"
+                                ><template v-slot:label>
+                                  <div>{{ routeItem.properties.name_fi }}</div>
+                                </template>
+                              </v-checkbox>
+                            </div>
+                          </template>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                  </template>
+                  <!-- Menu-layers -->
+                  <v-expansion-panels
+                    class="mb-4"
+                    v-model="renderStructureTEST.openOnStartUp"
+                    multiple
+                  >
+                    <!-- Level 0 -->
+                    <v-expansion-panel
+                      v-for="(layer, i) in renderStructureTEST.layers"
+                      :key="i"
+                      :style="layer.style"
+                      :class="layer.style.class"
+                    >
+                      <v-expansion-panel-header
+                        :expand-icon="
+                          layer.subContent.length == 0 ? '' : undefined
+                        "
+                        :disabled="layer.subContent.length == 0 ? true : false"
+                        class="my-0 py-0"
+                      >
+                        <v-container fluid class="ma-0 pa-0">
+                          <v-row>
+                            <v-col cols="10">
+                              <v-checkbox
+                                @click.native.stop
+                                @change="toggleVisibility(layer)"
+                                v-model="layer.visible"
+                                on-icon="mdi-eye"
+                                off-icon="mdi-eye-off"
+                                class="my-0 py-0"
+                                style="height: 20px;"
+                                ><template v-slot:label>
+                                  <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                                  <span
+                                    class="d-inline-block text-truncate"
+                                    style="max-width: 350px;"
+                                  >
+                                    {{ layer.name }}
+                                  </span>
+                                </template>
+                              </v-checkbox>
+                            </v-col>
+                            <!-- <v-col
+                              cols="2"
+                              class="text-right pr-4"
+                              style="line-height:24px;"
+                              >1/3</v-col
+                            > -->
+                            <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                          </v-row>
+                        </v-container>
+                      </v-expansion-panel-header>
+
+                      <v-expansion-panel-content>
+                        <div
+                          v-for="(item, i) in layer.subContent"
+                          :key="i"
+                          max-width="100%"
+                          class="ml-4 mt-0 py-0"
+                        >
+                          <v-checkbox
+                            v-if="item.renderAs == 'checkbox'"
+                            v-model="item.checked"
+                            @change="toggleChecked(item)"
+                            class="ml-4 mt-0 py-0"
+                          >
+                            <template v-slot:label>
+                              <div>
+                                {{ item.name }}
+                              </div>
+                            </template>
+
+                            <template v-slot:append>
+                              <v-img
+                                v-if="item.hasOwnProperty('legend')"
+                                :src="
+                                  item.legend.imageName.length == 0
+                                    ? ''
+                                    : require(`@/assets/mapsymbols/${item.legend.imageName}`)
+                                "
+                                :alt="item.name"
+                                max-width="40px"
+                                max-height="40px"
+                                class=""
+                              ></v-img>
+                            </template>
+                          </v-checkbox>
+
+                          <template v-else-if="item.renderAs == 'accordion'">
+                            <!-- Level 1 -->
+                            <v-expansion-panels>
+                              <v-expansion-panel>
+                                <v-expansion-panel-header
+                                  :expand-icon="
+                                    item.subContent.length == 0 ? '' : undefined
+                                  "
+                                  :disabled="
+                                    item.subContent.length == 0 ? true : false
+                                  "
+                                  class="my-0 py-0"
+                                >
+                                  <v-container fluid class="ma-0 pa-0">
+                                    <v-row>
+                                      <v-col cols="10">
+                                        <v-checkbox
+                                          @click.native.stop
+                                          @change="toggleVisibility(item)"
+                                          v-model="item.visible"
+                                          on-icon="mdi-eye"
+                                          off-icon="mdi-eye-off"
+                                          class="my-0 py-0"
+                                          style="height: 20px;"
+                                          ><template v-slot:label>
+                                            <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                                            <span
+                                              class="d-inline-block text-truncate"
+                                              style="max-width: 250px;"
+                                            >
+                                              {{ item.name }}
+                                            </span>
+                                          </template>
+                                        </v-checkbox>
+                                      </v-col>
+                                      <!-- <v-col cols="2" class="text-right" style="line-height:24px;">1/3</v-col> -->
+                                      <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                                    </v-row>
+                                  </v-container>
+                                </v-expansion-panel-header>
+
+                                <v-expansion-panel-content>
+                                  <!-- Level 2 -->
+                                  <div
+                                    v-for="(subItem, i) in item.subContent"
+                                    :key="i"
+                                    max-width="100%"
+                                    class="ml-4 mt-0 py-0"
+                                  >
+                                    <v-checkbox
+                                      v-if="subItem.renderAs == 'checkbox'"
+                                      v-model="subItem.checked"
+                                      @change="toggleChecked(subItem)"
+                                      class="ml-4 mt-0 py-0"
+                                    >
+                                      <template v-slot:label>
+                                        <div>
+                                          {{ subItem.name }}
+                                        </div>
+                                      </template>
+
+                                      <template v-slot:append>
+                                        <v-img
+                                          v-if="subItem.hasOwnProperty('legend')"
+                                          :src="
+                                            subItem.legend.imageName.length == 0
+                                              ? ''
+                                              : require(`@/assets/mapsymbols/${subItem.legend.imageName}`)
+                                          "
+                                          :alt="subItem.name"
+                                          max-width="40px"
+                                          max-height="40px"
+                                          class=""
+                                        ></v-img>
+                                      </template>
+                                    </v-checkbox>
+
+                                    <!-- Level 3 if needed -->
+                                    <!-- <template
+                                      v-else-if="subItem.renderAs == 'accordion'"
+                                    >
+                                      <v-expansion-panels>
+                                        <v-expansion-panel>
+                                          <v-expansion-panel-header>
+                                            {{ subItem.name }}
+                                          </v-expansion-panel-header>
+                                          <v-expansion-panel-content
+                                            max-width="100%"
+                                          >
+                                            <v-checkbox
+                                              v-for="(item, i) in 5"
+                                              :key="i"
+                                              :label="i + 1 + '. polku'"
+                                              checked
+                                              dense
+                                              class="ml-4 mt-0 pt-0"
+                                            ></v-checkbox>
+                                          </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                      </v-expansion-panels>
+                                    </template> -->
+
+                                    <template
+                                      v-else-if="subItem.renderAs == 'text'"
+                                    >
+                                      <p class="text-center">
+                                        <span v-html="subItem.name"></span>
+                                      </p>
+                                    </template>
+                                  </div>
+                                </v-expansion-panel-content>
+                              </v-expansion-panel>
+                            </v-expansion-panels>
+                          </template>
+
+                          <template v-else-if="item.renderAs == 'text'">
+                            <p class="text-center">
+                              <span v-html="item.name"></span>
+                            </p>
+                          </template>
+                        </div>
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+
+                  <!-- Backgroundmaps -->
+                  <template>
+                    <v-expansion-panels
+                      class="mb-4"
+                      v-model="backGroundMaps.openOnStartUp"
+                      multiple
+                    >
+                      <v-expansion-panel style="backgroundColor: #f7f7f7;">
+                        <v-expansion-panel-header class="my-0 py-0">
+                          <v-container fluid class="ma-0 pa-0">
+                            <v-row>
+                              <v-col cols="10">
+                                <v-checkbox
+                                  @click.native.stop
+                                  @change="toggleBackgroundMaps"
+                                  v-model="backGroundMaps.visible"
+                                  on-icon="mdi-eye"
+                                  off-icon="mdi-eye-off"
+                                  class="my-0 py-0"
+                                  style="height: 20px;"
+                                  ><template v-slot:label>
+                                    <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
+                                    <span
+                                      class="d-inline-block text-truncate"
+                                      style="max-width: 250px;"
+                                    >
+                                      Taustakartat
+                                    </span>
+                                  </template>
+                                </v-checkbox>
+                              </v-col>
+                              <!-- <v-col
+                                cols="2"
+                                class="text-right pr-4"
+                                style="line-height:24px;"
+                                >1/3</v-col
+                              > -->
+                              <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
+                            </v-row>
+                          </v-container>
+                        </v-expansion-panel-header>
+
+                        <v-expansion-panel-content>
+                          <template>
+                            <v-radio-group
+                              v-model="backGroundMaps.selected"
+                              :mandatory="true"
+                              class="mt-0"
+                              @change="toggleBackgroundMaps"
+                            >
+                              <div
+                                v-for="item in backGroundMaps.layers"
+                                :key="item.id"
+                                max-width="100%"
+                                class="ml-4 pl-4 mt-0 pb-4"
+                              >
+                                <v-radio
+                                  :label="item.name"
+                                  :value="item.id"
+                                ></v-radio>
+                              </div>
+                            </v-radio-group>
+                          </template>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                  </template>
+                </template>
+              </v-card>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </template>
 
     <!-- Search-dialog -->
     <template>
@@ -615,445 +1461,6 @@
                 </v-row>
               </v-tab-item>
             </v-tabs-items>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
-    </template>
-
-    <!-- Layers-dialog -->
-    <template>
-      <v-dialog
-        v-model="dialogLayers"
-        persistent
-        scrollable
-        max-width="700"
-        :fullscreen="$vuetify.breakpoint.xsOnly"
-      >
-        <!--
-        :retain-focus="false" for fixing Uncaught RangeError: Maximum call stack size exceeded.
-        https://forum.vuejs.org/t/too-much-recursion-maximum-call-stack-size-exceeded/66277/4
-        https://github.com/vuetifyjs/vuetify/issues/8459
-          -->
-
-        <v-card
-          style="min-width:350px;"
-          :min-height="
-            $vuetify.breakpoint.smAndUp ? $vuetify.breakpoint.height - 200 : ''
-          "
-        >
-          <v-toolbar flat>
-            <v-spacer></v-spacer>
-            <v-toolbar-title>Kartalla näkyvät tasot</v-toolbar-title>
-            <v-spacer></v-spacer>
-
-            <v-btn icon @click="dialogLayers = false">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar>
-
-          <v-card-text>
-            <v-row justify="center" class="mx-0">
-              <v-card width="100%" max-width="650px" flat class="ma-2">
-                <template v-if="!renderStructureTEST.layersLoaded">
-                  <div class="text-center">
-                    <h4 class="mb-4">Karttatasoja haetaan</h4>
-                    <v-progress-circular
-                      :size="50"
-                      color="primary"
-                      indeterminate
-                    ></v-progress-circular>
-                  </div>
-                </template>
-
-                <template v-else>
-                  <!-- Selected search results -->
-                  <template>
-                    <v-expansion-panels class="mb-4">
-                      <v-expansion-panel style="backgroundColor: #eedbad;">
-                        <v-expansion-panel-header class="my-0 py-0">
-                          <v-container fluid class="ma-0 pa-0">
-                            <v-row>
-                              <v-col cols="10">
-                                <!-- v-model="layer.visible" -->
-                                <v-checkbox
-                                  @click.native.stop
-                                  @change="toggleVisibilityOfSearchResults"
-                                  v-model="selectedSearchResultLayers.visible"
-                                  on-icon="mdi-eye"
-                                  off-icon="mdi-eye-off"
-                                  class="my-0 py-0"
-                                  style="height: 20px;"
-                                  ><template v-slot:label>
-                                    <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
-                                    <span
-                                      class="d-inline-block text-truncate"
-                                      style="max-width: 250px;"
-                                    >
-                                      Hakutulokset (
-                                      {{
-                                        selectedSearchResultLayers.selectedPoints
-                                          .length +
-                                          selectedSearchResultLayers
-                                            .selectedRoutes.length
-                                      }}
-                                      )
-                                    </span>
-                                  </template>
-                                </v-checkbox>
-                              </v-col>
-                              <!-- <v-col
-                                cols="2"
-                                class="text-right pr-4"
-                                style="line-height:24px;"
-                                >1/3</v-col
-                              > -->
-                              <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
-                            </v-row>
-                          </v-container>
-                        </v-expansion-panel-header>
-
-                        <v-expansion-panel-content>
-                          <template v-if="!hasSelectedFeaturesInLayersMenu">
-                            <div class="pl-8">
-                              Ei tuloksia, käytä Hakutoimintoa
-                              <v-btn
-                                color="#627f9a"
-                                dark
-                                fab
-                                small
-                                depressed
-                                class="mx-2"
-                                @click="
-                                  {
-                                    dialogLayers = false;
-                                    dialogSearch = true;
-                                  }
-                                "
-                                ><v-icon>mdi-magnify</v-icon></v-btn
-                              >
-                              ja valitse "Näytä valitut kartalla"
-                            </div>
-                          </template>
-                          <template v-else>
-                            <div
-                              v-for="pointItem in selectedSearchResultLayers.selectedPoints"
-                              :key="pointItem.id"
-                              max-width="100%"
-                              class="ml-4 mt-0 py-0"
-                            >
-                              <v-checkbox
-                                v-model="pointItem.checked"
-                                @change="toggleCheckedSearchResult(pointItem)"
-                                class="ml-4 mt-0 py-0"
-                                ><template v-slot:label>
-                                  <div>{{ pointItem.properties.name_fi }}</div>
-                                </template>
-                              </v-checkbox>
-                            </div>
-
-                            <div
-                              v-for="routeItem in selectedSearchResultLayers.selectedRoutes"
-                              :key="routeItem.id"
-                              max-width="100%"
-                              class="ml-4 mt-0 py-0"
-                            >
-                              <v-checkbox
-                                v-model="routeItem.checked"
-                                @change="toggleCheckedSearchResult(routeItem)"
-                                class="ml-4 mt-0 py-0"
-                                ><template v-slot:label>
-                                  <div>{{ routeItem.properties.name_fi }}</div>
-                                </template>
-                              </v-checkbox>
-                            </div>
-                          </template>
-                        </v-expansion-panel-content>
-                      </v-expansion-panel>
-                    </v-expansion-panels>
-                  </template>
-                  <!-- Menu-layers -->
-                  <v-expansion-panels
-                    class="mb-4"
-                    v-model="renderStructureTEST.openOnStartUp"
-                    multiple
-                  >
-                    <!-- Level 0 -->
-                    <v-expansion-panel
-                      v-for="(layer, i) in renderStructureTEST.layers"
-                      :key="i"
-                      :style="layer.style"
-                      :class="layer.style.class"
-                    >
-                      <v-expansion-panel-header
-                        :expand-icon="
-                          layer.subContent.length == 0 ? '' : undefined
-                        "
-                        :disabled="layer.subContent.length == 0 ? true : false"
-                        class="my-0 py-0"
-                      >
-                        <v-container fluid class="ma-0 pa-0">
-                          <v-row>
-                            <v-col cols="10">
-                              <v-checkbox
-                                @click.native.stop
-                                @change="toggleVisibility(layer)"
-                                v-model="layer.visible"
-                                on-icon="mdi-eye"
-                                off-icon="mdi-eye-off"
-                                class="my-0 py-0"
-                                style="height: 20px;"
-                                ><template v-slot:label>
-                                  <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
-                                  <span
-                                    class="d-inline-block text-truncate"
-                                    style="max-width: 350px;"
-                                  >
-                                    {{ layer.name }}
-                                  </span>
-                                </template>
-                              </v-checkbox>
-                            </v-col>
-                            <!-- <v-col
-                              cols="2"
-                              class="text-right pr-4"
-                              style="line-height:24px;"
-                              >1/3</v-col
-                            > -->
-                            <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
-                          </v-row>
-                        </v-container>
-                      </v-expansion-panel-header>
-
-                      <v-expansion-panel-content>
-                        <div
-                          v-for="(item, i) in layer.subContent"
-                          :key="i"
-                          max-width="100%"
-                          class="ml-4 mt-0 py-0"
-                        >
-                          <v-checkbox
-                            v-if="item.renderAs == 'checkbox'"
-                            v-model="item.checked"
-                            @change="toggleChecked(item)"
-                            class="ml-4 mt-0 py-0"
-                          >
-                            <template v-slot:label>
-                              <div>
-                                {{ item.name }}
-                              </div>
-                            </template>
-
-                            <template v-slot:append>
-                              <v-img
-                                v-if="item.hasOwnProperty('legend')"
-                                :src="
-                                  item.legend.imageName.length == 0
-                                    ? ''
-                                    : require(`@/assets/mapsymbols/${item.legend.imageName}`)
-                                "
-                                :alt="item.name"
-                                max-width="40px"
-                                max-height="40px"
-                                class=""
-                              ></v-img>
-                            </template>
-                          </v-checkbox>
-
-                          <template v-else-if="item.renderAs == 'accordion'">
-                            <!-- Level 1 -->
-                            <v-expansion-panels>
-                              <v-expansion-panel>
-                                <v-expansion-panel-header
-                                  :expand-icon="
-                                    item.subContent.length == 0 ? '' : undefined
-                                  "
-                                  :disabled="
-                                    item.subContent.length == 0 ? true : false
-                                  "
-                                  class="my-0 py-0"
-                                >
-                                  <v-container fluid class="ma-0 pa-0">
-                                    <v-row>
-                                      <v-col cols="10">
-                                        <v-checkbox
-                                          @click.native.stop
-                                          @change="toggleVisibility(item)"
-                                          v-model="item.visible"
-                                          on-icon="mdi-eye"
-                                          off-icon="mdi-eye-off"
-                                          class="my-0 py-0"
-                                          style="height: 20px;"
-                                          ><template v-slot:label>
-                                            <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
-                                            <span
-                                              class="d-inline-block text-truncate"
-                                              style="max-width: 250px;"
-                                            >
-                                              {{ item.name }}
-                                            </span>
-                                          </template>
-                                        </v-checkbox>
-                                      </v-col>
-                                      <!-- <v-col cols="2" class="text-right" style="line-height:24px;">1/3</v-col> -->
-                                      <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
-                                    </v-row>
-                                  </v-container>
-                                </v-expansion-panel-header>
-
-                                <v-expansion-panel-content>
-                                  <!-- Level 2 -->
-                                  <div
-                                    v-for="(subItem, i) in item.subContent"
-                                    :key="i"
-                                    max-width="100%"
-                                    class="ml-4 mt-0 py-0"
-                                  >
-                                    <v-checkbox
-                                      v-if="subItem.renderAs == 'checkbox'"
-                                      v-model="subItem.checked"
-                                      @change="toggleChecked(subItem)"
-                                      class="ml-4 mt-0 py-0"
-                                    >
-                                      <template v-slot:label>
-                                        <div>
-                                          {{ subItem.name }}
-                                        </div>
-                                      </template>
-
-                                      <template v-slot:append>
-                                        <v-img
-                                          v-if="subItem.hasOwnProperty('legend')"
-                                          :src="
-                                            subItem.legend.imageName.length == 0
-                                              ? ''
-                                              : require(`@/assets/mapsymbols/${subItem.legend.imageName}`)
-                                          "
-                                          :alt="subItem.name"
-                                          max-width="40px"
-                                          max-height="40px"
-                                          class=""
-                                        ></v-img>
-                                      </template>
-                                    </v-checkbox>
-
-                                    <!-- Level 3 if needed -->
-                                    <!-- <template
-                                      v-else-if="subItem.renderAs == 'accordion'"
-                                    >
-                                      <v-expansion-panels>
-                                        <v-expansion-panel>
-                                          <v-expansion-panel-header>
-                                            {{ subItem.name }}
-                                          </v-expansion-panel-header>
-                                          <v-expansion-panel-content
-                                            max-width="100%"
-                                          >
-                                            <v-checkbox
-                                              v-for="(item, i) in 5"
-                                              :key="i"
-                                              :label="i + 1 + '. polku'"
-                                              checked
-                                              dense
-                                              class="ml-4 mt-0 pt-0"
-                                            ></v-checkbox>
-                                          </v-expansion-panel-content>
-                                        </v-expansion-panel>
-                                      </v-expansion-panels>
-                                    </template> -->
-
-                                    <template
-                                      v-else-if="subItem.renderAs == 'text'"
-                                    >
-                                      <p class="text-center">
-                                        <span v-html="subItem.name"></span>
-                                      </p>
-                                    </template>
-                                  </div>
-                                </v-expansion-panel-content>
-                              </v-expansion-panel>
-                            </v-expansion-panels>
-                          </template>
-
-                          <template v-else-if="item.renderAs == 'text'">
-                            <p class="text-center">
-                              <span v-html="item.name"></span>
-                            </p>
-                          </template>
-                        </div>
-                      </v-expansion-panel-content>
-                    </v-expansion-panel>
-                  </v-expansion-panels>
-
-                  <!-- Backgroundmaps -->
-                  <template>
-                    <v-expansion-panels
-                      class="mb-4"
-                      v-model="backGroundMaps.openOnStartUp"
-                      multiple
-                    >
-                      <v-expansion-panel style="backgroundColor: #f7f7f7;">
-                        <v-expansion-panel-header class="my-0 py-0">
-                          <v-container fluid class="ma-0 pa-0">
-                            <v-row>
-                              <v-col cols="10">
-                                <v-checkbox
-                                  @click.native.stop
-                                  @change="toggleBackgroundMaps"
-                                  v-model="backGroundMaps.visible"
-                                  on-icon="mdi-eye"
-                                  off-icon="mdi-eye-off"
-                                  class="my-0 py-0"
-                                  style="height: 20px;"
-                                  ><template v-slot:label>
-                                    <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
-                                    <span
-                                      class="d-inline-block text-truncate"
-                                      style="max-width: 250px;"
-                                    >
-                                      Taustakartat
-                                    </span>
-                                  </template>
-                                </v-checkbox>
-                              </v-col>
-                              <!-- <v-col
-                                cols="2"
-                                class="text-right pr-4"
-                                style="line-height:24px;"
-                                >1/3</v-col
-                              > -->
-                              <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
-                            </v-row>
-                          </v-container>
-                        </v-expansion-panel-header>
-
-                        <v-expansion-panel-content>
-                          <template>
-                            <v-radio-group
-                              v-model="backGroundMaps.selected"
-                              :mandatory="true"
-                              class="mt-0"
-                              @change="toggleBackgroundMaps"
-                            >
-                              <div
-                                v-for="item in backGroundMaps.layers"
-                                :key="item.id"
-                                max-width="100%"
-                                class="ml-4 pl-4 mt-0 pb-4"
-                              >
-                                <v-radio
-                                  :label="item.name"
-                                  :value="item.id"
-                                ></v-radio>
-                              </div>
-                            </v-radio-group>
-                          </template>
-                        </v-expansion-panel-content>
-                      </v-expansion-panel>
-                    </v-expansion-panels>
-                  </template>
-                </template>
-              </v-card>
-            </v-row>
           </v-card-text>
         </v-card>
       </v-dialog>
@@ -3555,6 +3962,7 @@ export default {
 
   mounted: function() {
     let self = this;
+    this.dialogLayers = !this.$vuetify.breakpoint.mobile
     this.initOskariChannel();
 
     // Define EPSG3067 coordinate system for proj4.js (coordinate tranforms)
