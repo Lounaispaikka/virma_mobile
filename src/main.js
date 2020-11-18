@@ -1,4 +1,5 @@
 import Vue from "vue";
+import VueRouter from 'vue-router';
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 
@@ -7,6 +8,7 @@ import vuetify from "./plugins/vuetify";
 // Vue.use(LoadScript);
 
 Vue.config.productionTip = false;
+Vue.use(VueRouter);
 
 // TODO remove when finished playing with
 // eslint-disable-next-line
@@ -16,7 +18,12 @@ var store = {
   }
 };
 
+const router = new VueRouter({
+  mode: "history"
+});
+
 new Vue({
+  router,
   vuetify,
   data: { sharedState: store.state },
   render: h => h(App)
