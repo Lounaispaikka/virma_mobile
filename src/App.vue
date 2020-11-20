@@ -28,13 +28,27 @@
         style="width:100%; max-width:500px;"
         class="d-flex justify-space-around"
       >
-        <v-btn icon large @click.stop="dialogSearch = !dialogSearch">
+        <v-btn icon large @click.stop="toggleDialog('search', true)">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
         <!-- <v-spacer></v-spacer> -->
 
         <!-- TODO add tooltip -->
-        <v-btn icon large @click.stop="dialogLayers = !dialogLayers">
+        <v-btn
+          v-if="!$vuetify.breakpoint.mobile"
+          icon
+          large
+          @click.stop="dialogLayers = !dialogLayers"
+        >
+          <v-icon>mdi-layers-triple</v-icon>
+        </v-btn>
+
+        <v-btn
+          v-else
+          icon
+          large
+          @click.stop="toggleDialog('layers', true)"
+        >
           <v-icon>mdi-layers-triple</v-icon>
         </v-btn>
         <!-- <v-spacer></v-spacer> -->
@@ -43,7 +57,7 @@
           <v-icon>mdi-overscan</v-icon>
         </v-btn>
 
-        <v-btn icon large @click.stop="dialogHelp = !dialogHelp">
+        <v-btn icon large @click.stop="toggleDialog('help', true)">
           <v-icon>mdi-help</v-icon>
         </v-btn>
       </span>
@@ -197,7 +211,7 @@
                         small
                         depressed
                         class="mx-2"
-                        @click="dialogSearch = true"
+                        @click.stop="toggleDialog('search', true)"
                         ><v-icon>mdi-magnify</v-icon></v-btn
                       >
                       ja valitse "Näytä valitut kartalla"
@@ -550,7 +564,7 @@
             <v-toolbar-title>Kartalla näkyvät tasot</v-toolbar-title>
             <v-spacer></v-spacer>
 
-            <v-btn icon @click="dialogLayers = false">
+            <v-btn icon @click.stop="closeDialog('layers')">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-toolbar>
@@ -629,8 +643,8 @@
                                 class="mx-2"
                                 @click="
                                   {
-                                    dialogLayers = false;
-                                    dialogSearch = true;
+                                    toggleDialog('layers', false);
+                                    toggleDialog('search', true);
                                   }
                                 "
                                 ><v-icon>mdi-magnify</v-icon></v-btn
@@ -978,7 +992,7 @@
             <v-toolbar-title>Hae reittejä ja kohteita</v-toolbar-title>
             <v-spacer></v-spacer>
 
-            <v-btn icon @click="dialogSearch = false">
+            <v-btn icon @click.stop="closeDialog('search')">
               <v-icon>mdi-close</v-icon>
             </v-btn>
 
@@ -1482,7 +1496,7 @@
             }}</v-toolbar-title>
             <v-spacer></v-spacer>
 
-            <v-btn icon @click="dialogVectorFeatureInfo = false">
+            <v-btn icon @click.stop="closeDialog('feature-info')">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-toolbar>
@@ -1613,7 +1627,7 @@
             </v-toolbar-title>
             <v-spacer></v-spacer>
 
-            <v-btn icon @click="dialogHelp = false">
+            <v-btn icon @click.stop="closeDialog('help')">
               <v-icon>mdi-close</v-icon>
             </v-btn>
 
@@ -1645,8 +1659,8 @@
                           small
                           depressed
                           @click="
-                            dialogHelp = false;
-                            dialogSearch = true;
+                            toggleDialog('help', false);
+                            toggleDialog('search', true);
                           "
                         >
                           <v-icon>mdi-magnify</v-icon>
@@ -1668,14 +1682,32 @@
                     <v-col cols="2" class="d-flex">
                       <div class="mx-auto">
                         <v-btn
+                          v-if="!$vuetify.breakpoint.mobile"
                           color="#627f9a"
                           dark
                           fab
                           small
                           depressed
                           @click="
-                            dialogHelp = false;
+                            toggleDialog('help', false);
+                            // not using toggleDialog('layers', true) here
+                            // because that would push hash to url in desktop
                             dialogLayers = true;
+                          "
+                        >
+                          <v-icon>mdi-layers-triple</v-icon>
+                        </v-btn>
+
+                        <v-btn
+                          v-else
+                          color="#627f9a"
+                          dark
+                          fab
+                          small
+                          depressed
+                          @click="
+                            toggleDialog('help', false);
+                            toggleDialog('layers', true);
                           "
                         >
                           <v-icon>mdi-layers-triple</v-icon>
@@ -1706,7 +1738,7 @@
                           small
                           depressed
                           @click="
-                            dialogHelp = false;
+                            toggleDialog('help', false);
                             toggleFullScreen();
                           "
                         >
@@ -1745,7 +1777,7 @@
                           small
                           depressed
                           @click="
-                            dialogHelp = false;
+                            toggleDialog('help', false);
                             showPosition.status = !showPosition.status;
                             toggleShowAndUpdatePosition();
                           "
@@ -1773,7 +1805,7 @@
                           small
                           depressed
                           @click="
-                            dialogHelp = false;
+                            toggleDialog('help', false);
                             keepMapCenteredToPosition = !keepMapCenteredToPosition;
                           "
                         >
@@ -2563,6 +2595,49 @@ export default {
         }
       },
       deep: true
+    },
+
+    // Remove layers-hash from url when page is resized from mobile to desktop
+    // and push it to url when desktop -> mobile (if layers are open when page resizes)
+    "$vuetify.breakpoint.mobile"(mobile) {
+      if (!mobile && this.$route.hash == "#layers") {
+        this.$router.replace("");
+        this.dialogLayers = true;
+      } else if (mobile && this.dialogLayers == true) {
+        this.$router.push("#layers");
+      }
+    },
+
+    // Monitors url-hashes and toggles dialogs according to hash
+    "$route.hash"(newHash, oldHash) {
+      if (newHash === "#search") {
+        this.dialogSearch = true;
+      } else if (oldHash === "#search") {
+        this.dialogSearch = false;
+      }
+
+      if (newHash === "#layers") {
+        this.dialogLayers = true;
+      } else if (oldHash === "#layers" && !this.$vuetify.breakpoint.mobile) {
+        // Don't do anything, just catch...
+        // The idea here is to not close layers if layout changes from mobile to desktop.
+        // Only time that there is #layers-hash in desktop, should be when changing
+        // from mobile to desktop.
+      } else if (oldHash === "#layers") {
+        this.dialogLayers = false;
+      }
+
+      if (newHash === "#help") {
+        this.dialogHelp = true;
+      } else if (oldHash === "#help") {
+        this.dialogHelp = false;
+      }
+
+      if (newHash === "#feature-info") {
+        this.dialogVectorFeatureInfo = true;
+      } else if (oldHash === "#feature-info") {
+        this.dialogVectorFeatureInfo = false;
+      }
     }
   },
 
@@ -2697,11 +2772,59 @@ export default {
       });
     },
 
+    /**
+     * @description Open or close dialog.
+     * Works by adding hash to url so that route-watcher can toggle appropriate dialog.
+     * This way dialogs can be opened/closed also with browsers forward/back-button.
+     *
+     * @param {String} dialog - dialog name as one of the:
+     * "search", "layers", "help", "feature-info". This is added to url as eg. url/#search
+     * @param {Boolean} open - true to open dialog, false to navigating back
+     * ( which may mean closing dialog if there are no other hash-items in history stack
+     * or closing dialog and opening other if there are other hash-items in history).
+     * For 'just' closing dialog, see closeDialog
+     * @returns {Undefined} - Does not return anything
+     */
+    toggleDialog: function(dialog, open) {
+      if (open) {
+        this.$router.push("#" + dialog);
+        
+      } else {
+        this.$router.back();
+      }
+    },
+
+    /**
+     * @description Close dialog and remove the hash from url.
+     * Doesn't navigate back like toggleDialog("..", false), but instead just closes dialog
+     * and clears hash (like it should be in 'main' view).
+     * In other words, back-button works with both, but toggleDialog creates 'linear' history:
+     * "<empty>" -> "layers" -> "search" (and now backbutton) -> "layers" -> "<empty>"
+     * where as close dialog may have root address in the middle of history stack:
+     * "<empty>" -> "layers" -> "search" -> "<empty>" (here closeDialog is called) -> "help"
+     *
+     * @param {String} dialog - dialog name to close as one of the:
+     * "search", "layers", "help", "feature-info".
+     * @returns {Undefined} - Does not return anything
+     */
+    closeDialog: function(dialog) {
+      if (this.$route.hash == "#feature-info") {
+        // (feature-info is different pattern than others)
+        this.dialogVectorFeatureInfo = false;
+      } else {
+        eval("this.dialog" + dialog.charAt(0).toUpperCase() + dialog.slice(1) + "= false") ;
+      }
+      // #navigation is used just as temporary hash because othervise .replace would replace
+      // last real hash and back-button would navigate to one before last one
+      this.$router.push("#navigation");
+      this.$router.replace("");
+    },
+
     // TODO JsDoc
     showInfoForVectorFeature: function(data) {
       // save data here and refer to it in dialog-template
       this.clickedVectorFeature = data.features[0].geojson.features[0];
-      this.dialogVectorFeatureInfo = true;
+      this.toggleDialog("feature-info", true)
       // TODO remove console.logs
       console.log("FeatureEventId: " + data.features[0].id);
       console.log("FeatureLayer: " + data.features[0].layerId);
@@ -2852,7 +2975,7 @@ export default {
     // TODO remove or replace with Ohjeet-dialog logic
     showHelpDialog: function() {
       this.dialogWelcome = false;
-      this.dialogHelp = true;
+      this.toggleDialog("help", true);
     },
 
     /**
@@ -3472,7 +3595,7 @@ export default {
       this.findTypesOfSelectedFeatures();
       this.createVectorLayersForSelectedTypes();
       this.addSelectedFeaturesToVectorLayers();
-      this.dialogSearch = false;
+      this.closeDialog('search')
       this.channel.postRequest("MapModulePlugin.ZoomToFeaturesRequest", []);
       this.fillSearchResultsToLayersMenu();
       this.selectedSearchResultLayers.visible = true;
@@ -3965,6 +4088,13 @@ export default {
   mounted: function() {
     let self = this;
     this.dialogLayers = !this.$vuetify.breakpoint.mobile
+
+    // Ensure in app start that there is no hash in url
+    // ( maybe somebody copy-pasted the url or reloaded page when dialog is open )
+    if(this.$route.hash != "") {
+      this.$router.replace("");
+    }
+
     this.initOskariChannel();
 
     // Define EPSG3067 coordinate system for proj4.js (coordinate tranforms)
