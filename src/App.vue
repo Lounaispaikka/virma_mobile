@@ -1547,6 +1547,8 @@
               esimerkiksi etsiä lähimmät uimarannat tai matkailupalvelut. Löydät
               palvelusta jo yli 1000 kohdetta, ja määrä kasvaa koko ajan.
             </p>
+            <p><strong>HUOMIO!<br>
+            Virma Kartta on vielä kehitysvaiheessa ja palvelun ulkoasu ja toiminnallisuus saattavat muuttua.</strong></p>
             <p>
               Tästä pääset suoraan suosituimpiin reitteihimme sekä kohteisiin!
             </p>
