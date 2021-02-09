@@ -169,8 +169,8 @@
                           v-model="selectedSearchResultLayers.visible"
                           on-icon="mdi-eye"
                           off-icon="mdi-eye-off"
-                          class="my-0 py-0"
-                          style="height: 20px;"
+                          class="my-0 pb-0 pt-2"
+                          style="height: 40px;"
                           ><template v-slot:label>
                             <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                             <span
@@ -273,6 +273,7 @@
                 "
                 :disabled="layer.subContent.length == 0 ? true : false"
                 class="my-0 py-0"
+                
               >
                 <v-container fluid class="ma-0 pa-0">
                   <v-row>
@@ -283,26 +284,50 @@
                         v-model="layer.visible"
                         on-icon="mdi-eye"
                         off-icon="mdi-eye-off"
-                        class="my-0 py-0"
-                        style="height: 20px;"
+                        
+                        :class="layer.hasOwnProperty('nameXs') && layer.nameXs.length > 0 ? 'my-0 py-0' : 'my-0 pb-0 pt-2'"
+                        style="height: 40px;"
                         ><template v-slot:label>
                           <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
-                          <span
+                          <div
+                            v-if="layer.hasOwnProperty('nameXs') && layer.nameXs.length > 0"
                             class="d-inline-block text-truncate"
                             style="max-width: 350px;"
                           >
-                            {{ layer.name }}
-                          </span>
+                            <span
+                              class="caption"
+                            >
+                              {{ layer.nameXs }}<br>
+                            </span>
+                            <span>
+                              {{ layer.name  }}
+                            </span>
+                            <span
+                              v-if="layer.subContent.length > 0"
+                              class="pl-3"
+                            >
+                              ( {{ layer.checkedSubContentCount }} / {{ layer.subContent.length }} )
+                            </span>
+                          </div>
+
+                          <div
+                            v-else
+                            class="d-inline-block text-truncate"
+                            style="max-width: 350px;"
+                          >
+                            <span>
+                              {{ layer.name  }}
+                            </span>
+                            <span
+                              v-if="layer.subContent.length > 0"
+                              class="pl-3"
+                            >
+                              ( {{ layer.checkedSubContentCount }} / {{ layer.subContent.length }} )
+                            </span>
+                          </div>
                         </template>
                       </v-checkbox>
                     </v-col>
-                    <!-- <v-col
-                      cols="2"
-                      class="text-right pr-4"
-                      style="line-height:24px;"
-                      >1/3</v-col
-                    > -->
-                    <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
                   </v-row>
                 </v-container>
               </v-expansion-panel-header>
@@ -718,26 +743,50 @@
                                 v-model="layer.visible"
                                 on-icon="mdi-eye"
                                 off-icon="mdi-eye-off"
-                                class="my-0 py-0"
-                                style="height: 20px;"
+                                
+                                :class="layer.hasOwnProperty('nameXs') && layer.nameXs.length > 0 ? 'my-0 py-0' : 'my-0 pb-0 pt-2'"
+                                style="height: 40px;"
                                 ><template v-slot:label>
                                   <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
-                                  <span
+                                  <div
+                                    v-if="layer.hasOwnProperty('nameXs') && layer.nameXs.length > 0"
                                     class="d-inline-block text-truncate"
                                     style="max-width: 350px;"
                                   >
-                                    {{ layer.name }}
-                                  </span>
+                                    <span
+                                      class="caption"
+                                    >
+                                      {{ layer.nameXs }}<br>
+                                    </span>
+                                    <span>
+                                      {{ layer.name  }}
+                                    </span>
+                                    <span
+                                      v-if="layer.subContent.length > 0"
+                                      class="pl-3"
+                                    >
+                                      ( {{ layer.checkedSubContentCount }} / {{ layer.subContent.length }} )
+                                    </span>
+                                  </div>
+
+                                  <div
+                                    v-else
+                                    class="d-inline-block text-truncate"
+                                    style="max-width: 350px;"
+                                  >
+                                    <span>
+                                      {{ layer.name  }}
+                                    </span>
+                                    <span
+                                      v-if="layer.subContent.length > 0"
+                                      class="pl-3"
+                                    >
+                                      ( {{ layer.checkedSubContentCount }} / {{ layer.subContent.length }} )
+                                    </span>
+                                  </div>
                                 </template>
                               </v-checkbox>
                             </v-col>
-                            <!-- <v-col
-                              cols="2"
-                              class="text-right pr-4"
-                              style="line-height:24px;"
-                              >1/3</v-col
-                            > -->
-                            <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
                           </v-row>
                         </v-container>
                       </v-expansion-panel-header>
@@ -2571,6 +2620,9 @@ export default {
   },
 
   watch: {
+    // NOTE: In addition to watchers here, there are also dynamic watchers added in
+    // mounted-hook (setCheckedWatcher)
+
     // TODO JsDoc
     keepMapCenteredToPosition: function(updatedKeepMapCenteredToPosition) {
       if (
@@ -3266,7 +3318,7 @@ export default {
     /**
      * @description Set parent pointers for items (and sub-items) in config.js renderStructureTEST.layers
      * (layers-menu). This makes it possible to travel menu-structure upwards to find out
-     * whether all items parents are visible (allParentsVisible).
+     * whether all items parents are visible (allParentsVisible). Used in mounted-hook.
      *
      * @param {Object} node item or sub-item in renderStructureTEST.layers (or .subContent)
      * @returns {Undefined} - Does not return anything
@@ -3283,6 +3335,47 @@ export default {
         }, this);
       }
       return;
+    },
+
+    /**
+     * @description Set Vue watchers for checkbox items in config.js renderStructureTEST.layers
+     * (layers-menu). These watchers then update the count (checkedSubContentCount property)
+     * for checked items (which is visible in menu). Used in mounted-hook.
+     *
+     * @param {Object} node item in renderStructureTEST.layers
+     * @returns {Undefined} - Does not return anything
+     */
+    setCheckedWatcher: function(node) {
+      const self = this;
+      // eslint-disable-next-line no-prototype-builtins
+      if (node.hasOwnProperty("subContent") && node.subContent.length > 0) {
+        node.checkedSubContentCount = 0;
+        
+        node.subContent.forEach(function(subItem) {
+          if (subItem.id) {
+            if (subItem.type == "wms") {
+              if (subItem.renderAs == "checkbox") {
+                self.$watch(
+                  function() {
+                    return subItem.checked;
+                  },
+                  function(newValue) {
+                    if (newValue == true) {
+                      node.checkedSubContentCount++;
+                    } else {
+                      node.checkedSubContentCount--;
+                    }
+                  }
+                )
+
+                if (subItem.checked) {
+                  node.checkedSubContentCount++;
+                }
+              }
+            }
+          }
+        });
+      }
     },
 
     // TODO JsDoc
@@ -4105,9 +4198,11 @@ export default {
     );
 
     // Set parent pointers for layers-menu-items
+    // and Vue watchers for checked state of checkbox items (for counting checked menu items)
     this.renderStructureTEST.layers.forEach(function(layer) {
       layer.parent = null; // top-level nodes
       self.setParentPointer(layer);
+      self.setCheckedWatcher(layer);
     });
     this.welcomeContent = welcomeContent;
   },

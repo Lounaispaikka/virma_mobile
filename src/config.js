@@ -198,7 +198,8 @@ export let renderStructureTEST = {
 
     // Kohteet
     {
-      name: "Varsinais-Suomen virkistyskohteet",
+      nameXs: "Varsinais-Suomen",
+      name: "Virkistyskohteet",
       id: 1349, //1166, // layer id:s are logged to console when logLayerInfoToConsole = true
       type: "wms",
       visible: false, // visibility on startup
@@ -212,7 +213,8 @@ export let renderStructureTEST = {
     },
 
     {
-      name: "Varsinais-Suomen luontomatkailupalvelut",
+      nameXs: "Varsinais-Suomen",
+      name: "Luontomatkailupalvelut",
       id: 1355, //1166, // TODO Add layer in Karttapalvelu (and here...)
       type: "wms",
       visible: false,
@@ -227,7 +229,8 @@ export let renderStructureTEST = {
 
     // Reitit
     {
-      name: "Varsinais-Suomen virkistysreitit",
+      nameXs: "Varsinais-Suomen",
+      name: "Virkistysreitit",
       id: null,
       type: "virtual",
       visible: true,
