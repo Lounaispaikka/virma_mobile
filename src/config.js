@@ -86,7 +86,7 @@ export let welcomeContent = {
       externalLink: ""
     },
     {
-      name: "Ohjeet",
+      name: "Ohjeet ja karttaselitteet",
       id: null,
       columnWidth: 6,
       bgColor: "",
