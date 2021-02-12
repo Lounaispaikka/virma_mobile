@@ -203,7 +203,7 @@ export let renderStructureTEST = {
       id: 1349, //1166, // layer id:s are logged to console when logLayerInfoToConsole = true
       type: "wms",
       visible: false, // visibility on startup
-      checked: null, // null unless renderAs == "checkbox"
+      checked: null, // null unless renderAs == "checkbox", now used also for 'select all'
       renderAs: "accordion",
       style: {
         backgroundColor: "#e4effa",

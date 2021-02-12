@@ -334,6 +334,23 @@
 
               <v-expansion-panel-content>
                 <div
+                  v-if="layer.subContent.length > 1"
+                  max-width="100%"
+                  class="ml-4 mt-0 py-0"
+                >
+                  <v-checkbox
+                    v-model="layer.checked"
+                    @change="selectAllSubContentItems(layer, $event)"
+                    class="ml-4 mt-0 py-0"
+                  >
+                    <template v-slot:label>
+                      <div>
+                        Valitse kaikki / poista valinnat
+                      </div>
+                    </template>
+                  </v-checkbox>
+                </div>
+                <div
                   v-for="(item, i) in layer.subContent"
                   :key="i"
                   max-width="100%"
@@ -342,7 +359,7 @@
                   <v-checkbox
                     v-if="item.renderAs == 'checkbox'"
                     v-model="item.checked"
-                    @change="toggleChecked(item)"
+                    @change="toggleChecked(item, layer)"
                     class="ml-4 mt-0 py-0"
                   >
                     <template v-slot:label>
@@ -793,6 +810,23 @@
 
                       <v-expansion-panel-content>
                         <div
+                          v-if="layer.subContent.length > 1"
+                          max-width="100%"
+                          class="ml-4 mt-0 py-0"
+                        >
+                          <v-checkbox
+                            v-model="layer.checked"
+                            @change="selectAllSubContentItems(layer, $event)"
+                            class="ml-4 mt-0 py-0"
+                          >
+                            <template v-slot:label>
+                              <div>
+                                Valitse kaikki / poista valinnat
+                              </div>
+                            </template>
+                          </v-checkbox>
+                        </div>
+                        <div
                           v-for="(item, i) in layer.subContent"
                           :key="i"
                           max-width="100%"
@@ -801,7 +835,7 @@
                           <v-checkbox
                             v-if="item.renderAs == 'checkbox'"
                             v-model="item.checked"
-                            @change="toggleChecked(item)"
+                            @change="toggleChecked(item, layer)"
                             class="ml-4 mt-0 py-0"
                           >
                             <template v-slot:label>
@@ -3096,13 +3130,15 @@ export default {
     },
 
     // TODO JsDoc
-    toggleChecked: function(eventTarget) {
+    toggleChecked: function(eventTarget, layer) {
       // NOTE! item refers to layer structure from config, which is separate from actual Oskari-layer items (objects)
       // this also means that item.visible and Oskari-layer item.visible are not the same setting
       // (even though they reflect each other)
       // item.visible is for state of application, Oskari-item.visible actually controls visibility
       // Templates v-model also modifies .visible and .checked state
       // (because they control the rendering of eye-icon and checkbox)
+      // Also controls the state of Select / deselect all -checkbox
+      // (checked when all subContent items are checked, not checked othervise)
 
       let item = eventTarget;
       let channel = this.channel;
@@ -3110,6 +3146,11 @@ export default {
       if (item.id) {
         if (item.type == "wms") {
           if (item.renderAs == "checkbox" && item.checked) {
+            // Check 'select all' if all subcontent is checked
+            if (this.allSubContentSelected(layer)) {
+              layer.checked = true;
+            }
+
             if (this.allParentsVisible(item)) {
               // TODO remove console.logs
               console.log(
@@ -3129,6 +3170,9 @@ export default {
               false
             ]);
             item.visible = false;
+
+            // Uncheck 'select all' if some (or  all) of subcontent is unchecked
+            layer.checked = false;
           }
           // console.log(
           //   "WMS2: " + item.id + " " + item.name + ", visible:" + item.visible
@@ -3137,6 +3181,48 @@ export default {
           // item.type something else
         }
       }
+    },
+
+    /**
+     * @description Selects (checks) or deselects all menu-layers subContent items
+     *
+     * @param {Object} layer - layer item from config.js renderStructureTEST.layers
+     * @param {Object} event - Vue change event for getting checkbox state
+     * @returns {Undefined} - Does not return anything
+     */
+    selectAllSubContentItems: function(layer, event) {
+      if (event == true) {
+        layer.subContent.forEach(
+          item => { 
+            item.checked = true;
+            this.toggleChecked(item, layer);
+          }
+        );
+      } else {
+        layer.subContent.forEach(
+          item => { 
+            item.checked = false;
+            this.toggleChecked(item, layer);
+          }
+        );
+      }
+    },
+
+    /**
+     * @description Checks if all layers subContent items are selected (checked).
+     * Returns early (as soon as subContent item that is not checked, is found).
+     *
+     * @param {Object} layer - layer item from config.js renderStructureTEST.layers
+     * @returns {Boolean} - returns false if any or all subContent item is not checked,
+     * and true if all are checked
+     */
+    allSubContentSelected: function(layer) {
+      for (let item of layer.subContent) {
+        if (!item.checked) {
+          return false
+        }
+      }
+      return true;
     },
 
     /**
@@ -4203,6 +4289,11 @@ export default {
       layer.parent = null; // top-level nodes
       self.setParentPointer(layer);
       self.setCheckedWatcher(layer);
+
+      // Initialize Select / deselect all state
+      if (self.allSubContentSelected(layer)) {
+        layer.checked = true;
+      }
     });
     this.welcomeContent = welcomeContent;
   },
