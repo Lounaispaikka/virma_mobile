@@ -3316,8 +3316,11 @@ export default {
               // TODO move to config.js
               featureStyle: {
                 image: {
-                  shape: 0,
-                  size: 3 // Oskari icon size.
+                  shape: 2,
+                  size: 4,
+                  fill: {
+                    color: "#ff0000" // image fill color
+                  }
                 }
               }
             }
@@ -3956,17 +3959,17 @@ export default {
             // TODO move to config.js
             featureStyle: {
               image: {
-                shape: 0,
+                shape: 2,
                 //shape: "https://mobile.virma.fi/symbols/Oskari-map-pin.svg",
-                size: 3 // Oskari icon size.
+                size: 4, // Oskari icon size.
                 //sizePx: 80, // Exact icon px size. Used if 'size' not defined.
                 // offsetX: 0, // image offset x
                 // offsetY: 0, // image offset y
                 // opacity: 0.7, // image opacity
                 // radius: 2 // image radius
-                // fill: {
-                //   color: "#ff00ff" // image fill color
-                // }
+                fill: {
+                  color: "#ff0000" // image fill color
+                }
               }
             }
           }
