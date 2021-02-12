@@ -123,10 +123,6 @@ export let backGroundMaps = {
       id: 1175
     },
     {
-      name: "OpenStreetMap",
-      id: 329
-    },
-    {
       name: "Ilmakuva",
       id: 1165
     }
