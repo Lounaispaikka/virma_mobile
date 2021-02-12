@@ -1735,6 +1735,17 @@
                   <v-row class="d-flex align-start">
                     <v-col cols="2" class="d-flex">
                       <div class="mx-auto">
+                        
+                      </div>
+                    </v-col>
+                    <v-col cols="10">
+                      Virma Kartta sovellukseen liittyvistä ongelmista voit ilmoittaa sähköpostitse osoitteeseen virma@lounaistieto.fi
+                    </v-col>
+                  </v-row>
+
+                  <v-row class="d-flex align-start">
+                    <v-col cols="2" class="d-flex">
+                      <div class="mx-auto">
                         <v-btn
                           color="#627f9a"
                           dark
