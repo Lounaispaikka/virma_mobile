@@ -308,8 +308,8 @@
                             : require(`@/assets/mapsymbols/${item.legend.imageName}`)
                         "
                         :alt="item.name"
-                        max-width="40px"
-                        max-height="40px"
+                        max-width="30px"
+                        max-height="30px"
                         class=""
                       ></v-img>
                     </template>
@@ -710,8 +710,8 @@
                                     : require(`@/assets/mapsymbols/${item.legend.imageName}`)
                                 "
                                 :alt="item.name"
-                                max-width="40px"
-                                max-height="40px"
+                                max-width="30px"
+                                max-height="30px"
                                 class=""
                               ></v-img>
                             </template>
