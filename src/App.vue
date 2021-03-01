@@ -1791,7 +1791,7 @@
                     v-for="route in helpDialogSymbols.routes"
                     :key="route.key"
                   >
-                    <v-col cols="2" class="d-flex">
+                    <v-col cols="2" class="d-flex" align-self="start">
                       <div class="mx-auto">
                         <v-img
                           :src="
@@ -1800,7 +1800,9 @@
                               : require(`@/assets/mapsymbols/${route.imageName}`)
                           "
                           :alt="route.key"
-                          class="mt-4"
+                          class="mt-2"
+                          max-width="40px"
+                          max-height="40px"
                         ></v-img>
                       </div>
                     </v-col>
@@ -2141,19 +2143,19 @@ export default {
           key: "Retkeilyreitti",
           description:
             "Patikointiin tarkoitettu, yleensä vähintään useita kilometrejä pitkä reitti, joka on yleensä maastossa viitoitettu.",
-          imageName: "retkeilyreitti_60px.jpg"
+          imageName: "retkeilyreitti_60px.png"
         },
         {
           key: "Luontopolku",
           description:
             "Suhteellisen lyhyt luonnossa kulkeva polku, jonka varrella on yleensä luontoon ja polun ympäristöön liittyviä opastauluja. Opastussisältö voi olla myös digitaalista mobiililaitteilla luettavaa.",
-          imageName: "luontopolku_60px.jpg"
+          imageName: "luontopolku_60px.png"
         },
         {
           key: "Kulttuuriulkoilureitti",
           description:
             "Yleisesti kulttuuriympäristöön, kulttuuriperintöön ja kulttuurimaisemaan pohjautuva reitti. Reitti voi kulkea paikoin myös hyvin urbaanissa ympäristössä.",
-          imageName: "kulttuuriulkoilureitti_60px.jpg"
+          imageName: "kulttuuriulkoilureitti_60px.png"
         },
         {
           key: "Hevosreitti",
@@ -2170,30 +2172,30 @@ export default {
           key: "Melontareitti",
           description:
             "Melontaan tarkoitettu reitti, jonka varrella on yleensä kanootin nosto- ja laskupaikkoja sekä mahdollisuus kantaa kanootti kosken tai padon ohi.",
-          imageName: "melontareitti_60px.jpg"
+          imageName: "melontareitti_60px.png"
         },
         {
           key: "Kuntoreitti",
           description:
             "Yleensä valaistu juoksuun tai hölkkäämiseen tarkoitettu reitti puru- tai sorapinnoitteella. ",
-          imageName: "kuntoreitti_60px.jpg"
+          imageName: "kuntoreitti_60px.png"
         },
         {
           key: "Retkilatu",
           description:
             "Retkihiihtoon tarkoitettu latupohja. Yleensä perinteisen tyylin latu. Retkiladun ura voi olla merkitty myös vesialueelle, jolloin latu tehdään jäätilanteen niin salliessa.",
-          imageName: "retkilatu_60px.jpg"
+          imageName: "retkilatu_60px.png"
         },
         {
           key: "Matkailureitti",
           description:
             "Yleensä kymmeniä kilometrejä pitkä reitti, joka on suunniteltu kuljettavan muulla tavoin kuin kävellen esim. autolla tai ryhmämatkailubussilla.",
-          imageName: "matkailureitti_60px.jpg"
+          imageName: "matkailureitti_60px.png"
         },
         {
           key: "Pyöräilyreitti",
           description: "Pyöräilyyn tarkoitettu tiepohjia noudattava reitti.",
-          imageName: "pyöräilyreitti_60px.jpg"
+          imageName: "pyöräilyreitti_60px.png"
         }
       ],
       pointsRecreation: [
