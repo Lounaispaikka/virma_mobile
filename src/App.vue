@@ -1265,6 +1265,7 @@
                           fixed
                           cols="12"
                           @click="resetSelectedSearchResults"
+                          :disabled="selectedSearchResultCount > 0 ? false : true"
                         >
                           Tyhjennä valinnat
                         </v-btn>
