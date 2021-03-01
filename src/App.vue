@@ -3155,7 +3155,7 @@ export default {
                   // opacity: 0.7, // image opacity
                   // radius: 2 // image radius
                   fill: {
-                    color: "#ff0000" // image fill color
+                    color: "rgba(255, 0, 0, 0.7)" // image fill color
                   }
                 }
               }
@@ -3172,8 +3172,10 @@ export default {
               // TODO move to config.js
               featureStyle: {
                 stroke: {
-                  color: "rgba(235, 174, 52,1)",
-                  width: 4
+                  color: "rgba(255, 0, 0, 0.7)",
+                  width: 8,
+                  lineDash: "dot", // line dash, supported: dash, dashdot, dot, longdash, longdashdot and solid
+                  lineCap: "round", // line cap, supported: mitre, round and square
                 }
               }
             }
