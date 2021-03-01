@@ -1020,7 +1020,7 @@
                           </v-card-actions>
                           <v-text-field
                             v-model="searchOptions.searchText"
-                            hint="Esim. Kurjenrahka"
+                            hint="Esim. kuhankuono"
                             label="Vapaasanahaku"
                             clearable
                             outlined
