@@ -990,7 +990,34 @@
                       </template>
 
                       <template v-else>
-                        <v-form ref="searchForm">
+                        <v-form
+                          ref="searchForm"
+                          @submit.prevent="searchRoutesAndPoints"
+                        >
+                          <v-card-actions
+                            class="justify-center mb-4"
+                          >
+                            <v-btn
+                              color="success"
+                              class="mr-2"
+                              width="120px"
+                              type="submit"
+                            >
+                              Hae
+                            </v-btn>
+
+                            <v-btn
+                              color="warning"
+                              width="120px"
+                              @click="
+                                resetSearchForm();
+                                resetSearchResults();
+                                resetSelectedSearchResults();
+                              "
+                            >
+                              Tyhjennä
+                            </v-btn>
+                          </v-card-actions>
                           <v-text-field
                             v-model="searchOptions.searchText"
                             hint="Esim. Kurjenrahka"
@@ -1195,32 +1222,6 @@
                         </v-form>
                       </template>
                     </v-container>
-
-                    <v-card-actions
-                      v-if="renderStructureTEST.layersLoaded"
-                      class="justify-center"
-                    >
-                      <v-btn
-                        color="success"
-                        class="mr-2"
-                        width="120px"
-                        @click="searchRoutesAndPoints"
-                      >
-                        Hae
-                      </v-btn>
-
-                      <v-btn
-                        color="warning"
-                        width="120px"
-                        @click="
-                          resetSearchForm();
-                          resetSearchResults();
-                          resetSelectedSearchResults();
-                        "
-                      >
-                        Tyhjennä
-                      </v-btn>
-                    </v-card-actions>
                   </v-card>
                 </v-row>
               </v-tab-item>
