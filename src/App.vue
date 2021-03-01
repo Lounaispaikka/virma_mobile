@@ -158,15 +158,14 @@
           <template>
             <v-expansion-panels class="mb-4 ml-2">
               <v-expansion-panel style="backgroundColor: #eedbad;">
-                <v-expansion-panel-header class="my-0 py-0">
+                <v-expansion-panel-header class="my-0 py-0" hide-actions>
                   <v-container fluid class="ma-0 pa-0">
                     <v-row>
                       <v-col cols="10">
-                        <!-- v-model="layer.visible" -->
                         <v-checkbox
                           @click.native.stop
                           @change="toggleVisibilityOfSearchResults"
-                          v-model="selectedSearchResultLayers.visible"
+                          v-model="searchResults.visible"
                           on-icon="mdi-eye"
                           off-icon="mdi-eye-off"
                           class="my-0 pb-0 pt-2"
@@ -177,80 +176,14 @@
                               class="d-inline-block text-truncate"
                               style="max-width: 250px;"
                             >
-                              Hakutulokset (
-                              {{
-                                selectedSearchResultLayers.selectedPoints
-                                  .length +
-                                  selectedSearchResultLayers
-                                    .selectedRoutes.length
-                              }}
-                              )
+                              Hakutulokset ({{ selectedSearchResultCount }})
                             </span>
                           </template>
                         </v-checkbox>
                       </v-col>
-                      <!-- <v-col
-                        cols="2"
-                        class="text-right pr-4"
-                        style="line-height:24px;"
-                        >1/3</v-col
-                      > -->
-                      <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
                     </v-row>
                   </v-container>
                 </v-expansion-panel-header>
-
-                <v-expansion-panel-content>
-                  <template v-if="!hasSelectedFeaturesInLayersMenu">
-                    <div class="pl-8">
-                      Ei tuloksia, käytä Hakutoimintoa
-                      <v-btn
-                        color="#627f9a"
-                        dark
-                        fab
-                        small
-                        depressed
-                        class="mx-2"
-                        @click.stop="toggleDialog('search', true)"
-                        ><v-icon>mdi-magnify</v-icon></v-btn
-                      >
-                      ja valitse "Näytä valitut kartalla"
-                    </div>
-                  </template>
-                  <template v-else>
-                    <div
-                      v-for="pointItem in selectedSearchResultLayers.selectedPoints"
-                      :key="pointItem.id"
-                      max-width="100%"
-                      class="ml-4 mt-0 py-0"
-                    >
-                      <v-checkbox
-                        v-model="pointItem.checked"
-                        @change="toggleCheckedSearchResult(pointItem)"
-                        class="ml-4 mt-0 py-0"
-                        ><template v-slot:label>
-                          <div>{{ pointItem.properties.name_fi }}</div>
-                        </template>
-                      </v-checkbox>
-                    </div>
-
-                    <div
-                      v-for="routeItem in selectedSearchResultLayers.selectedRoutes"
-                      :key="routeItem.id"
-                      max-width="100%"
-                      class="ml-4 mt-0 py-0"
-                    >
-                      <v-checkbox
-                        v-model="routeItem.checked"
-                        @change="toggleCheckedSearchResult(routeItem)"
-                        class="ml-4 mt-0 py-0"
-                        ><template v-slot:label>
-                          <div>{{ routeItem.properties.name_fi }}</div>
-                        </template>
-                      </v-checkbox>
-                    </div>
-                  </template>
-                </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
           </template>
@@ -268,9 +201,7 @@
               :class="layer.style.class"
             >
               <v-expansion-panel-header
-                :expand-icon="
-                  layer.subContent.length == 0 ? '' : undefined
-                "
+                :expand-icon="layer.subContent.length == 0 ? '' : undefined"
                 :disabled="layer.subContent.length == 0 ? true : false"
                 class="my-0 py-0"
                 
@@ -630,15 +561,14 @@
                   <template>
                     <v-expansion-panels class="mb-4">
                       <v-expansion-panel style="backgroundColor: #eedbad;">
-                        <v-expansion-panel-header class="my-0 py-0">
+                        <v-expansion-panel-header class="my-0 py-0" hide-actions>
                           <v-container fluid class="ma-0 pa-0">
                             <v-row>
                               <v-col cols="10">
-                                <!-- v-model="layer.visible" -->
                                 <v-checkbox
                                   @click.native.stop
                                   @change="toggleVisibilityOfSearchResults"
-                                  v-model="selectedSearchResultLayers.visible"
+                                  v-model="searchResults.visible"
                                   on-icon="mdi-eye"
                                   off-icon="mdi-eye-off"
                                   class="my-0 py-0"
@@ -649,85 +579,14 @@
                                       class="d-inline-block text-truncate"
                                       style="max-width: 250px;"
                                     >
-                                      Hakutulokset (
-                                      {{
-                                        selectedSearchResultLayers.selectedPoints
-                                          .length +
-                                          selectedSearchResultLayers
-                                            .selectedRoutes.length
-                                      }}
-                                      )
+                                      Hakutulokset  ({{ selectedSearchResultCount }})
                                     </span>
                                   </template>
                                 </v-checkbox>
                               </v-col>
-                              <!-- <v-col
-                                cols="2"
-                                class="text-right pr-4"
-                                style="line-height:24px;"
-                                >1/3</v-col
-                              > -->
-                              <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
                             </v-row>
                           </v-container>
                         </v-expansion-panel-header>
-
-                        <v-expansion-panel-content>
-                          <template v-if="!hasSelectedFeaturesInLayersMenu">
-                            <div class="pl-8">
-                              Ei tuloksia, käytä Hakutoimintoa
-                              <v-btn
-                                color="#627f9a"
-                                dark
-                                fab
-                                small
-                                depressed
-                                class="mx-2"
-                                @click="
-                                  {
-                                    toggleDialog('layers', false);
-                                    toggleDialog('search', true);
-                                  }
-                                "
-                                ><v-icon>mdi-magnify</v-icon></v-btn
-                              >
-                              ja valitse "Näytä valitut kartalla"
-                            </div>
-                          </template>
-                          <template v-else>
-                            <div
-                              v-for="pointItem in selectedSearchResultLayers.selectedPoints"
-                              :key="pointItem.id"
-                              max-width="100%"
-                              class="ml-4 mt-0 py-0"
-                            >
-                              <v-checkbox
-                                v-model="pointItem.checked"
-                                @change="toggleCheckedSearchResult(pointItem)"
-                                class="ml-4 mt-0 py-0"
-                                ><template v-slot:label>
-                                  <div>{{ pointItem.properties.name_fi }}</div>
-                                </template>
-                              </v-checkbox>
-                            </div>
-
-                            <div
-                              v-for="routeItem in selectedSearchResultLayers.selectedRoutes"
-                              :key="routeItem.id"
-                              max-width="100%"
-                              class="ml-4 mt-0 py-0"
-                            >
-                              <v-checkbox
-                                v-model="routeItem.checked"
-                                @change="toggleCheckedSearchResult(routeItem)"
-                                class="ml-4 mt-0 py-0"
-                                ><template v-slot:label>
-                                  <div>{{ routeItem.properties.name_fi }}</div>
-                                </template>
-                              </v-checkbox>
-                            </div>
-                          </template>
-                        </v-expansion-panel-content>
                       </v-expansion-panel>
                     </v-expansion-panels>
                   </template>
@@ -745,9 +604,7 @@
                       :class="layer.style.class"
                     >
                       <v-expansion-panel-header
-                        :expand-icon="
-                          layer.subContent.length == 0 ? '' : undefined
-                        "
+                        :expand-icon="layer.subContent.length == 0 ? '' : undefined"
                         :disabled="layer.subContent.length == 0 ? true : false"
                         class="my-0 py-0"
                       >
@@ -1075,7 +932,13 @@
             <v-toolbar-title>Hae reittejä ja kohteita</v-toolbar-title>
             <v-spacer></v-spacer>
 
-            <v-btn icon @click.stop="closeDialog('search')">
+            <v-btn
+              icon
+              @click.stop="
+                closeDialog('search');
+                zoomToSearchResults();
+              "
+            >
               <v-icon>mdi-close</v-icon>
             </v-btn>
 
@@ -1352,6 +1215,7 @@
                         @click="
                           resetSearchForm();
                           resetSearchResults();
+                          resetSelectedSearchResults();
                         "
                       >
                         Tyhjennä
@@ -1392,34 +1256,23 @@
                     </template>
 
                     <template v-else>
-                      <v-card-actions class="my-4">
-                        <v-row class="">
-                          <v-col>
-                            <v-btn
-                              color="success"
-                              class="mr-2 mb-4"
-                              width="380px"
-                              cols="12"
-                              @click="showSearchResultsOnMap"
-                              >Näytä valitut kartalla ja sulje ikkuna</v-btn
-                            >
-                            <v-btn
-                              color="warning"
-                              class="mb-4"
-                              width="380px"
-                              cols="12"
-                              @click="resetSelectedSearchResults"
-                            >
-                              Tyhjennä valinnat
-                            </v-btn>
-                          </v-col>
-                        </v-row>
+                      <v-card-actions class="">
+                        <v-btn
+                          color="warning"
+                          class="mt-3"
+                          style="z-index: 1;"
+                          fixed
+                          cols="12"
+                          @click="resetSelectedSearchResults"
+                        >
+                          Tyhjennä valinnat
+                        </v-btn>
                       </v-card-actions>
 
                       <!-- Points -->
                       <v-card
                         color="#e4effa"
-                        class="px-2 pb-2"
+                        class="px-2 pb-2 mt-8"
                         v-if="searchResults.points.objects.length > 0"
                       >
                         <v-card-title>
@@ -1444,6 +1297,8 @@
                           single-expand
                           multi-sort
                           v-model="searchResults.points.selected"
+                          v-on:item-selected="searchResultSelected"
+                          v-on:toggle-select-all="allSearchResultsSelected"
                           :footer-props="{
                             itemsPerPageText: 'Rivejä yhdellä sivulla'
                           }"
@@ -1517,6 +1372,8 @@
                           single-expand
                           multi-sort
                           v-model="searchResults.routes.selected"
+                          v-on:item-selected="searchResultSelected"
+                          v-on:toggle-select-all="allSearchResultsSelected"
                           :footer-props="{
                             itemsPerPageText: 'Rivejä yhdellä sivulla'
                           }"
@@ -1767,8 +1624,7 @@
                       Mikäli et rajoita hakua hakuehdoilla, etsitään kaikista
                       Virma-aineiston reiteistä ja kohteista.<br />
                       Halutut hakutulokset voit lisätä kartalle valitsemalla ne
-                      ('ruksi') ja painamalla "Näytä valitut hakutulokset
-                      kartalla".
+                      ('ruksi').
                     </v-col>
                   </v-row>
 
@@ -2236,7 +2092,7 @@ export default {
         objects: [],
         visible: false,
         selected: [],
-        selectedResultsRouteTypes: [],
+        // selectedResultsRouteTypes: [],
         search: "",
         expanded: []
       },
@@ -2244,14 +2100,14 @@ export default {
         objects: [],
         visible: false,
         selected: [],
-        selectedResultsPointTypes: [],
+        // selectedResultsPointTypes: [],
         search: "",
         expanded: []
       },
       visible: false,
-      count: 0, // TODO is this in use?
       searchOngoing: false,
       resultHeadersPoints: [
+        // for Vuetify data-table
         {
           text: "Kohteen nimi",
           align: "start",
@@ -2263,6 +2119,7 @@ export default {
         { text: "", value: "data-table-expand" }
       ],
       resultHeadersRoutes: [
+        // for Vuetify data-table
         {
           text: "Reitin nimi",
           align: "start",
@@ -2273,11 +2130,6 @@ export default {
         { text: "Sijainti", value: "properties.municipali" },
         { text: "", value: "data-table-expand" }
       ]
-    },
-    selectedSearchResultLayers: {
-      visible: false,
-      selectedPoints: [],
-      selectedRoutes: []
     },
     backGroundMaps: {}, // loaded from config.js
     renderStructureTEST: {}, // loaded from config.js
@@ -2641,26 +2493,15 @@ export default {
         this.searchResults.points.objects.length > 0 ||
         this.searchResults.routes.objects.length > 0
       ) {
-        // TODO debug, remove
-        console.log("POINTS: " + this.searchResults.points.objects.length);
-        console.log(this.searchResults.points.objects);
-        console.log("ROUTES: " + this.searchResults.routes.objects.length);
-        console.log(this.searchResults.routes.objects);
         return true;
       } else {
         return false;
       }
     },
 
-    hasSelectedFeaturesInLayersMenu() {
-      if (
-        this.selectedSearchResultLayers.selectedPoints.length > 0 ||
-        this.selectedSearchResultLayers.selectedRoutes.length > 0
-      ) {
-        return true;
-      } else {
-        return false;
-      }
+    selectedSearchResultCount() {
+      return this.searchResults.points.selected.length + 
+        this.searchResults.routes.selected.length;
     }
   },
 
@@ -3238,86 +3079,77 @@ export default {
 
     /**
      * @description Toggles visibility of search results that are added
-     * to map using 'show checked search results on map' -functionality
-     * (in search results -dialog)
+     * to map (checked in search results -dialog)
      *
      * @returns {Undefined} - Does not return anything
      */
     toggleVisibilityOfSearchResults: function() {
-      if (!this.selectedSearchResultLayers.visible) {
+      if (!this.searchResults.visible) {
         // Hide Point layers
-        this.searchResults.points.selectedResultsPointTypes.forEach(
-          pointType => {
-            this.channel.postRequest("VectorLayerRequest", [
-              { layerId: pointType, opacity: 0 }
-            ]);
-          }
-        );
+        this.channel.postRequest("VectorLayerRequest", [
+          { layerId: "selectedSearchResultPoints", opacity: 0 }
+        ]);
 
-        // Hide Route layers
-        this.searchResults.routes.selectedResultsRouteTypes.forEach(
-          routeType => {
-            this.channel.postRequest("VectorLayerRequest", [
-              { layerId: routeType, opacity: 0 }
-            ]);
-          }
-        );
+        // Hide Route layers selectedSearchResultPoints
+        this.channel.postRequest("VectorLayerRequest", [
+          { layerId: "selectedSearchResultRoutes", opacity: 0 }
+        ]);
+        
       } else {
         // Show Point layers
-        this.searchResults.points.selectedResultsPointTypes.forEach(
-          pointType => {
-            this.channel.postRequest("VectorLayerRequest", [
-              { layerId: pointType, opacity: 100 }
-            ]);
-          }
-        );
+        this.channel.postRequest("VectorLayerRequest", [
+          { layerId: "selectedSearchResultPoints", opacity: 100 }
+        ]);
 
         // Show Route layers
-        this.searchResults.routes.selectedResultsRouteTypes.forEach(
-          routeType => {
-            this.channel.postRequest("VectorLayerRequest", [
-              { layerId: routeType, opacity: 100 }
-            ]);
-          }
-        );
+        this.channel.postRequest("VectorLayerRequest", [
+          { layerId: "selectedSearchResultRoutes", opacity: 100 }
+        ]);
       }
     },
 
     /**
-     * @description Shows or hides individual features in selected
-     * search results (in layers-menu) according to checkbox state.
+     * @description Shows or hides individual features selected in
+     * search results according to checkbox state.
      * Because of Oskari restrictions, features are actually added
      * or removed everytime checkbox state changes (instead of hiding/showing).
      *
      * @returns {Undefined} - Does not return anything
      */
-    toggleCheckedSearchResult: function(feature) {
-      // TODO remove console.logs
-      console.log("toggleCheckedSearchResult: " + feature.id);
-      console.log("Feature checked: " + feature.checked);
-      const featureLayer = this.removeSpaces(feature.properties.class2_fi);
-      console.log("featureLayer: " + featureLayer);
-      if (feature.checked) {
-        // Show feature
-        // Oskari needs FeatureCollection object (instead of Feature object)
-        const featureCollectionWrapper = {
-          type: "FeatureCollection",
-          features: [feature]
-        };
+    searchResultSelected: function(eventPayload) {
+      let selectedItem = eventPayload.item;
+      
+      // Oskari needs FeatureCollection object (instead of Feature object)
+      const featureCollectionWrapper = {
+        type: "FeatureCollection",
+        features: [selectedItem]
+      };
+
+      // Item checked in search results table -> show it
+      if (eventPayload.value == true) {
+        // Feature can not be removed (by Oskari...) later unless it has some
+        // identifying property at Object.properties
+        selectedItem.properties.id = selectedItem.id;
+
         if (
           featureCollectionWrapper.features[0].geometry.type == "Point" ||
           featureCollectionWrapper.features[0].geometry.type == "MultiPoint"
         ) {
-          // Add MultiPoint
           this.channel.postRequest("MapModulePlugin.AddFeaturesToMapRequest", [
             featureCollectionWrapper,
             {
-              layerId: featureLayer,
+              layerId: "selectedSearchResultPoints",
               // TODO move to config.js
               featureStyle: {
                 image: {
                   shape: 2,
-                  size: 4,
+                  //shape: "https://mobile.virma.fi/symbols/Oskari-map-pin.svg",
+                  size: 4, // Oskari icon size.
+                  //sizePx: 80, // Exact icon px size. Used if 'size' not defined.
+                  // offsetX: 0, // image offset x
+                  // offsetY: 0, // image offset y
+                  // opacity: 0.7, // image opacity
+                  // radius: 2 // image radius
                   fill: {
                     color: "#ff0000" // image fill color
                   }
@@ -3326,15 +3158,13 @@ export default {
             }
           ]);
         } else if (
-          featureCollectionWrapper.features[0].geometry.type ==
-            "MultiLineString" ||
+          featureCollectionWrapper.features[0].geometry.type == "MultiLineString" ||
           featureCollectionWrapper.features[0].geometry.type == "LineString"
         ) {
-          // Add MultiLineString
           this.channel.postRequest("MapModulePlugin.AddFeaturesToMapRequest", [
             featureCollectionWrapper,
             {
-              layerId: featureLayer,
+              layerId: "selectedSearchResultRoutes",
               // TODO move to config.js
               featureStyle: {
                 stroke: {
@@ -3345,15 +3175,56 @@ export default {
             }
           ]);
         }
+
+        this.searchResults.visible = true;
+
       } else {
-        // Hide feature
+        // Item unchecked in search results table -> hide it
+        let layerId;
+        
+        if (
+          featureCollectionWrapper.features[0].geometry.type == "Point" ||
+          featureCollectionWrapper.features[0].geometry.type == "MultiPoint"
+        ) {
+          layerId = "selectedSearchResultPoints";
+
+        } else if (
+          featureCollectionWrapper.features[0].geometry.type == "MultiLineString" ||
+          featureCollectionWrapper.features[0].geometry.type == "LineString"
+        ) {
+          layerId = "selectedSearchResultRoutes";
+        }
+
         this.channel.postRequest(
           "MapModulePlugin.RemoveFeaturesFromMapRequest",
-          ["id", feature.properties.id, featureLayer]
+          ["id", selectedItem.properties.id, layerId]
         );
-        // TODO remove console.logs
-        console.log("Removed");
       }
+    },
+
+    /**
+     * @description Shows or hides all features selected in
+     * search results according to select all -checkbox state.
+     *
+     * @returns {Undefined} - Does not return anything
+     */
+    allSearchResultsSelected: function(eventPayload) {
+      let selectionState = eventPayload.value;
+      eventPayload.items.forEach(selectedItem => {
+        let singleItemObject = {};
+        singleItemObject.item = selectedItem;
+        singleItemObject.value = selectionState;
+        this.searchResultSelected(singleItemObject);
+      })
+    },
+
+    /**
+     * @description Zooms to search results (Oskari vector features).
+     *
+     * @returns {Undefined} - Does not return anything
+     */
+    zoomToSearchResults: function() {
+      this.channel.postRequest("MapModulePlugin.ZoomToFeaturesRequest", []);
     },
 
     /**
@@ -3751,6 +3622,7 @@ export default {
     resetSelectedSearchResults: function() {
       this.searchResults.points.selected.splice(0);
       this.searchResults.routes.selected.splice(0);
+      this.removeFeaturesFromVectorLayers();
     },
 
     /**
@@ -3779,235 +3651,20 @@ export default {
     },
 
     /**
-     * @description Show selected search results on map as vector layers.
-     *
-     * @returns {Undefined} - Does not return anything
-     */
-    showSearchResultsOnMap: function() {
-      this.removeFeaturesFromVectorLayers();
-      this.findTypesOfSelectedFeatures();
-      this.createVectorLayersForSelectedTypes();
-      this.addSelectedFeaturesToVectorLayers();
-      this.closeDialog('search')
-      this.channel.postRequest("MapModulePlugin.ZoomToFeaturesRequest", []);
-      this.fillSearchResultsToLayersMenu();
-      this.selectedSearchResultLayers.visible = true;
-    },
-
-    /**
-     * @description Removes spaces from strings.
-     *
-     * @param {String} input
-     * @returns {String} - input string without spaces
-     */
-    removeSpaces: function(input) {
-      return input.split(" ").join("");
-    },
-
-    /**
-     * @description Removes 'old' features from vector layers for each point and route type.
+     * @description Remove all features from point and route vector layers.
      *
      * @returns {Undefined} - Does not return anything
      */
     removeFeaturesFromVectorLayers: function() {
-      // Remove 'old' features from vector layers for each point and route type
-      // (at the time it's not possible to remove whole Oskari-vectorlayers,
-      // but there is a feature request ticket for it.)
-      // TODO Later it might be good to remove unneeded layers
-      this.searchResults.routes.selectedResultsRouteTypes.forEach(routeType => {
-        this.channel.postRequest(
-          "MapModulePlugin.RemoveFeaturesFromMapRequest",
-          [null, null, routeType]
-        );
-        // TODO remove console.logs
-        console.log("RemoveFeaturesFromMapRequest " + routeType);
-      });
+      this.channel.postRequest(
+        "MapModulePlugin.RemoveFeaturesFromMapRequest",
+        [null, null, "selectedSearchResultPoints"]
+      );
 
-      this.searchResults.points.selectedResultsPointTypes.forEach(pointType => {
-        this.channel.postRequest(
-          "MapModulePlugin.RemoveFeaturesFromMapRequest",
-          [null, null, pointType]
-        );
-        // TODO remove console.logs
-        console.log("RemoveFeaturesFromMapRequest " + pointType);
-      });
-    },
-
-    /**
-     * @description Finds all point and route types of selected features
-     * and pushes them to point and route arrays
-     * (selectedResultsRouteTypes, selectedResultsPointTypes).
-     *
-     * @returns {Undefined} - Does not return anything
-     */
-    findTypesOfSelectedFeatures: function() {
-      this.searchResults.routes.selected.forEach(routeFeature => {
-        routeFeature.checked = true;
-        const routeFeatureNameWithoutSpaces = this.removeSpaces(
-          routeFeature.properties.class2_fi
-        );
-        if (
-          !this.searchResults.routes.selectedResultsRouteTypes.includes(
-            routeFeatureNameWithoutSpaces
-          )
-        ) {
-          this.searchResults.routes.selectedResultsRouteTypes.push(
-            routeFeatureNameWithoutSpaces
-          );
-        }
-      });
-
-      this.searchResults.points.selected.forEach(pointFeature => {
-        pointFeature.checked = true;
-        const pointFeatureNameWithoutSpaces = this.removeSpaces(
-          pointFeature.properties.class2_fi
-        );
-        if (
-          !this.searchResults.points.selectedResultsPointTypes.includes(
-            pointFeatureNameWithoutSpaces
-          )
-        ) {
-          this.searchResults.points.selectedResultsPointTypes.push(
-            pointFeatureNameWithoutSpaces
-          );
-        }
-      });
-    },
-
-    /**
-     * @description Creates vector layers for each point and route type
-     * (they may also already exist (because of previous searches),
-     * but propably(!? not documented) Oskari does not create several vector layers with same id...)
-     *
-     * @returns {Undefined} - Does not return anything
-     */
-    createVectorLayersForSelectedTypes: function() {
-      this.searchResults.routes.selectedResultsRouteTypes.forEach(routeType => {
-        this.channel.postRequest("VectorLayerRequest", [
-          {
-            layerId: routeType
-          }
-        ]);
-        console.log("Propably added layer " + routeType);
-      });
-
-      this.searchResults.points.selectedResultsPointTypes.forEach(pointType => {
-        this.channel.postRequest("VectorLayerRequest", [
-          {
-            layerId: pointType
-          }
-        ]);
-        // TODO remove console.logs
-        console.log("Propably added layer " + pointType);
-      });
-    },
-
-    /**
-     * @description Add selected search result features to vector layers
-     *
-     * @returns {Undefined} - Does not return anything
-     */
-    addSelectedFeaturesToVectorLayers: function() {
-      this.searchResults.routes.selected.forEach(routeFeature => {
-        // Feature can not be removed (by Oskari...) later unless it has some
-        // identifying property at Object.properties
-        routeFeature.properties.id = routeFeature.id;
-
-        // Oskari needs FeatureCollection object (instead of Feature object)
-        const featureCollectionWrapper = {
-          type: "FeatureCollection",
-          features: [routeFeature]
-        };
-        // TODO remove console.logs
-        console.log(featureCollectionWrapper);
-
-        this.channel.postRequest("MapModulePlugin.AddFeaturesToMapRequest", [
-          featureCollectionWrapper,
-          {
-            layerId: this.removeSpaces(routeFeature.properties.class2_fi),
-            // TODO move to config.js
-            featureStyle: {
-              stroke: {
-                color: "rgba(235, 174, 52,1)",
-                width: 8
-              }
-            }
-          }
-        ]);
-        // TODO remove console.logs
-        console.log("Maybe added feature " + routeFeature);
-        console.log(
-          "... to layer " + this.removeSpaces(routeFeature.properties.class2_fi)
-        );
-      });
-
-      this.searchResults.points.selected.forEach(pointFeature => {
-        // Feature can not be removed (by Oskari...) later unless it has some
-        // identifying property at Object.properties
-        pointFeature.properties.id = pointFeature.id;
-
-        // Oskari needs FeatureCollection object (instead of Feature object)
-        const featureCollectionWrapper = {
-          type: "FeatureCollection",
-          features: [pointFeature]
-        };
-
-        this.channel.postRequest("MapModulePlugin.AddFeaturesToMapRequest", [
-          featureCollectionWrapper,
-          {
-            layerId: this.removeSpaces(pointFeature.properties.class2_fi),
-            // TODO move to config.js
-            featureStyle: {
-              image: {
-                shape: 2,
-                //shape: "https://mobile.virma.fi/symbols/Oskari-map-pin.svg",
-                size: 4, // Oskari icon size.
-                //sizePx: 80, // Exact icon px size. Used if 'size' not defined.
-                // offsetX: 0, // image offset x
-                // offsetY: 0, // image offset y
-                // opacity: 0.7, // image opacity
-                // radius: 2 // image radius
-                fill: {
-                  color: "#ff0000" // image fill color
-                }
-              }
-            }
-          }
-        ]);
-        // TODO remove console.logs
-        console.log("Maybe added feature " + pointFeature);
-        console.log(
-          "... to layer " + this.removeSpaces(pointFeature.properties.class2_fi)
-        );
-      });
-    },
-
-    /**
-     * @description Makes deep copy of selected features (in Search-dialog) and
-     * pushes them to selectedSearchResultLayers-arrays (which is also emptied
-     * in case there are features from previous function calls).
-     *
-     * @returns {Undefined} - Does not return anything
-     */
-    fillSearchResultsToLayersMenu: function() {
-      // empty old ones
-      this.selectedSearchResultLayers.selectedPoints.splice(0);
-      this.selectedSearchResultLayers.selectedRoutes.splice(0);
-      this.selectedSearchResultLayers.visible = false;
-
-      this.searchResults.points.selected.forEach(pointFeature => {
-        const pointFeatureDeepCopy = JSON.parse(JSON.stringify(pointFeature));
-        this.selectedSearchResultLayers.selectedPoints.push(
-          pointFeatureDeepCopy
-        );
-      });
-
-      this.searchResults.routes.selected.forEach(routeFeature => {
-        const routeFeatureDeepCopy = JSON.parse(JSON.stringify(routeFeature));
-        this.selectedSearchResultLayers.selectedRoutes.push(
-          routeFeatureDeepCopy
-        );
-      });
+      this.channel.postRequest(
+        "MapModulePlugin.RemoveFeaturesFromMapRequest",
+        [null, null, "selectedSearchResultRoutes"]
+      );
     },
 
     /**
@@ -4309,6 +3966,11 @@ export default {
         layer.checked = true;
       }
     });
+
+    // Create Oskari vector layers for search results to come
+    this.channel.postRequest("VectorLayerRequest", [{ layerId: "selectedSearchResultRoutes" }]);
+    this.channel.postRequest("VectorLayerRequest", [{ layerId: "selectedSearchResultPoints" }]);
+    
     this.welcomeContent = welcomeContent;
   },
 
