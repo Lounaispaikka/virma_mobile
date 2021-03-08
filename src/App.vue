@@ -1504,7 +1504,8 @@
               palvelusta jo yli 1000 kohdetta, ja määrä kasvaa koko ajan.
             </p>
             <p><strong>HUOMIO!<br>
-            Virma Kartta on vielä kehitysvaiheessa ja palvelun ulkoasu ja toiminnallisuus saattavat muuttua.</strong></p>
+            Virma Kartta on vielä kehitysvaiheessa ja palvelun ulkoasu ja toiminnallisuus saattavat muuttua.</strong><br>
+            Palvelun käytöstä on tulossa myöhemmin myös ohjevideo.</p>
             <p>
               Tästä pääset suoraan suosituimpiin reitteihimme sekä kohteisiin!
             </p>
