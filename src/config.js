@@ -37,7 +37,7 @@ export let searchConfig = {
     },
 
     municipalityFilter: function(municipality) {
-      return `municipali = '${municipality}'`;
+      return `municipali ILIKE '%${municipality}%'`;
     },
 
     maxDistanceFromLocationFilter: function(location, distance) {
