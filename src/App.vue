@@ -158,7 +158,10 @@
           <template>
             <v-expansion-panels class="mb-4 ml-2">
               <v-expansion-panel style="backgroundColor: #eedbad;">
-                <v-expansion-panel-header class="my-0 py-0" hide-actions>
+                <v-expansion-panel-header 
+                  class="my-0 py-0"
+                  :hide-actions="selectedSearchResultCount == 0 ? false : true"
+                >
                   <v-container fluid class="ma-0 pa-0">
                     <v-row>
                       <v-col cols="10">
@@ -176,7 +179,7 @@
                               class="d-inline-block text-truncate"
                               style="max-width: 250px;"
                             >
-                              Hakutulokset ({{ selectedSearchResultCount }})
+                              Hakutulokset ( {{ selectedSearchResultCount }} )
                             </span>
                           </template>
                         </v-checkbox>
@@ -184,9 +187,29 @@
                     </v-row>
                   </v-container>
                 </v-expansion-panel-header>
+                <v-expansion-panel-content v-if="selectedSearchResultCount == 0">
+                  <template>
+                    <div class="pl-8">
+                      Ei valittuja hakutuloksia.<br>
+                      Käytä hakutoimintoa
+                      <v-btn
+                        color="#627f9a"
+                        dark
+                        fab
+                        small
+                        depressed
+                        class="mx-2"
+                        @click.stop="toggleDialog('search', true)"
+                        ><v-icon>mdi-magnify</v-icon></v-btn
+                      >
+                      ja valitse haluamasi tulokset näytettäväksi kartalla.
+                    </div>
+                  </template>
+                </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
           </template>
+
           <!-- Menu-layers -->
           <v-expansion-panels
             class="mb-4 ml-2"
@@ -561,7 +584,10 @@
                   <template>
                     <v-expansion-panels class="mb-4">
                       <v-expansion-panel style="backgroundColor: #eedbad;">
-                        <v-expansion-panel-header class="my-0 py-0" hide-actions>
+                        <v-expansion-panel-header 
+                          class="my-0 py-0"
+                          :hide-actions="selectedSearchResultCount == 0 ? false : true"
+                        >
                           <v-container fluid class="ma-0 pa-0">
                             <v-row>
                               <v-col cols="10">
@@ -571,15 +597,15 @@
                                   v-model="searchResults.visible"
                                   on-icon="mdi-eye"
                                   off-icon="mdi-eye-off"
-                                  class="my-0 py-0"
-                                  style="height: 20px;"
+                                  class="my-0 pb-0 pt-2"
+                                  style="height: 40px;"
                                   ><template v-slot:label>
                                     <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                                     <span
                                       class="d-inline-block text-truncate"
                                       style="max-width: 250px;"
                                     >
-                                      Hakutulokset  ({{ selectedSearchResultCount }})
+                                      Hakutulokset ( {{ selectedSearchResultCount }} )
                                     </span>
                                   </template>
                                 </v-checkbox>
@@ -587,9 +613,29 @@
                             </v-row>
                           </v-container>
                         </v-expansion-panel-header>
+                        <v-expansion-panel-content v-if="selectedSearchResultCount == 0">
+                          <template>
+                            <div class="pl-8">
+                              Ei valittuja hakutuloksia.<br>
+                              Käytä hakutoimintoa
+                              <v-btn
+                                color="#58a291"
+                                dark
+                                fab
+                                small
+                                depressed
+                                class="mx-2"
+                                @click.stop="toggleDialog('search', true)"
+                                ><v-icon>mdi-magnify</v-icon></v-btn
+                              >
+                              ja valitse haluamasi tulokset näytettäväksi kartalla.
+                            </div>
+                          </template>
+                        </v-expansion-panel-content>
                       </v-expansion-panel>
                     </v-expansion-panels>
                   </template>
+
                   <!-- Menu-layers -->
                   <v-expansion-panels
                     class="mb-4"
