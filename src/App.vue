@@ -3688,15 +3688,19 @@ export default {
     parseSearchResults: function(featureCollection) {
       featureCollection.features.map(feature => {
         if (
-          feature.geometry.type == "Point" ||
-          feature.geometry.type == "MultiPoint"
+          feature.geometry && (
+            feature.geometry.type == "Point" ||
+            feature.geometry.type == "MultiPoint"
+          )
         ) {
           this.searchResults.points.objects.push(feature);
         }
 
         if (
-          feature.geometry.type == "MultiLineString" ||
-          feature.geometry.type == "LineString"
+          feature.geometry && (
+            feature.geometry.type == "MultiLineString" ||
+            feature.geometry.type == "LineString"
+          )
         ) {
           this.searchResults.routes.objects.push(feature);
         }
