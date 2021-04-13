@@ -81,6 +81,8 @@
     <v-main class="pt-0 pt-sm-14 pt-md-16 pb-14 pb-sm-0">
       <!-- v-main padding is for fixing Vues 'lazy' reacting for window resize -->
       <v-container class="fill-height" fluid>
+
+        <!-- Geolocation buttons -->
         <div style="position: absolute; bottom: 16px; right: 0; z-index: 1;">
           <v-row justify="end" class="ma-0">
             <v-col class="pr-1 pr-sm-3 mb-6">
@@ -116,6 +118,42 @@
             </v-col>
           </v-row>
         </div>
+
+        <!-- Zoom buttons -->
+        <template v-if="$vuetify.breakpoint.smAndUp">
+          <div style="position: absolute; bottom: 256px; right: 0; z-index: 1;">
+            <v-row justify="end" class="ma-0">
+              <v-col class="pr-1 pr-sm-3 mb-6">
+                <!-- TODO add tooltip -->
+                <!-- TODO remove this comment if color scheme ok. Old color: 'darken-1' -->
+                <v-btn
+                  fab
+                  class="mb-2 no-blur"
+                  color="#58a291"
+                  dark
+                  style="display: block;"
+                  @click="zoomIn"
+                >
+                  <v-icon>mdi-magnify-plus</v-icon>
+                  <!-- <v-icon>map-marker-path</v-icon> -->
+                  <!-- <v-icon>vector-point</v-icon> -->
+                </v-btn>
+
+                <!-- TODO add tooltip -->
+                <v-btn
+                  fab
+                  class="mb-2 no-blur"
+                  color="#58a291"
+                  dark
+                  style="display: block;"
+                  @click="zoomOut"
+                >
+                  <v-icon>mdi-magnify-minus</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </div>
+        </template>
 
         <v-row align="center" justify="center">
           <v-col class="text-center">
@@ -2758,6 +2796,30 @@ export default {
             self.showInfoForVectorFeature(data);
           }
         });
+      });
+    },
+
+    /**
+     * @description Zoom map in
+     * Used for desktop zoom buttons.
+     *
+     * @returns {Undefined} - Does not return anything
+     */
+    zoomIn: function() {
+      this.channel.zoomIn(function () {
+        // Oskari needs a callback even if it's empty...
+      });
+    },
+
+    /**
+     * @description Zoom map out
+     * Used for desktop zoom buttons.
+     *
+     * @returns {Undefined} - Does not return anything
+     */
+    zoomOut: function() {
+      this.channel.zoomOut(function () {
+        // Oskari needs a callback even if it's empty...
       });
     },
 
