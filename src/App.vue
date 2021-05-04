@@ -4,7 +4,7 @@
       clipped-left
       fixed
       app
-      color="#627f9a"
+      color="#58a291"
       dark
       :bottom="$vuetify.breakpoint.xsOnly"
     >
@@ -14,7 +14,7 @@
       /> -->
       <v-img
         class="mx-2 d-none d-sm-inline"
-        src="@/assets/virma_logo_green.png"
+        src="@/assets/virma_logo_white.png"
         max-height="50"
         max-width="100"
         contain
@@ -91,7 +91,7 @@
               <v-btn
                 fab
                 class="mb-2 no-blur"
-                :color="keepMapCenteredToPosition ? 'success' : '#627f9a'"
+                :color="keepMapCenteredToPosition ? 'success' : '#58a291'"
                 dark
                 style="display: block;"
                 @click="keepMapCenteredToPosition = !keepMapCenteredToPosition"
@@ -105,7 +105,7 @@
               <v-btn
                 fab
                 class="mb-2 no-blur"
-                :color="showPosition.status ? 'success' : '#627f9a'"
+                :color="showPosition.status ? 'success' : '#58a291'"
                 dark
                 style="display: block;"
                 @click="
@@ -195,7 +195,7 @@
           <!-- Selected search results -->
           <template>
             <v-expansion-panels class="mb-4 ml-2">
-              <v-expansion-panel style="backgroundColor: #eedbad;">
+              <v-expansion-panel style="backgroundColor: #eeb1b2;">
                 <v-expansion-panel-header 
                   class="my-0 py-0"
                   :hide-actions="selectedSearchResultCount == 0 ? false : true"
@@ -231,7 +231,7 @@
                       Ei valittuja hakutuloksia.<br>
                       Käytä hakutoimintoa
                       <v-btn
-                        color="#627f9a"
+                        color="#58a291"
                         dark
                         fab
                         small
@@ -621,7 +621,7 @@
                   <!-- Selected search results -->
                   <template>
                     <v-expansion-panels class="mb-4">
-                      <v-expansion-panel style="backgroundColor: #eedbad;">
+                      <v-expansion-panel style="backgroundColor: #eeb1b2;">
                         <v-expansion-panel-header 
                           class="my-0 py-0"
                           :hide-actions="selectedSearchResultCount == 0 ? false : true"
@@ -1029,7 +1029,7 @@
             <template v-slot:extension>
               <v-tabs
                 v-model="dialogSearchTabs"
-                background-color="#627f9a"
+                background-color="#58a291"
                 dark
                 centered
               >
@@ -1357,7 +1357,7 @@
 
                       <!-- Points -->
                       <v-card
-                        color="#e4effa"
+                        color="#bcdad3"
                         class="px-2 pb-2 mt-8"
                         v-if="searchResults.points.objects.length > 0"
                       >
@@ -1431,7 +1431,7 @@
 
                       <!-- Routes -->
                       <v-card
-                        color="#e4effa"
+                        color="#bcdad3"
                         class="px-2 pb-2 mt-4"
                         v-if="searchResults.routes.objects.length > 0"
                       >
@@ -1587,12 +1587,8 @@
               esimerkiksi etsiä lähimmät uimarannat tai matkailupalvelut. Löydät
               palvelusta jo yli 1000 kohdetta, ja määrä kasvaa koko ajan.
             </p>
-            <p><strong>HUOMIO!<br>
-            Virma Kartta on vielä kehitysvaiheessa ja palvelun ulkoasu ja toiminnallisuus saattavat muuttua.</strong><br>
-            Palvelun käytöstä on tulossa myöhemmin myös ohjevideo.</p>
-            <p>
-              Tästä pääset suoraan suosituimpiin reitteihimme sekä kohteisiin!
-            </p>
+            <p>Palvelun käytöstä on tulossa myös ohjevideo.</p>
+            <p>Tästä pääset suoraan suosituimpiin reitteihimme sekä kohteisiin!</p>
           
 
             <v-container fluid>
@@ -1661,7 +1657,7 @@
             <template v-slot:extension>
               <v-tabs
                 v-model="dialogHelpTabs"
-                background-color="#627f9a"
+                background-color="#58a291"
                 dark
                 centered
               >
@@ -1674,16 +1670,13 @@
           <v-card-text>
             <v-tabs-items v-model="dialogHelpTabs">
               <!-- App functions -->
-              <v-tab-item class="py-4">
+              <v-tab-item>
                 <v-container fluid>
                   <v-row class="d-flex align-start">
-                    <v-col cols="2" class="d-flex">
-                      <div class="mx-auto">
-                        
+                    <v-col cols="12" class="d-flex">
+                      <div class="ml-10">
+                        <p>Virma Kartta sovellukseen liittyvistä ongelmista voit ilmoittaa sähköpostitse osoitteeseen virma@lounaistieto.fi</p>
                       </div>
-                    </v-col>
-                    <v-col cols="10">
-                      Virma Kartta sovellukseen liittyvistä ongelmista voit ilmoittaa sähköpostitse osoitteeseen virma@lounaistieto.fi
                     </v-col>
                   </v-row>
 
@@ -1691,7 +1684,7 @@
                     <v-col cols="2" class="d-flex">
                       <div class="mx-auto">
                         <v-btn
-                          color="#627f9a"
+                          color="#58a291"
                           dark
                           fab
                           small
@@ -1720,7 +1713,7 @@
                       <div class="mx-auto">
                         <v-btn
                           v-if="!$vuetify.breakpoint.mobile"
-                          color="#627f9a"
+                          color="#58a291"
                           dark
                           fab
                           small
@@ -1737,7 +1730,7 @@
 
                         <v-btn
                           v-else
-                          color="#627f9a"
+                          color="#58a291"
                           dark
                           fab
                           small
@@ -1769,7 +1762,7 @@
                     <v-col cols="2" class="d-flex">
                       <div class="mx-auto">
                         <v-btn
-                          color="#627f9a"
+                          color="#58a291"
                           dark
                           fab
                           small
@@ -1793,7 +1786,7 @@
                   <v-row class="d-flex align-start">
                     <v-col cols="2" class="d-flex">
                       <div class="mx-auto">
-                        <v-btn color="#627f9a" dark fab small depressed>
+                        <v-btn color="#58a291" dark fab small depressed>
                           <v-icon>mdi-help</v-icon>
                         </v-btn>
                       </div>
@@ -1808,7 +1801,7 @@
                     <v-col cols="2" class="d-flex">
                       <div class="mx-auto">
                         <v-btn
-                          color="#627f9a"
+                          color="#58a291"
                           dark
                           fab
                           small
@@ -1836,7 +1829,7 @@
                     <v-col cols="2" class="d-flex">
                       <div class="mx-auto">
                         <v-btn
-                          color="#627f9a"
+                          color="#58a291"
                           dark
                           fab
                           small
@@ -2022,12 +2015,12 @@ tbody tr:nth-of-type(odd) {
 }
 
 .v-data-table-header {
-  background-color: #e4effa;
+  background-color: #bcdad3;
   color: white;
 }
 
 .v-data-footer {
-  background-color: #e4effa;
+  background-color: #bcdad3;
 }
 
 .theme--light.v-data-table thead tr th {
@@ -3209,8 +3202,8 @@ export default {
               featureStyle: {
                 stroke: {
                   color: "rgba(255, 0, 0, 0.7)",
-                  width: 8,
-                  lineDash: "dot", // line dash, supported: dash, dashdot, dot, longdash, longdashdot and solid
+                  width: 12,
+                  lineDash: "solid", // line dash, supported: dash, dashdot, dot, longdash, longdashdot and solid
                   lineCap: "round", // line cap, supported: mitre, round and square
                 }
               }
@@ -3734,8 +3727,8 @@ export default {
           y: positionEPSG3067.coords.latitude,
           color,
           msg: "",
-          shape: 2,
-          size: 2
+          shape: 5,
+          size: 3
         },
         id
       ]);

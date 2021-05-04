@@ -7,6 +7,7 @@ export let mapLegend = {
 };
 
 export let mapConfig = {
+  // Karttaupotuksen osoite
   mapAddress:
     "https://karttapalvelu.lounaistieto.fi/?lang=fi&uuid=f18aacd7-765a-4b08-8996-8aa0d27eb2a9"
 };
@@ -89,7 +90,7 @@ export let welcomeContent = {
       name: "Ohjeet ja karttaselitteet",
       id: null,
       columnWidth: 6,
-      bgColor: "",
+      bgColor: "#58a291",
       imageName: "",
       internalFunction: "showHelpDialog",
       externalLink: ""
@@ -98,7 +99,7 @@ export let welcomeContent = {
       name: "Lue lisää Virmasta",
       id: null,
       columnWidth: 6,
-      bgColor: "#b8cf69",
+      bgColor: "#58a291",
       imageName: "",
       internalFunction: "",
       externalLink: "https://valonia.fi/virmaesite"
@@ -202,7 +203,7 @@ export let renderStructureTEST = {
       checked: null, // null unless renderAs == "checkbox", now used also for 'select all'
       renderAs: "accordion",
       style: {
-        backgroundColor: "#e4effa",
+        backgroundColor: "#bcdad3",
         class: ""
       },
       subContent: []
@@ -217,7 +218,7 @@ export let renderStructureTEST = {
       checked: null,
       renderAs: "accordion",
       style: {
-        backgroundColor: "#e4effa",
+        backgroundColor: "#bcdad3",
         class: ""
       },
       subContent: []
@@ -233,7 +234,7 @@ export let renderStructureTEST = {
       checked: null,
       renderAs: "accordion",
       style: {
-        backgroundColor: "#e4effa",
+        backgroundColor: "#bcdad3",
         class: "mb-4"
       },
       subContent: [
@@ -337,7 +338,7 @@ export let renderStructureTEST = {
       checked: null,
       renderAs: "accordion",
       style: {
-        backgroundColor: "#edf8e9",
+        backgroundColor: "#cccccc",
         class: "mb-4"
       },
       subContent: [
@@ -377,7 +378,7 @@ export let renderStructureTEST = {
       checked: null,
       renderAs: "accordion",
       style: {
-        backgroundColor: "#e6e8dd",
+        backgroundColor: "#e6e6e6",
         class: "mb-4"
       },
       subContent: [
