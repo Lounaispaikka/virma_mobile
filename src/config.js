@@ -25,8 +25,15 @@ export let searchConfig = {
 
   CQLFilters: {
     freeTextFilter: function(searchText) {
-      return `name_fi ILIKE '%${searchText}%' OR name_se ILIKE '%${searchText}%' OR name_en ILIKE '%${searchText}%' OR
-        info_fi ILIKE '%${searchText}%' OR info_se ILIKE '%${searchText}%' OR info_en ILIKE '%${searchText}%'`;
+      return `
+        name_fi ILIKE '%${searchText}%' OR 
+        name_se ILIKE '%${searchText}%' OR 
+        name_en ILIKE '%${searchText}%' OR 
+        info_fi ILIKE '%${searchText}%' OR 
+        info_se ILIKE '%${searchText}%' OR 
+        info_en ILIKE '%${searchText}%' OR 
+        municipali ILIKE '%${searchText}%'
+      `;
     },
 
     routeTypeFilter: function(routeType) {
