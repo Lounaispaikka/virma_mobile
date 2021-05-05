@@ -180,7 +180,7 @@
         width="430"
         class="pr-2 pt-2"
       >
-        <template v-if="!renderStructureTEST.layersLoaded">
+        <template v-if="!layersMenuContent.layersLoaded">
           <div class="text-center">
             <h4 class="mb-4">Karttatasoja haetaan</h4>
             <v-progress-circular
@@ -251,12 +251,12 @@
           <!-- Menu-layers -->
           <v-expansion-panels
             class="mb-4 ml-2"
-            v-model="renderStructureTEST.openOnStartUp"
+            v-model="layersMenuContent.openOnStartUp"
             multiple
           >
             <!-- Level 0 -->
             <v-expansion-panel
-              v-for="(layer, i) in renderStructureTEST.layers"
+              v-for="(layer, i) in layersMenuContent.layers"
               :key="i"
               :style="layer.style"
               :class="layer.style.class"
@@ -606,7 +606,7 @@
           <v-card-text>
             <v-row justify="center" class="mx-0">
               <v-card width="100%" max-width="650px" flat class="ma-2">
-                <template v-if="!renderStructureTEST.layersLoaded">
+                <template v-if="!layersMenuContent.layersLoaded">
                   <div class="text-center">
                     <h4 class="mb-4">Karttatasoja haetaan</h4>
                     <v-progress-circular
@@ -677,12 +677,12 @@
                   <!-- Menu-layers -->
                   <v-expansion-panels
                     class="mb-4"
-                    v-model="renderStructureTEST.openOnStartUp"
+                    v-model="layersMenuContent.openOnStartUp"
                     multiple
                   >
                     <!-- Level 0 -->
                     <v-expansion-panel
-                      v-for="(layer, i) in renderStructureTEST.layers"
+                      v-for="(layer, i) in layersMenuContent.layers"
                       :key="i"
                       :style="layer.style"
                       :class="layer.style.class"
@@ -1062,7 +1062,7 @@
                     "
                   >
                     <v-container>
-                      <template v-if="!renderStructureTEST.layersLoaded">
+                      <template v-if="!layersMenuContent.layersLoaded">
                         <div class="text-center">
                           <h4 class="mb-4">Karttatasoja haetaan</h4>
                           <v-progress-circular
@@ -2036,11 +2036,11 @@ tbody tr:nth-of-type(odd) {
 // TODO remove proj4 if / when geolocation api is not used anymore (but Oskari native requests instead)
 import proj4 from "../node_modules/proj4";
 import { backGroundMaps } from "./config.js";
-import { renderStructureTEST } from "./config.js";
+import { layersMenuContent } from "./config.js";
 import { searchConfig } from "./config.js";
 import { mapConfig } from "./config.js";
-import { mapLegend } from "./config.js";
 import { welcomeContent } from "./config.js";
+import { helpDialogSymbols } from "./config.js";
 
 //TODO should one always check for Oskari request availability / errors in order to make more general implementation
 // (= degrades or informs if Oskari backend version does not support used request etc.)
@@ -2058,9 +2058,6 @@ export default {
     zoomAfterPreviousMapMovement: "",
     channel: {},
     mapSrc: mapConfig.mapAddress,
-    mapLegendIcons: {
-      route: mapLegend.icons.route
-    },
     dialogLayers: false,
     dialogSearch: false,
     dialogVectorFeatureInfo: false,
@@ -2069,102 +2066,15 @@ export default {
     dialogWelcome: true,
     dialogHelp: false,
     dialogHelpTabs: null,
-    virmaReititJson: {},
     searchOptions: {
       searchText: "",
       routeOrPoint: ["Reitti", "Kohde"],
       selectedRouteOrPoint: [],
-      routeTypes: [
-        // TODO fetch types from geoserver, fill here
-        "Kulttuuriulkoilureitti",
-        "Kuntoreitti",
-        "Luontopolku",
-        "Matkailureitti",
-        "Melontareitti",
-        "Pyöräilyreitti",
-        "Retkeilyreitti",
-        "Retkilatu"
-      ],
+      routeTypes: searchConfig.routeTypes,
       selectedRouteTypes: [],
-      pointTypes: [
-        // TODO fetch types from geoserver, fill here
-        "Ankkuripaikka",
-        "Hätäsatama",
-        "Jätepiste",
-        "Kalastuspaikka",
-        "Käyntisatama",
-        "Keittokatos- / ruoanlaittopaikka",
-        "Kulttuuripalvelu",
-        "Lähde tai kaivo",
-        "Leirikeskus",
-        "Leirintä- tai caravanalue",
-        "Levähdyspaikka",
-        "Luonnonmuistomerkki tai näköalapaikka",
-        "Luonto- tai lintutorni",
-        "Majoituspalvelu",
-        "Moottorirata",
-        "Ohjelma- tai elämyspalvelu",
-        "Opaspalvelu",
-        "Opastuskeskus",
-        "Opastuspiste",
-        "Päivälaavu tai -kota",
-        "Palvelusatama",
-        "Polttopuusuoja",
-        "Rantautumispaikka",
-        "Retkeilyä palveleva parkkipaikka",
-        "Retki- tai luonnonsatama",
-        "Ruokapalvelu",
-        "Sauna",
-        "Suojasatama",
-        "Talviuimapaikka",
-        "Telttailupaikka",
-        "Tilavuokraus- tai kokouspalvelu",
-        "Tulipaikka",
-        "Tupa",
-        "Uimapaikka",
-        "Uimaranta",
-        "Ulkoilu- tai hiihtomaja",
-        "Varauslaavu tai -kota",
-        "Varaussauna",
-        "Veneenlaskupaikka",
-        "Vieraslaituri",
-        "Vierassatama",
-        "Virkistykseen liittyvä erityiskohde",
-        "Virkistysreitin lähtöpiste",
-        "Yhteysaluslaituri",
-        "Yleisö-wc tai -puucee",
-        "Yöpymislaavu tai -kota"
-      ],
+      pointTypes: searchConfig.pointTypes,
       selectedPointTypes: [],
-      municipalities: [
-        "Aura",
-        "Kaarina",
-        "Kemiönsaari",
-        "Koski Tl",
-        "Kustavi",
-        "Laitila",
-        "Lieto",
-        "Loimaa",
-        "Marttila",
-        "Masku",
-        "Mynämäki",
-        "Naantali",
-        "Nousiainen",
-        "Oripää",
-        "Paimio",
-        "Parainen",
-        "Pyhäranta",
-        "Pöytyä",
-        "Raisio",
-        "Rusko",
-        "Salo",
-        "Sauvo",
-        "Somero",
-        "Taivassalo",
-        "Turku",
-        "Uusikaupunki",
-        "Vehmaa"
-      ],
+      municipalities: searchConfig.municipalities,
       selectedMunicipalities: [],
       maxDistanceFromCurrentLocation: "",
       routeLengthRange: [0, 100]
@@ -2174,7 +2084,6 @@ export default {
         objects: [],
         visible: false,
         selected: [],
-        // selectedResultsRouteTypes: [],
         search: "",
         expanded: []
       },
@@ -2182,7 +2091,6 @@ export default {
         objects: [],
         visible: false,
         selected: [],
-        // selectedResultsPointTypes: [],
         search: "",
         expanded: []
       },
@@ -2214,286 +2122,9 @@ export default {
       ]
     },
     backGroundMaps: {}, // loaded from config.js
-    renderStructureTEST: {}, // loaded from config.js
+    layersMenuContent: {}, // loaded from config.js
     welcomeContent: {}, // loaded from config.js in mounted-property
-    helpDialogSymbols: {
-      // place images to assets/mapsymbols/
-      // TODO move to config.js
-      routes: [
-        {
-          key: "Kulttuuriulkoilureitti",
-          description:
-            "Yleisesti kulttuuriympäristöön, kulttuuriperintöön ja kulttuurimaisemaan pohjautuva reitti. Reitti voi kulkea paikoin myös hyvin urbaanissa ympäristössä.",
-          imageName: "kulttuuriulkoilureitti_60px.png"
-        },
-        {
-          key: "Kuntoreitti",
-          description:
-            "Yleensä valaistu juoksuun tai hölkkäämiseen tarkoitettu reitti puru- tai sorapinnoitteella. ",
-          imageName: "kuntoreitti_60px.png"
-        },
-        {
-          key: "Luontopolku",
-          description:
-            "Suhteellisen lyhyt luonnossa kulkeva polku, jonka varrella on yleensä luontoon ja polun ympäristöön liittyviä opastauluja. Opastussisältö voi olla myös digitaalista mobiililaitteilla luettavaa.",
-          imageName: "luontopolku_60px.png"
-        },
-        {
-          key: "Matkailureitti",
-          description:
-            "Yleensä kymmeniä kilometrejä pitkä reitti, joka on suunniteltu kuljettavan muulla tavoin kuin kävellen esim. autolla tai ryhmämatkailubussilla.",
-          imageName: "matkailureitti_60px.png"
-        },
-        {
-          key: "Melontareitti",
-          description:
-            "Melontaan tarkoitettu reitti, jonka varrella on yleensä kanootin nosto- ja laskupaikkoja sekä mahdollisuus kantaa kanootti kosken tai padon ohi.",
-          imageName: "melontareitti_60px.png"
-        },
-        {
-          key: "Pyöräilyreitti",
-          description: "Pyöräilyyn tarkoitettu tiepohjia noudattava reitti.",
-          imageName: "pyöräilyreitti_60px.png"
-        },
-        {
-          key: "Retkeilyreitti",
-          description:
-            "Patikointiin tarkoitettu, yleensä vähintään useita kilometrejä pitkä reitti, joka on yleensä maastossa viitoitettu.",
-          imageName: "retkeilyreitti_60px.png"
-        },
-        {
-          key: "Retkilatu",
-          description:
-            "Retkihiihtoon tarkoitettu latupohja. Yleensä perinteisen tyylin latu. Retkiladun ura voi olla merkitty myös vesialueelle, jolloin latu tehdään jäätilanteen niin salliessa.",
-          imageName: "retkilatu_60px.png"
-        } 
-      ],
-      pointsRecreation: [
-        {
-          key: "Ankkuripaikka",
-          description: "Suojainen paikka, jonne voi ankkuroitua.",
-          imageName: "satama_tai_ankkuripaikka_bw.png"
-        },
-        {
-          key: "Hätäsatama",
-          description: "Hätätilassa käytettävä satamapaikka.",
-          imageName: "satama_tai_ankkuripaikka_bw.png"
-        },
-        {
-          key: "Jätepiste",
-          description:
-            "Retkeilijöiden käyttöön tarkoitettu jäte- tai kierrätyspiste.",
-          imageName: "jätepiste_bw.png"
-        },
-        {
-          key: "Kalastuspaikka",
-          description: "Erityisesti kalastukseen tarkoitettu paikka",
-          imageName: "kalastuspaikka_bw.png"
-        },
-        {
-          key: "Keittokatos-/ruoanlaittopaikka",
-          description:
-            "Katettu tulipaikka, jossa on mahdollisuus grillata tai tehdä ruokaa",
-          imageName: "keittokatos_bw.png"
-        },
-        {
-          key: "Levähdyspaikka",
-          description:
-            "Yleensä penkki tai penkkipöytäyhdistelmä, jossa voi levähtää reittiä kulkiessa. Ei tulentekomahdollisuutta.",
-          imageName: "levähdyspaikka_bw.png"
-        },
-        {
-          key: "Luonnonmuistomerkki tai näköalapaikka",
-          description:
-            "Luonnon erityislaatuinen kohde tai luontainen näköalapaikka esim. linnavuori tai muu korkea paikka.",
-          imageName: "luonnonmuistomerkki_bw.png"
-        },
-        {
-          key: "Luonto-tai lintutorni",
-          description: "Lintujen tai maiseman tarkasteluun tarkoitettu torni",
-          imageName: "lintutorni_bw.png"
-        },
-        {
-          key: "Opastuskeskus",
-          description:
-            "Piste, joka tarjoaa tietoa esim. reitistä tai kohteesta. Usein rakennus tai laajempi infokokonaisuus. Opastuskeskuksessa on yleensä myös henkilökuntaa ainakin osan ajasta.",
-          imageName: "opastuskeskus_bw.png"
-        },
-        {
-          key: "Opastuspiste",
-          description:
-            "Piste, joka tarjoaa tietoa esim. reitistä tai kohteesta. Ei henkilökuntaa.",
-          imageName: "opastuspiste_bw.png"
-        },
-        {
-          key: "Polttopuusuoja",
-          description:
-            "Polttopuuhuollettujen tulipaikkojen ja laavujen polttopuiden säilytykseen tarkoitettu vaja.",
-          imageName: "polttopuusuoja_bw.png"
-        },
-        {
-          key: "Päivälaavu tai -kota",
-          description: "Päiväkäyttöön tarkoitettu laavu tai kota.",
-          imageName: "päivälaavu_bw.png"
-        },
-        {
-          key: "Rantautumispaikka",
-          description:
-            "Paikka, jossa on mahdollisuus rantautua veneellä tai kanootilla",
-          imageName: "rantautumispaikka_bw.png"
-        },
-        {
-          key: "Retkeilyä palveleva parkkipaikka",
-          description:
-            "Yleensä retkeilyreitin aloituspisteeseen tai virkistyskohteen yhteyteen sijoitettu parkkialue",
-          imageName: "retkeilyparkkipaikka_bw.png"
-        },
-        {
-          key: "Retki- tai luonnonsatama",
-          description:
-            "Yleinen, kaikille avoin satama, jossa ei yleensä ole palveluita.",
-          imageName: "satama_tai_ankkuripaikka_bw.png"
-        },
-        {
-          key: "Sauna",
-          description:
-            "Yleinen sauna, jonne voi olla pieni saunamaksu. Yleensä tällaisella saunalla on tietyt ajat, jolloin saunaan voi mennä ilman varausta. Sauna voi toimia varaussaunana osan aikaa.",
-          imageName: "sauna_bw.png"
-        },
-        {
-          key: "Suojasatama",
-          description: "Tuulelta suojainen satamapaikka.",
-          imageName: "satama_tai_ankkuripaikka_bw.png"
-        },
-        {
-          key: "Talviuimapaikka",
-          description:
-            "Yleinen uimapaikka myös talvikäyttöön. Yleensä talviuimapaikalla on myös sauna.",
-          imageName: "talviuimapaikka_bw.png"
-        },
-        {
-          key: "Telttailupaikka",
-          description: "Erityisesti telttailuun tarkoitettu alue.",
-          imageName: "telttailupaikka_bw.png"
-        },
-        {
-          key: "Tulipaikka",
-          description:
-            "Yleensä reitin varrella tai virkistyskohteessa oleva paikka, jossa on mahdollisuus tehdä tulet. Tulipaikalla voi olla polttopuuhuolto, mutta voi myös olla että paikalle pitää ottaa omat polttopuut mukaan.",
-          imageName: "tulipaikka_bw.png"
-        },
-        {
-          key: "Tupa",
-          description: "Yöpymiseen tai päiväkäyttöön tarkoitettu sisätila.",
-          imageName: "tupa_bw.png"
-        },
-        {
-          key: "Uimapaikka",
-          description: "Yleinen uimapaikka.",
-          imageName: "uimapaikka_bw.png"
-        },
-        {
-          key: "Uimaranta",
-          description:
-            "Yleinen uimapaikka, jossa voi olla ajoittain uimavalvontaa ja muita palveluita.",
-          imageName: "uimapaikka_bw.png"
-        },
-        {
-          key: "Veneenlaskupaikka",
-          description:
-            "Paikka, jossa on mahdollisuus laskea vene tai kanootti trailerilta veteen ramppia pitkin",
-          imageName: "veneenlaskupaikka_bw.png"
-        },
-        {
-          key: "Virkistykseen liittyvä erityiskohde",
-          description: "Muu erityinen virkistyskohde.",
-          imageName: "muu_virkistyskohde_bw.png"
-        },
-        {
-          key: "Virkistysreitin lähtöpiste",
-          description:
-            "Piste joka on suunniteltu virkistysreitin lähtöpaikaksi.",
-          imageName: "virkistysreitin_lähtöpiste_bw.png"
-        },
-        {
-          key: "Yleisö-wc tai -puucee",
-          description:
-            "Retkeilijöitä tai kävijöitä palveleva yleisesti avoinna oleva wc",
-          imageName: "yleisöwc_bw.png"
-        },
-        {
-          key: "Yöpymislaavu tai -kota",
-          description: "Yöpymiseen tarkoitettu makuulaavu tai -kota.",
-          imageName: "yöpymislaavu_bw.png"
-        } 
-      ],
-      pointsTravel: [
-        {
-          key: "Kulttuuripalvelu",
-          description: "Matkailuun liittyvä kulttuuripalvelu.",
-          imageName: "kulttuuripalvelu_bw.png"
-        },
-        {
-          key: "Käyntisatama",
-          description:
-            "Veneilyä palveleva satama, jossa on yleensä joitain palveluita, mutta vierassatamaa vähemmän. Veneilysesongin aikana satamassa voi olla henkilökuntaa.",
-          imageName: "satama_tai_ankkuripaikka_bw.png"
-        },
-        {
-          key: "Leirikeskus",
-          description:
-            "Varauksesta käyttöön saatava tai tietylle ryhmälle kuten seurakunnan jäsenille tarkoitettu leirikeskus.",
-          imageName: "leirikeskus_bw.png"
-        },
-        {
-          key: "Leirintä- tai caravanalue",
-          description:
-            "Alue, jossa voi leiriytyä tai yöpyä asuntovaunulla tai autolla. Maksulliset palvelut.",
-          imageName: "leirintäalue_bw.png"
-        },
-        {
-          key: "Majoituspalvelu",
-          description:
-            "Majoituspalvelua retkeilijöille ja matkailijoille tarjoava kohde.",
-          imageName: "majoituspalvelu_bw.png"
-        },
-        {
-          key: "Palvelusatama",
-          description:
-            "Veneilyä palveleva satama, jossa on usein jokin palvelu, kuten kierrätyspiste.",
-          imageName: "satama_tai_ankkuripaikka_bw.png"
-        },
-        {
-          key: "Tilavuokraus- tai kokouspalvelu",
-          description:
-            "Matkailijoille tai retkeilijöille kokous- tai kokoontumistiloja vuokraava yritys tai yhteisö.",
-          imageName: "tilavuokraus_bw.png"
-        },
-        {
-          key: "Varauslaavu tai -kota",
-          description:
-            "Ennakkovarauksesta käyttöön saatava tai vuokrattava laavu tai kota. ",
-          imageName: "päivälaavu_bw.png"
-        },
-        {
-          key: "Vieraslaituri",
-          description:
-            "Laituri, johon voi jättää veneen esim. kylässä asiointia varten. Yleensä ei muita palveluita.",
-          imageName: "satama_tai_ankkuripaikka_bw.png"
-        },
-        {
-          key: "Vierassatama",
-          description:
-            "Veneilyä palveleva satama, jossa on erittäin hyvä palveluvarustus ja paikalla on henkilökuntaa veneilysesongin aikana. Yleensä ainakin  osa palveluista on maksullisia.",
-          imageName: "satama_tai_ankkuripaikka_bw.png"
-        },
-        {
-          key: "Yhteysaluslaituri",
-          description: "Laituri, johon liikennöi yhteysalus.",
-          imageName: "yhteysaluslaituri_bw.png"
-        } 
-      ]
-    }
+    helpDialogSymbols: helpDialogSymbols,
   }),
 
   computed: {
@@ -2597,13 +2228,13 @@ export default {
       var channel = OskariRPC.connect(iFrame, IFRAME_DOMAIN);
       this.channel = channel;
       this.backGroundMaps = backGroundMaps;
-      this.renderStructureTEST = renderStructureTEST;
+      this.layersMenuContent = layersMenuContent;
       var findMatchingConfigLayer = this.findMatchingConfigLayer;
       var self = this;
 
       channel.onReady(function() {
         channel.getAllLayers(function(layers) {
-          if (renderStructureTEST.logLayerInfoToConsole) {
+          if (layersMenuContent.logLayerInfoToConsole) {
             console.log(
               `\nOskarilayers from Karttapalvelu: ${layers.length} layer(s)\n********************************************\n`
             );
@@ -2627,8 +2258,8 @@ export default {
               // TODO refactor data structure to real tree (only one root with subContent)?
               // -> can be parsed with just findMatchingConfigLayer(oskariLayer, root)
               // needs also rethinking of parent == null in allParentsVisible-logic
-              for (let i = 0; i < self.renderStructureTEST.layers.length; i++) {
-                const configLayer = self.renderStructureTEST.layers[i];
+              for (let i = 0; i < self.layersMenuContent.layers.length; i++) {
+                const configLayer = self.layersMenuContent.layers[i];
                 let result = findMatchingConfigLayer(oskariLayer, configLayer);
                 if (result != null) {
                   return result;
@@ -2638,7 +2269,7 @@ export default {
             })(oskariLayer);
 
             if (matchingConfigLayer != null) {
-              if (renderStructureTEST.logLayerInfoToConsole) {
+              if (layersMenuContent.logLayerInfoToConsole) {
                 console.log(
                   `+++ Match for Oskarilayer: ${oskariLayer.id} ${oskariLayer.name}`
                 );
@@ -2649,7 +2280,7 @@ export default {
                 matchingConfigLayer
               );
             } else {
-              if (renderStructureTEST.logLayerInfoToConsole) {
+              if (layersMenuContent.logLayerInfoToConsole) {
                 // TODO add check for backgroundlayers
                 console.log(
                   `--- NO MATCH in config-layers for Oskarilayer: ${oskariLayer.id} ${oskariLayer.name}`
@@ -2660,7 +2291,7 @@ export default {
 
           // Show selected background map
           self.toggleBackgroundMaps();
-          self.renderStructureTEST.layersLoaded = true;
+          self.layersMenuContent.layersLoaded = true;
         });
 
         channel.handleEvent("AfterMapMoveEvent", function(
@@ -2807,7 +2438,7 @@ export default {
      *
      * @param {(Object|number)} oskariLayer - layer item from Oskari iframe (channel.getAllLayers())
      * or layer id number.
-     * @param {Object} configLayerItem - layer item from config.js renderStructureTEST.layers
+     * @param {Object} configLayerItem - layer item from config.js layersMenuContent.layers
      * @returns {(Object|null)} - configLayerItem if id-values are the same or null otherwise
      */
     findMatchingConfigLayer: function(oskariLayer, configLayerItem) {
@@ -2844,7 +2475,7 @@ export default {
      * @description Set Oskari-layer visible if it is visible in config (matchingConfigLayer.visible == true).
      *
      * @param {Object} oskariLayer - layer item from Oskari iframe (channel.getAllLayers())
-     * @param {Object} matchingConfigLayer - layer item from config.js renderStructureTEST.layers
+     * @param {Object} matchingConfigLayer - layer item from config.js layersMenuContent.layers
      * <br> which has same id than oskariLayer
      * @returns {Undefined} - Does not return anything
      */
@@ -2907,8 +2538,8 @@ export default {
       } else {
         // Normal wms-layers
         // Turn off (not visible) and uncheck all items in menu structure
-        for (let i = 0; i < this.renderStructureTEST.layers.length; i++) {
-          const layer = this.renderStructureTEST.layers[i];
+        for (let i = 0; i < this.layersMenuContent.layers.length; i++) {
+          const layer = this.layersMenuContent.layers[i];
           layer.visible = false;
           this.toggleVisibility(layer, true);
         }
@@ -2916,8 +2547,8 @@ export default {
         // Find right menu-item (map layer)
         var self = this;
         const matchingConfigLayer = (function(oskariLayer) {
-          for (let i = 0; i < self.renderStructureTEST.layers.length; i++) {
-            const configLayer = self.renderStructureTEST.layers[i];
+          for (let i = 0; i < self.layersMenuContent.layers.length; i++) {
+            const configLayer = self.layersMenuContent.layers[i];
             let result = self.findMatchingConfigLayer(oskariLayer, configLayer);
             if (result != null) {
               return result;
@@ -2953,7 +2584,7 @@ export default {
      * @description Toggles visibility of layers-menu items ("eye-icon").
      * Travels menu structure recursively downwards if needed.
      *
-     * @param {Object} eventTarget item or sub-item in renderStructureTEST.layers (or .subContent)
+     * @param {Object} eventTarget item or sub-item in layersMenuContent.layers (or .subContent)
      * @param {boolean} [toggleCheckBox=false] If true, turns also all checkboxes off (checked=false)
      * This can be used when turning all (or some) item(structure)(s) off programmatically
      * @todo Implement "all checkboxes on" -functionality (toggleCheckBox=true) if needed
@@ -3071,7 +2702,7 @@ export default {
     /**
      * @description Selects (checks) or deselects all menu-layers subContent items
      *
-     * @param {Object} layer - layer item from config.js renderStructureTEST.layers
+     * @param {Object} layer - layer item from config.js layersMenuContent.layers
      * @param {Object} event - Vue change event for getting checkbox state
      * @returns {Undefined} - Does not return anything
      */
@@ -3097,7 +2728,7 @@ export default {
      * @description Checks if all layers subContent items are selected (checked).
      * Returns early (as soon as subContent item that is not checked, is found).
      *
-     * @param {Object} layer - layer item from config.js renderStructureTEST.layers
+     * @param {Object} layer - layer item from config.js layersMenuContent.layers
      * @returns {Boolean} - returns false if any or all subContent item is not checked,
      * and true if all are checked
      */
@@ -3300,11 +2931,11 @@ export default {
     },
 
     /**
-     * @description Travel config.js renderStructureTEST.layers (layers-menu) upwards from configLayerItem
+     * @description Travel config.js layersMenuContent.layers (layers-menu) upwards from configLayerItem
      * and check whether item has parents and are they all visible.
      * Returns early (as soon as a possible non-visible parent is found).
      *
-     * @param {Object} configLayerItem - layer item from config.js renderStructureTEST.layers
+     * @param {Object} configLayerItem - layer item from config.js layersMenuContent.layers
      * @returns {(true|false)} - true if all items parents are visible (their visible-property == true)
      * <br> true if item does not have parents but is visible itself.
      * <br> false if any of the parents visible-property is false
@@ -3322,11 +2953,11 @@ export default {
     },
 
     /**
-     * @description Set parent pointers for items (and sub-items) in config.js renderStructureTEST.layers
+     * @description Set parent pointers for items (and sub-items) in config.js layersMenuContent.layers
      * (layers-menu). This makes it possible to travel menu-structure upwards to find out
      * whether all items parents are visible (allParentsVisible). Used in mounted-hook.
      *
-     * @param {Object} node item or sub-item in renderStructureTEST.layers (or .subContent)
+     * @param {Object} node item or sub-item in layersMenuContent.layers (or .subContent)
      * @returns {Undefined} - Does not return anything
      */
     setParentPointer: function(node) {
@@ -3344,11 +2975,11 @@ export default {
     },
 
     /**
-     * @description Set Vue watchers for checkbox items in config.js renderStructureTEST.layers
+     * @description Set Vue watchers for checkbox items in config.js layersMenuContent.layers
      * (layers-menu). These watchers then update the count (checkedSubContentCount property)
      * for checked items (which is visible in menu). Used in mounted-hook.
      *
-     * @param {Object} node item in renderStructureTEST.layers
+     * @param {Object} node item in layersMenuContent.layers
      * @returns {Undefined} - Does not return anything
      */
     setCheckedWatcher: function(node) {
@@ -3995,7 +3626,7 @@ export default {
 
     // Set parent pointers for layers-menu-items
     // and Vue watchers for checked state of checkbox items (for counting checked menu items)
-    this.renderStructureTEST.layers.forEach(function(layer) {
+    this.layersMenuContent.layers.forEach(function(layer) {
       layer.parent = null; // top-level nodes
       self.setParentPointer(layer);
       self.setCheckedWatcher(layer);
