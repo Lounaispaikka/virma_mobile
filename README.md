@@ -3,14 +3,14 @@
 https://kartta.virma.fi
 
 
-###What is this about:
+### What is this about:
 
 The project is a webmap-application for visualizing and using open Virma-data.
 
 It is coded with Vue.js, Vuetify and Javascript and it uses OskariRPC-framework/functionality to communicate with backend Geoserver.
 
 
-###Basic developer flow:
+### Basic developer flow:
 
 Clone the repository
 
@@ -25,7 +25,7 @@ Build production version (compile and minify): '''npm run build''''
 Publish /dist somehow - rsync for example, or build some fancy pipeline :)
 
 
-###Some things to know to give general understanding of the code:
+### Some things to know to give general understanding of the code:
 
 Geographical information (as well ad Geoserver and backend database) has concepts of (multi)linestrings and points.
 
@@ -38,7 +38,7 @@ In addition the application uses OskariRPC vector layers / vector features to re
 Search function uses CQL-filter-queries to get (vector)features from Geoserver.
 
 
-###More specific about code:
+### More specific about code:
 
 The code is obviously constructed using Vue:s structure (template-script-style) but it is not divided into single file components.
 
@@ -61,7 +61,7 @@ Config.js has variables for url-address of the map (karttaupotus) and Geoserver-
 These are the first ones to check if the application (or search) is not responding (and general server (web- and Geoserver) state of course...)
 
 
-###Links:
+### Links:
 
 Vue.js: [https://www.vue.js](https://www.vue.js)
 
