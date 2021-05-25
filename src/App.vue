@@ -8,10 +8,6 @@
       dark
       :bottom="$vuetify.breakpoint.xsOnly"
     >
-      <!-- <v-app-bar-nav-icon
-        class="d-none d-sm-flex"
-        @click.stop="drawer = !drawer"
-      /> -->
       <v-img
         class="mx-2 d-none d-sm-inline"
         src="@/assets/virma_logo_white.png"
@@ -19,11 +15,10 @@
         max-width="100"
         contain
       ></v-img>
-      <v-toolbar-title class="d-none d-md-flex" style="overflow:visible;"
-        >Kartta</v-toolbar-title
-      >
+      <v-toolbar-title class="d-none d-md-flex" style="overflow:visible;">
+        Kartta
+      </v-toolbar-title>
       <v-spacer></v-spacer>
-      <!-- TODO add tooltip -->
       <span
         style="width:100%; max-width:500px;"
         class="d-flex justify-space-around"
@@ -31,9 +26,7 @@
         <v-btn icon large @click.stop="toggleDialog('search', true)">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
-        <!-- <v-spacer></v-spacer> -->
-
-        <!-- TODO add tooltip -->
+        
         <v-btn
           v-if="!$vuetify.breakpoint.mobile"
           icon
@@ -51,8 +44,7 @@
         >
           <v-icon>mdi-layers-triple</v-icon>
         </v-btn>
-        <!-- <v-spacer></v-spacer> -->
-
+        
         <v-btn icon large @click="toggleFullScreen">
           <v-icon>mdi-overscan</v-icon>
         </v-btn>
@@ -61,20 +53,6 @@
           <v-icon>mdi-help</v-icon>
         </v-btn>
       </span>
-
-      <!-- <v-menu left bottom>
-        <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
-
-        <v-list>
-          <v-list-item v-for="n in 5" :key="n" @click="() => {}">
-            <v-list-item-title>Option {{ n }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu> -->
       <v-spacer></v-spacer>
     </v-app-bar>
 
@@ -86,8 +64,6 @@
         <div style="position: absolute; bottom: 16px; right: 0; z-index: 1;">
           <v-row justify="end" class="ma-0">
             <v-col class="pr-1 pr-sm-3 mb-6">
-              <!-- TODO add tooltip -->
-              <!-- TODO remove this comment if color scheme ok. Old color: 'darken-1' -->
               <v-btn
                 fab
                 class="mb-2 no-blur"
@@ -97,11 +73,8 @@
                 @click="keepMapCenteredToPosition = !keepMapCenteredToPosition"
               >
                 <v-icon>mdi-image-filter-center-focus</v-icon>
-                <!-- <v-icon>map-marker-path</v-icon> -->
-                <!-- <v-icon>vector-point</v-icon> -->
               </v-btn>
 
-              <!-- TODO add tooltip -->
               <v-btn
                 fab
                 class="mb-2 no-blur"
@@ -124,8 +97,6 @@
           <div style="position: absolute; bottom: 256px; right: 0; z-index: 1;">
             <v-row justify="end" class="ma-0">
               <v-col class="pr-1 pr-sm-3 mb-6">
-                <!-- TODO add tooltip -->
-                <!-- TODO remove this comment if color scheme ok. Old color: 'darken-1' -->
                 <v-btn
                   fab
                   class="mb-2 no-blur"
@@ -135,11 +106,8 @@
                   @click="zoomIn"
                 >
                   <v-icon>mdi-magnify-plus</v-icon>
-                  <!-- <v-icon>map-marker-path</v-icon> -->
-                  <!-- <v-icon>vector-point</v-icon> -->
                 </v-btn>
 
-                <!-- TODO add tooltip -->
                 <v-btn
                   fab
                   class="mb-2 no-blur"
@@ -171,7 +139,6 @@
     </v-main>
 
     <!-- Layers-dialog Desktop -->
-    <!-- src="@/assets/Hierkonpolku_DSC_9195_Terhi Ajosenpää_800px.jpg" -->
     <template v-if="!$vuetify.breakpoint.mobile">
       <v-navigation-drawer
         v-model="dialogLayers"
@@ -212,7 +179,6 @@
                           class="my-0 pb-0 pt-2"
                           style="height: 40px;"
                           ><template v-slot:label>
-                            <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                             <span
                               class="d-inline-block text-truncate"
                               style="max-width: 250px;"
@@ -280,7 +246,6 @@
                         :class="layer.hasOwnProperty('nameXs') && layer.nameXs.length > 0 ? 'my-0 py-0' : 'my-0 pb-0 pt-2'"
                         style="height: 40px;"
                         ><template v-slot:label>
-                          <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                           <div
                             v-if="layer.hasOwnProperty('nameXs') && layer.nameXs.length > 0"
                             class="d-inline-block text-truncate"
@@ -401,7 +366,6 @@
                                   class="my-0 py-0"
                                   style="height: 20px;"
                                   ><template v-slot:label>
-                                    <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                                     <span
                                       class="d-inline-block text-truncate"
                                       style="max-width: 250px;"
@@ -411,8 +375,6 @@
                                   </template>
                                 </v-checkbox>
                               </v-col>
-                              <!-- <v-col cols="2" class="text-right" style="line-height:24px;">1/3</v-col> -->
-                              <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
                             </v-row>
                           </v-container>
                         </v-expansion-panel-header>
@@ -452,31 +414,6 @@
                                 ></v-img>
                               </template>
                             </v-checkbox>
-
-                            <!-- Level 3 if needed -->
-                            <!-- <template
-                              v-else-if="subItem.renderAs == 'accordion'"
-                            >
-                              <v-expansion-panels>
-                                <v-expansion-panel>
-                                  <v-expansion-panel-header>
-                                    {{ subItem.name }}
-                                  </v-expansion-panel-header>
-                                  <v-expansion-panel-content
-                                    max-width="100%"
-                                  >
-                                    <v-checkbox
-                                      v-for="(item, i) in 5"
-                                      :key="i"
-                                      :label="i + 1 + '. polku'"
-                                      checked
-                                      dense
-                                      class="ml-4 mt-0 pt-0"
-                                    ></v-checkbox>
-                                  </v-expansion-panel-content>
-                                </v-expansion-panel>
-                              </v-expansion-panels>
-                            </template> -->
 
                             <template
                               v-else-if="subItem.renderAs == 'text'"
@@ -522,7 +459,6 @@
                           class="my-0 py-0"
                           style="height: 20px;"
                           ><template v-slot:label>
-                            <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                             <span
                               class="d-inline-block text-truncate"
                               style="max-width: 250px;"
@@ -532,13 +468,6 @@
                           </template>
                         </v-checkbox>
                       </v-col>
-                      <!-- <v-col
-                        cols="2"
-                        class="text-right pr-4"
-                        style="line-height:24px;"
-                        >1/3</v-col
-                      > -->
-                      <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
                     </v-row>
                   </v-container>
                 </v-expansion-panel-header>
@@ -638,7 +567,6 @@
                                   class="my-0 pb-0 pt-2"
                                   style="height: 40px;"
                                   ><template v-slot:label>
-                                    <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                                     <span
                                       class="d-inline-block text-truncate"
                                       style="max-width: 250px;"
@@ -705,7 +633,6 @@
                                 :class="layer.hasOwnProperty('nameXs') && layer.nameXs.length > 0 ? 'my-0 py-0' : 'my-0 pb-0 pt-2'"
                                 style="height: 40px;"
                                 ><template v-slot:label>
-                                  <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                                   <div
                                     v-if="layer.hasOwnProperty('nameXs') && layer.nameXs.length > 0"
                                     class="d-inline-block text-truncate"
@@ -826,7 +753,6 @@
                                           class="my-0 py-0"
                                           style="height: 20px;"
                                           ><template v-slot:label>
-                                            <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                                             <span
                                               class="d-inline-block text-truncate"
                                               style="max-width: 250px;"
@@ -836,8 +762,6 @@
                                           </template>
                                         </v-checkbox>
                                       </v-col>
-                                      <!-- <v-col cols="2" class="text-right" style="line-height:24px;">1/3</v-col> -->
-                                      <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
                                     </v-row>
                                   </v-container>
                                 </v-expansion-panel-header>
@@ -877,31 +801,6 @@
                                         ></v-img>
                                       </template>
                                     </v-checkbox>
-
-                                    <!-- Level 3 if needed -->
-                                    <!-- <template
-                                      v-else-if="subItem.renderAs == 'accordion'"
-                                    >
-                                      <v-expansion-panels>
-                                        <v-expansion-panel>
-                                          <v-expansion-panel-header>
-                                            {{ subItem.name }}
-                                          </v-expansion-panel-header>
-                                          <v-expansion-panel-content
-                                            max-width="100%"
-                                          >
-                                            <v-checkbox
-                                              v-for="(item, i) in 5"
-                                              :key="i"
-                                              :label="i + 1 + '. polku'"
-                                              checked
-                                              dense
-                                              class="ml-4 mt-0 pt-0"
-                                            ></v-checkbox>
-                                          </v-expansion-panel-content>
-                                        </v-expansion-panel>
-                                      </v-expansion-panels>
-                                    </template> -->
 
                                     <template
                                       v-else-if="subItem.renderAs == 'text'"
@@ -947,7 +846,6 @@
                                   class="my-0 py-0"
                                   style="height: 20px;"
                                   ><template v-slot:label>
-                                    <!-- TODO set max-width to somehow fill cols-10 without set px:s -->
                                     <span
                                       class="d-inline-block text-truncate"
                                       style="max-width: 250px;"
@@ -957,13 +855,6 @@
                                   </template>
                                 </v-checkbox>
                               </v-col>
-                              <!-- <v-col
-                                cols="2"
-                                class="text-right pr-4"
-                                style="line-height:24px;"
-                                >1/3</v-col
-                              > -->
-                              <!-- TODO text color same as label text, count real numbers instead of this placeholder... -->
                             </v-row>
                           </v-container>
                         </v-expansion-panel-header>
@@ -1420,12 +1311,6 @@
                             </td>
                           </template>
 
-                          <!-- <template
-                            v-if="$vuetify.breakpoint.xsOnly"
-                            v-slot:item.properties.name_fi="{ item }"
-                          >
-                          Buu: {{ item.properties.name_fi }}
-                          </template> -->
                         </v-data-table>
                       </v-card>
 
@@ -1436,7 +1321,6 @@
                         v-if="searchResults.routes.objects.length > 0"
                       >
                         <v-card-title>
-                          <!-- TODO maybe a bit prettier with count smaller and grey? -->
                           Reitit ( {{ searchResults.routes.objects.length }} )
                           <v-spacer></v-spacer>
                           <v-text-field
@@ -2033,7 +1917,6 @@ tbody tr:nth-of-type(odd) {
 </style>
 
 <script>
-// TODO remove proj4 if / when geolocation api is not used anymore (but Oskari native requests instead)
 import proj4 from "../node_modules/proj4";
 import { backGroundMaps } from "./config.js";
 import { layersMenuContent } from "./config.js";
@@ -2042,13 +1925,8 @@ import { mapConfig } from "./config.js";
 import { welcomeContent } from "./config.js";
 import { helpDialogSymbols } from "./config.js";
 
-//TODO should one always check for Oskari request availability / errors in order to make more general implementation
-// (= degrades or informs if Oskari backend version does not support used request etc.)
-
 export default {
-  props: {
-    source: String
-  },
+  props: {},
 
   data: () => ({
     showPosition: { status: false, id: "" },
@@ -2149,11 +2027,8 @@ export default {
     // NOTE: In addition to watchers here, there are also dynamic watchers added in
     // mounted-hook (setCheckedWatcher)
 
-    // TODO JsDoc
     keepMapCenteredToPosition: function(updatedKeepMapCenteredToPosition) {
       if (
-        // TODO Decide between if(condition) and if(condition == true) in whole codebase
-        // using == may improve code readibility?
         updatedKeepMapCenteredToPosition == true &&
         this.showPosition.status == false
       ) {
@@ -2162,7 +2037,6 @@ export default {
       }
     },
 
-    // TODO JsDoc
     showPosition: {
       handler(updatedShowPosition) {
         if (
@@ -2220,7 +2094,11 @@ export default {
   },
 
   methods: {
-    // TODO JsDoc
+    /**
+     * @description Initializes the application and creates Oskari iFrame
+     *
+     * @returns {Undefined} - Does not return anything
+     */
     initOskariChannel: function() {
       var IFRAME_DOMAIN = "https://karttapalvelu.lounaistieto.fi";
       var iFrame = document.getElementById("map");
@@ -2255,9 +2133,6 @@ export default {
             ]);
 
             const matchingConfigLayer = (function(oskariLayer) {
-              // TODO refactor data structure to real tree (only one root with subContent)?
-              // -> can be parsed with just findMatchingConfigLayer(oskariLayer, root)
-              // needs also rethinking of parent == null in allParentsVisible-logic
               for (let i = 0; i < self.layersMenuContent.layers.length; i++) {
                 const configLayer = self.layersMenuContent.layers[i];
                 let result = findMatchingConfigLayer(oskariLayer, configLayer);
@@ -2281,9 +2156,8 @@ export default {
               );
             } else {
               if (layersMenuContent.logLayerInfoToConsole) {
-                // TODO add check for backgroundlayers
                 console.log(
-                  `--- NO MATCH in config-layers for Oskarilayer: ${oskariLayer.id} ${oskariLayer.name}`
+                  `--- NO MATCH in config-layers for Oskarilayer: ${oskariLayer.id} ${oskariLayer.name} (may still be background map)`
                 );
               }
             }
@@ -2422,14 +2296,17 @@ export default {
       this.$router.replace("");
     },
 
-    // TODO JsDoc
+    /**
+     * @description Shows info box for vector feature (search result feature)
+     * 
+     * @param {Object} data - Object in search results
+     * @returns {Undefined} - Does not return anything
+     */
     showInfoForVectorFeature: function(data) {
+      console.log(data);
       // save data here and refer to it in dialog-template
       this.clickedVectorFeature = data.features[0].geojson.features[0];
       this.toggleDialog("feature-info", true)
-      // TODO remove console.logs
-      console.log("FeatureEventId: " + data.features[0].id);
-      console.log("FeatureLayer: " + data.features[0].layerId);
     },
 
     /**
@@ -2574,7 +2451,11 @@ export default {
       }
     },
 
-    // TODO remove or replace with Ohjeet-dialog logic
+    /**
+     * @description Used in config.js to open help dialog from welcome dialog
+     * 
+     * @returns {Undefined} - Does not return anything
+     */
     showHelpDialog: function() {
       this.dialogWelcome = false;
       this.toggleDialog("help", true);
@@ -2587,7 +2468,6 @@ export default {
      * @param {Object} eventTarget item or sub-item in layersMenuContent.layers (or .subContent)
      * @param {boolean} [toggleCheckBox=false] If true, turns also all checkboxes off (checked=false)
      * This can be used when turning all (or some) item(structure)(s) off programmatically
-     * @todo Implement "all checkboxes on" -functionality (toggleCheckBox=true) if needed
      * @returns {Undefined} - Does not return anything
      */
     toggleVisibility: function(eventTarget, toggleCheckBox = false) {
@@ -2645,7 +2525,13 @@ export default {
       toggleVisibilityOrGoDeeper(eventTarget);
     },
 
-    // TODO JsDoc
+    /**
+     * @description Toggles visibility of layers-menu items ("checkbox").
+     *
+     * @param {Object} eventTarget checked (or unchecked) menu item
+     * @param {Object} layer layer in layersMenuContent.layers which holds eventTarget
+     * @returns {Undefined} - Does not return anything
+     */
     toggleChecked: function(eventTarget, layer) {
       // NOTE! item refers to layer structure from config, which is separate from actual Oskari-layer items (objects)
       // this also means that item.visible and Oskari-layer item.visible are not the same setting
@@ -2658,7 +2544,6 @@ export default {
 
       let item = eventTarget;
       let channel = this.channel;
-      //let toggleToVisible = this.allParentsVisible(item); //tavallaan turha tsekata jos laitetaan pois päältä...
       if (item.id) {
         if (item.type == "wms") {
           if (item.renderAs == "checkbox" && item.checked) {
@@ -2668,10 +2553,6 @@ export default {
             }
 
             if (this.allParentsVisible(item)) {
-              // TODO remove console.logs
-              console.log(
-                "All Parents Visible, ToggleChecked: " + item.checked
-              );
               channel.postRequest("MapModulePlugin.MapLayerVisibilityRequest", [
                 item.id,
                 true
@@ -2679,8 +2560,6 @@ export default {
               item.visible = true;
             }
           } else if (item.renderAs == "checkbox" && !item.checked) {
-            // TODO remove console.logs
-            console.log("ToggleChecked: " + item.checked);
             channel.postRequest("MapModulePlugin.MapLayerVisibilityRequest", [
               item.id,
               false
@@ -2690,9 +2569,6 @@ export default {
             // Uncheck 'select all' if some (or  all) of subcontent is unchecked
             layer.checked = false;
           }
-          // console.log(
-          //   "WMS2: " + item.id + " " + item.name + ", visible:" + item.visible
-          // );
         } else {
           // item.type something else
         }
@@ -2803,11 +2679,10 @@ export default {
             featureCollectionWrapper,
             {
               layerId: "selectedSearchResultPoints",
-              // TODO move to config.js
               featureStyle: {
                 image: {
                   shape: 2,
-                  //shape: "https://mobile.virma.fi/symbols/Oskari-map-pin.svg",
+                  //shape: "https://mobile.virma.fi/symbols/Oskari-map-pin.svg", // external icon can be used
                   size: 4, // Oskari icon size.
                   //sizePx: 80, // Exact icon px size. Used if 'size' not defined.
                   // offsetX: 0, // image offset x
@@ -2829,13 +2704,12 @@ export default {
             featureCollectionWrapper,
             {
               layerId: "selectedSearchResultRoutes",
-              // TODO move to config.js
               featureStyle: {
                 stroke: {
                   color: "rgba(255, 0, 0, 0.7)",
                   width: 12,
-                  lineDash: "solid", // line dash, supported: dash, dashdot, dot, longdash, longdashdot and solid
-                  lineCap: "round", // line cap, supported: mitre, round and square
+                  lineDash: "solid", // supported options: dash, dashdot, dot, longdash, longdashdot and solid
+                  lineCap: "round", // supported options: mitre, round and square
                 }
               }
             }
@@ -2937,8 +2811,8 @@ export default {
      *
      * @param {Object} configLayerItem - layer item from config.js layersMenuContent.layers
      * @returns {(true|false)} - true if all items parents are visible (their visible-property == true)
-     * <br> true if item does not have parents but is visible itself.
-     * <br> false if any of the parents visible-property is false
+     * true if item does not have parents but is visible itself.
+     * false if any of the parents visible-property is false
      */
     allParentsVisible: function(configLayerItem) {
       if (configLayerItem.parent === null) {
@@ -2962,7 +2836,6 @@ export default {
      */
     setParentPointer: function(node) {
       let parent = node;
-      // TODO replace hasOwnProperty with something 'allowed'(eslint): property in X maybe?
       // eslint-disable-next-line no-prototype-builtins
       if (node.hasOwnProperty("subContent") && node.subContent.length > 0) {
         node.subContent.forEach(function(subItem) {
@@ -3015,9 +2888,12 @@ export default {
       }
     },
 
-    // TODO JsDoc
+    /**
+     * @description Main method for search functionality
+     *
+     * @returns {Undefined} - Does not return anything
+     */
     searchRoutesAndPoints: async function() {
-      // TODO handle no-geolocation (don't show any geolocation related components or show error (error is better?))
       this.resetSearchResults();
       this.resetSelectedSearchResults();
       this.removeFeaturesFromVectorLayers();
@@ -3049,19 +2925,23 @@ export default {
           this.parseSearchResults(pointsGeoJson);
         }
       } catch (e) {
-        // TODO remove console.logs
-        console.log(
-          // TODO handle network errors (handling now OK, but error message could be better (than eg "404"))
-          // TODO handle geoserver errors (are these always actually network errors (404 etc))
-          // TODO show error and recover somehow (zero maxDistanceFilter? and let user do a new search without maxDist)
-          "ERROR (searchRoutesAndPoints): " + e.name + ": " + e.message
-        );
+        // console.log(
+        //   // TODO handle network errors (handling now OK, but error message could be better (than eg "404"))
+        //   // TODO handle geoserver errors (are these always actually network errors (404 etc))
+        //   // TODO show error and recover somehow (zero maxDistanceFilter? and let user do a new search without maxDist)
+        //   "ERROR (searchRoutesAndPoints): " + e.name + ": " + e.message
+        // );
       }
 
       this.searchResults.searchOngoing = false;
     },
 
-    // TODO JsDoc
+    /**
+     * @description Collects all route search filters from search form
+     * and combines them to CQL-filter string ready to be sent to Geosever 
+     *
+     * @returns {String} - CQLFilter
+     */
     getRouteSearchFilters: async function() {
       const CQLFilterArray = [];
 
@@ -3086,21 +2966,25 @@ export default {
         CQLFilterArray.push(this.getRouteLengthFilter());
       }
 
-      // TODO .filter can be removed (but test it) - CQLFilterArray doesn't include falsy elements anymore
       const CQLFilter = CQLFilterArray.filter(Boolean)
         .map(filterComponent => `(${filterComponent})`)
         .join(" AND ");
 
-      // TODO debug, remove
-      console.log("CQLFilter ROUTE: " + CQLFilter);
-      console.log(
-        "urlencoded CQLFilter ROUTE: " + encodeURIComponent(CQLFilter)
-      );
+      // TODO debug, remove when within-filter works
+      // console.log("CQLFilter ROUTE: " + CQLFilter);
+      // console.log(
+      //   "urlencoded CQLFilter ROUTE: " + encodeURIComponent(CQLFilter)
+      // );
 
       return CQLFilter;
     },
 
-    // TODO JsDoc
+    /**
+     * @description Collects all point search filters from search form
+     * and combines them to CQL-filter string ready to be sent to Geosever 
+     *
+     * @returns {String} - CQLFilter
+     */
     getPointSearchFilters: async function() {
       const CQLFilterArray = [];
 
@@ -3119,28 +3003,35 @@ export default {
         );
       }
 
-      // TODO .filter can be removed (but test it) - CQLFilterArray doesn't include falsy elements anymore
       const CQLFilter = CQLFilterArray.filter(Boolean)
         .map(filterComponent => `(${filterComponent})`)
         .join(" AND ");
 
-      // TODO debug, remove
-      console.log("CQLFilter POINT: " + CQLFilter);
-      console.log(
-        "urlencoded CQLFilter POINT: " + encodeURIComponent(CQLFilter)
-      );
+      // TODO debug, remove when within-filter works
+      // console.log("CQLFilter POINT: " + CQLFilter);
+      // console.log(
+      //   "urlencoded CQLFilter POINT: " + encodeURIComponent(CQLFilter)
+      // );
 
       return CQLFilter;
     },
 
-    // TODO JsDoc
+    /**
+     * @description Get CQL Filter for free text search option.
+     *
+     * @returns {String} - CQLFiltertext
+     */
     getFreeTextSearchFilter: function() {
       return searchConfig.CQLFilters.freeTextFilter(
         this.searchOptions.searchText
       );
     },
 
-    // TODO JsDoc
+    /**
+     * @description Get CQL Filter for route type search option.
+     *
+     * @returns {String} - CQLFiltertext
+     */
     getRouteTypeSearchFilter: function() {
       const routeTypeFilterArray = this.searchOptions.selectedRouteTypes.map(
         routeType => searchConfig.CQLFilters.routeTypeFilter(routeType)
@@ -3148,7 +3039,11 @@ export default {
       return routeTypeFilterArray.join(" OR ");
     },
 
-    // TODO JsDoc
+    /**
+     * @description Get CQL Filter for point type search option.
+     *
+     * @returns {String} - CQLFiltertext
+     */
     getPointTypeSearchFilter: function() {
       const pointTypeFilterArray = this.searchOptions.selectedPointTypes.map(
         pointType => searchConfig.CQLFilters.pointTypeFilter(pointType)
@@ -3156,7 +3051,11 @@ export default {
       return pointTypeFilterArray.join(" OR ");
     },
 
-    // TODO JsDoc
+    /**
+     * @description Get CQL Filter for municipality search option.
+     *
+     * @returns {String} - CQLFiltertext
+     */
     getMunicipalitySearchFilter: function() {
       const municipalityFilterArray = this.searchOptions.selectedMunicipalities.map(
         municipality => searchConfig.CQLFilters.municipalityFilter(municipality)
@@ -3164,9 +3063,12 @@ export default {
       return municipalityFilterArray.join(" OR ");
     },
 
-    // TODO JsDoc
+    /**
+     * @description Get CQL Filter for max distance from users current location search option.
+     *
+     * @returns {String} - CQLFiltertext
+     */
     getMaxDistanceFromLocationSearchFilter: async function() {
-      // TODO navigator.geolocation.clearWatch if closes search-modal while geolocation (for search!) ongoing
       const distance = this.searchOptions.maxDistanceFromCurrentLocation;
       const geolocationOptions = {
         enableHighAccuracy: true,
@@ -3176,7 +3078,6 @@ export default {
       const positionWGS84 = await this.getAccuratePositionOnceDEV(
         geolocationOptions
       );
-      // TODO loading indicator etc, where do we implement it?
       const positionEPSG3067 = this.transformCoordinates(positionWGS84);
 
       return searchConfig.CQLFilters.maxDistanceFromLocationFilter(
@@ -3185,7 +3086,11 @@ export default {
       );
     },
 
-    // TODO JsDoc
+    /**
+     * @description Get CQL Filter for route length search option.
+     *
+     * @returns {String} - CQLFiltertext
+     */
     getRouteLengthFilter: function() {
       const routeLengthFilterArray = [];
 
@@ -3207,7 +3112,13 @@ export default {
       return routeLengthFilterArray.join(" AND ");
     },
 
-    // TODO JsDoc
+    /**
+     * @description Makes a search query to Geoserver
+     *
+     * @param {String} CQLFilter - CQL filter to be used in query
+     * @param {String} type - either "Route" or "Point"
+     * @returns {Json} - Geoserver response Feature collection GeoJSON
+     */
     fetchSearchResults: function(CQLFilter, type) {
       return new Promise((resolve, reject) => {
         let address = "";
@@ -3233,13 +3144,9 @@ export default {
               searchConfig.geoserverPointsTypeName
             )}&CQL_FILTER=${CQLFilter}`;
           }
-
-          // address = `${searchConfig.baseAddress}${encodeURIComponent(
-          //   searchConfig.geoserverRoutesTypeName
-          // )}&CQL_FILTER=${CQLFilter}`;
         }
         // TODO debug, remove
-        console.log("address: " + address);
+        // console.log("address: " + address);
 
         //fetch("https://reqres.in/api/users/23") // test 404
         fetch(address)
@@ -3255,7 +3162,6 @@ export default {
           })
           .catch(error => reject(error));
       });
-      // TODO loading indicator also for fetchRoute
     },
 
     /**
@@ -3348,9 +3254,6 @@ export default {
      * @returns {Undefined} - Does not return anything
      */
     addMarker: function(positionEPSG3067, id = "marker", color = "#0377fc") {
-      // TODO reformat: pass argumets as object eg. id: props.id || "defaultValue"
-      // https://stackoverflow.com/questions/27735855/javascript-function-with-optional-parameters-as-object
-
       let channel = this.channel;
       channel.postRequest("MapModulePlugin.AddMarkerRequest", [
         {
@@ -3413,7 +3316,6 @@ export default {
      * containing coordinates in WGS84 coordinate system
      * @returns {Object}  object which has .coords.latitude and .coords.longitude properties
      * containing coordinates in EPSG3067 coordinate system
-     * @todo not needed with Oskari native request
      */
     transformCoordinates: function(positionWGS84) {
       let positionEPSG3067 = { coords: {} };
@@ -3434,7 +3336,6 @@ export default {
      * containing coordinates in WGS84 coordinate system
      * @returns {Promise}  Promise object which resolves to Geolocation Position -like object (WGS84)
      * which is constructed by hand OR rejects with error if returnError is set to true
-     * @todo only needed in local development => remove or comment out
      */
     // eslint-disable-next-line no-unused-vars
     getAccuratePositionOnceDEV: function(options = {}) {
@@ -3461,26 +3362,19 @@ export default {
      * containing coordinates in WGS84 coordinate system
      * @returns {Promise}  Promise object which resolves to Geolocation Position object (WGS84)
      * or rejects with error
-     * @todo add accuracy as parameter
-     * @todo implement and document timeout and loading indicator
      */
     getAccuratePositionOnce: function(options = {}) {
       return new Promise((resolve, reject) => {
         const id = navigator.geolocation.watchPosition(
           positionWGS84 => {
             if (positionWGS84.coords.accuracy < 200) {
-              // TODO loading indicator for waiting position
-              // TODO remove console.logs
-              console.log("Promise: Good accyracy");
-              console.log("Promise: Clearing ID: " + id);
               navigator.geolocation.clearWatch(id);
               resolve(positionWGS84);
             } else {
               // TODO what if accurate position "never" comes - timeout + reject(error)? cancel-by-user-option?
-              // TODO debug, remove else when not needed
-              console.log(
-                "Promise: Poor accyracy: " + positionWGS84.coords.accuracy
-              );
+              // console.log(
+              //   "Promise: Poor accyracy: " + positionWGS84.coords.accuracy
+              // );
             }
           },
           // eslint-disable-next-line no-unused-vars
@@ -3502,8 +3396,6 @@ export default {
      * If turned off, will remove marker and remove navigator.geolocation.watchPosition (clearWatch).
      *
      * @returns {Undefined} - Does not return anything
-     * @todo add accuracy as parameter?
-     * @todo add options as parameter with sensible defaults
      * @todo handle errors and not geolocation in navigator
      * @todo implement keepMapRotationNorthUp-functionality
      */
@@ -3511,7 +3403,6 @@ export default {
       if ("geolocation" in navigator) {
         const self = this;
         const options = {
-          // TODO check geolocation options from everywhere (sensible and uniform - general data-prop or config?)
           enableHighAccuracy: true,
           maximumAge: 0,
           timeout: 30000
@@ -3547,10 +3438,7 @@ export default {
 
         // eslint-disable-next-line no-inner-declarations
         function error() {
-          // TODO handle errors (by throwing?)
-          // TODO remove console.logs
-          console.log("no position available");
-          alert("Sorry, no position available.");
+          // console.log("no position available");
         }
 
         self.showPosition.id =
@@ -3560,9 +3448,7 @@ export default {
               self.removeMarker("trackLocationMarker"));
       } else {
         /* geolocation IS NOT available */
-        // TODO handle somehow
-        // TODO remove console.logs
-        console.log("geolocation IS NOT available");
+        // console.log("geolocation IS NOT available");
       }
 
       // Oskari native request can be used when Lounaispaikka Oskari has updated (instead of current browser geolocation api)
@@ -3575,33 +3461,6 @@ export default {
       //   maximumAge: 5000
       // };
       // channel.postRequest("StartUserLocationTrackingRequest", [options]);
-    },
-
-    // TODO JsDoc
-    loadGeoJson: function() {
-      // TODO rename and reformat, no fetch here. addSearchFeaturesToMap etc.
-      let channel = this.channel;
-      let url =
-        "https://geoserver.lounaistieto.fi/geoserver/virma/wfs?request=GetFeature&service=WFS&version=1.0.0&typeName=virma%3Avirma_reitit_avoin&outputFormat=application%2Fjson&CQL_FILTER=name_fi%20%3D%20%27Kuuvan%20polku%27";
-
-      // kenttä sisältää:
-      // &CQL_FILTER=name_fi%20LIKE%20%27%25Savoj%C3%A4rven%20kierros%25%27
-
-      fetch(url)
-        .then(response => response.json())
-        .then(result => addVectorLayer(result));
-
-      var options = {
-        layerId: "MY_VECTOR_LAYER",
-        centerTo: true
-      };
-
-      function addVectorLayer(geoJson) {
-        channel.postRequest("MapModulePlugin.AddFeaturesToMapRequest", [
-          geoJson,
-          options
-        ]);
-      }
     }
   },
 
@@ -3619,7 +3478,6 @@ export default {
 
     // Define EPSG3067 coordinate system for proj4.js (coordinate tranforms)
     proj4.defs(
-      // TODO remove when geolocation api is not used anymore (but Oskari native requests instead)
       "EPSG:3067",
       "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
     );
