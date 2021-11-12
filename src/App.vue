@@ -50,7 +50,7 @@
 				</v-btn>
 
 				<v-btn icon large @click.stop="toggleDialog('help', true)">
-					<v-icon>mdi-help</v-icon>
+					<v-icon>mdi-exclamation</v-icon>
 				</v-btn>
 			</span>
 			<v-spacer></v-spacer>
@@ -1549,6 +1549,7 @@
 								<v-tab>Toiminnot</v-tab>
 								<v-tab>Karttasymbolit</v-tab>
 								<v-tab>Tekijät</v-tab>
+								<v-tab>Vastuullisen tekijän ohjeet</v-tab>
 							</v-tabs>
 						</template>
 					</v-toolbar>
@@ -1673,13 +1674,13 @@
 										<v-col cols="2" class="d-flex">
 											<div class="mx-auto">
 												<v-btn color="#58a291" dark fab small depressed>
-													<v-icon>mdi-help</v-icon>
+													<v-icon>mdi-exclamation</v-icon>
 												</v-btn>
 											</div>
 										</v-col>
 										<v-col cols="10">
 											<p class="font-weight-bold mb-1">Ohjeet</p>
-											Näyttää tämän ohje-valikon.
+											Näyttää ohjevalikon.
 										</v-col>
 									</v-row>
 
@@ -1923,6 +1924,21 @@
 											></v-img>
 										</v-col>
 									</v-row>	
+
+								</v-container>
+							</v-tab-item>
+
+							
+							<!-- Vastuullisuus -->
+							<v-tab-item>
+								<v-container fluid>
+
+									<v-row class="d-flex align-start">
+										<v-col cols="12" class="d-flex">
+												<p class=" text-justify">Ole vastuullinen (TODO).</p>
+										</v-col>
+									</v-row>	
+
 
 								</v-container>
 							</v-tab-item>
