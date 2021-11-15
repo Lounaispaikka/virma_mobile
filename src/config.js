@@ -142,12 +142,12 @@ export let searchConfig = {
 
     // Reitin pituus vähintään
     routeLengthMinFilter: function(value) {
-      return `geomLength(geom) > ${value * 1000}`;
+      return `length_m > ${value * 1000}`;
     },
 
     // Reitin pituus enintään
     routeLengthMaxFilter: function(value) {
-      return `geomLength(geom) < ${value * 1000}`;
+      return `length_m < ${value * 1000}`;
     }
   }
 };
