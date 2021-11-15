@@ -2113,7 +2113,7 @@ export default {
 					sortable: false,
 					value: "properties.name_fi"
 				},
-				{ text: "Pituus", value: "properties.length_m" },
+				{ text: "Pituus", value: "properties.length_m", formatter: (len)=> (len/1000).toFixed(1) + " km" },
 				{ text: "Sijainti", value: "properties.municipali" },
 				{ text: "", value: "data-table-expand" }
 			]
@@ -3340,6 +3340,7 @@ export default {
 						feature.geometry.type == "LineString"
 					)
 				) {
+					//TODO: Move
 					this.searchResults.routes.objects.push(feature);
 				}
 			});
