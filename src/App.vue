@@ -50,7 +50,7 @@
 				</v-btn>
 
 				<v-btn icon large @click.stop="toggleDialog('help', true)">
-					<v-icon>mdi-exclamation</v-icon>
+					<v-icon>mdi-information-outline</v-icon>
 				</v-btn>
 			</span>
 			<v-spacer></v-spacer>
@@ -1471,7 +1471,6 @@
 							esimerkiksi etsiä lähimmät uimarannat tai matkailupalvelut. Löydät
 							palvelusta jo yli 1000 kohdetta, ja määrä kasvaa koko ajan.
 						</p>
-						<p>Palvelun käytöstä on tulossa myös ohjevideo.</p>
 						<p>Tästä pääset suoraan suosituimpiin reitteihimme sekä kohteisiin!</p>
 					
 
@@ -1546,10 +1545,10 @@
 								show-arrows
 								centered
 							>
-								<v-tab>Toiminnot</v-tab>
-								<v-tab>Karttasymbolit</v-tab>
-								<v-tab>Tekijät</v-tab>
-								<v-tab>Vastuullisen tekijän ohjeet</v-tab>
+								<v-tab><v-icon>mdi-shape</v-icon> Toiminnot</v-tab>
+								<v-tab><v-icon>mdi-windsock</v-icon> Karttasymbolit</v-tab>
+								<v-tab><v-icon>mdi-account-multiple</v-icon> Tekijät</v-tab>
+								<v-tab><v-icon>mdi-sprout</v-icon> Vastuullisen retkeilijän ohjeet</v-tab>
 							</v-tabs>
 						</template>
 					</v-toolbar>
@@ -1674,7 +1673,7 @@
 										<v-col cols="2" class="d-flex">
 											<div class="mx-auto">
 												<v-btn color="#58a291" dark fab small depressed>
-													<v-icon>mdi-exclamation</v-icon>
+													<v-icon>mdi-information-outline</v-icon>
 												</v-btn>
 											</div>
 										</v-col>
@@ -1864,60 +1863,80 @@
 										<v-col cols="12" class="d-flex">
 											<div class="ml-10">
 												<p>Tiedustelut sovellukseen liittyen: <a href="mailto:virma@lounaistieto.fi">virma@lounaistieto.fi</a></p>
-											</div>
-										</v-col>
-									</v-row>
 
-									<v-row class="d-flex align-start">
-										<v-col cols="12" class="d-flex">
-											<div class="ml-10">
 												<p class="text">
 													Lisätietoa Virma-hankkeesta (Digi-SAAPAS) löytyy täältä:
 													<a href="https://valonia.fi/hanke/digitaalisen-saavutettavuuden-parantaminen-virkistyspalveluissa-digi-saapas/">Valonia</a>, 
 													<a href="https://www.lounaistieto.fi/virkistys/">Lounaistieto</a>,
 													<a href="https://valonia.fi/virmaesite">Virman esittely</a> 
 												</p>
-												
-											</div>
-										</v-col>
-									</v-row>
-									<v-row class="d-flex align-start">
-										<v-col cols="12" class="d-flex">
-											<div class="ml-10">
-
 												<p class="text">
 													Sovelluksen lähdekoodit: 
 													<a href="https://github.com/Lounaispaikka/virma_mobile">Virma Mobile</a>
 												</p>
-												
+
 											</div>
 										</v-col>
-									</v-row>							
-											
+									</v-row>
+
 									<v-row class="d-flex align-start">
 										<v-col cols="12" class="d-flex flex-wrap justify-left">
 											
 											<v-img
-												class=""
-												src="@/assets/lounaistieto.png"
-												max-height="96"
-												max-width="256"
-												contain
-											></v-img><v-img
-												class=""
-												src="@/assets/logo-utu-crop.png"
-												max-height="96"
-												max-width="256"
-												contain
-											></v-img><v-img
-												class=""
+												class="tekijalogot"
 												src="@/assets/lippu_ja_tunnuslause-uai-516x81.jpg"
 												max-height="96"
 												max-width="256"
 												contain
-											></v-img><v-img
-												class=""
+											>
+											</v-img>
+											<v-img
+												class="tekijalogot"
 												src="@/assets/ely_logo.png"
+												max-height="96"
+												max-width="256"
+												contain
+											></v-img>
+											
+											<v-img
+												class="tekijalogot"
+												src="@/assets/liitto.svg"
+												max-height="96"
+												max-width="256"
+												contain
+											></v-img>
+
+											<v-img
+												class="tekijalogot"
+												src="@/assets/lounaistieto_logo_avoimesti_musta.png"
+												max-height="96"
+												max-width="256"
+												contain
+											></v-img>
+											<v-img
+												class="tekijalogot"
+												src="@/assets/valonia_logo1_rgb-e1569320033805.png"
+												max-height="96"
+												max-width="256"
+												contain
+											></v-img>
+											<v-img
+												class="tekijalogot"
+												src="@/assets/maajakotit.jpg"
+												max-height="96"
+												max-width="256"
+												contain
+											></v-img>
+											<v-img
+												class="tekijalogot"
+												src="@/assets/proagria-lansi-suomi.png"
+												max-height="96"
+												max-width="256"
+												contain
+											></v-img>
+											<v-img
+												class="tekijalogot"
+												src="@/assets/logo-utu-crop.png"
 												max-height="96"
 												max-width="256"
 												contain
@@ -1935,11 +1954,9 @@
 
 									<v-row class="d-flex align-start">
 										<v-col cols="12" class="d-flex">
-												<p class=" text-justify">Ole vastuullinen (TODO).</p>
+												<p class=" text-justify">Retkeilyssä kannattaa huomioida esimerkiksi <a href="https://visitjyvaskyla.fi/luonto/vastuullinen-retkeily/">tämänlainen</a> ohjeistus.</p>
 										</v-col>
-									</v-row>	
-
-
+									</v-row>
 								</v-container>
 							</v-tab-item>
 						</v-tabs-items>
@@ -2010,6 +2027,11 @@ tbody tr:nth-of-type(odd) {
 
 .no-blur:not(.v-btn--text):not(.v-btn--outlined):hover:before {
 	opacity: 0 !important;
+}
+
+.tekijalogot {
+	margin: 12px;
+	padding: 12px;
 }
 </style>
 
