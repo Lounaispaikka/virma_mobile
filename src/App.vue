@@ -2050,7 +2050,7 @@
               <v-tab-item>
                 <v-container fluid>
                   <v-row class="d-flex align-start">
-                    <v-col cols="12" class="d-flex">
+                    <v-col cols="12" class="">
                       <h1>Vastuullisen retkeilij&auml;n ohjeet&nbsp;</h1>
 
                       <p>
