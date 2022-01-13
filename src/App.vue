@@ -1984,22 +1984,6 @@
                     <v-col cols="12" class="d-flex flex-wrap justify-left">
                       <v-img
                         class="tekijalogot"
-                        src="@/assets/lippu_ja_tunnuslause-uai-516x81.jpg"
-                        max-height="96"
-                        max-width="256"
-                        contain
-                      >
-                      </v-img>
-                      <v-img
-                        class="tekijalogot"
-                        src="@/assets/ely_logo.png"
-                        max-height="96"
-                        max-width="256"
-                        contain
-                      ></v-img>
-
-                      <v-img
-                        class="tekijalogot"
                         src="@/assets/liitto.svg"
                         max-height="96"
                         max-width="256"
@@ -2037,6 +2021,22 @@
                       <v-img
                         class="tekijalogot"
                         src="@/assets/logo-utu-crop.png"
+                        max-height="96"
+                        max-width="256"
+                        contain
+                      ></v-img>
+
+                      <v-img
+                        class="tekijalogot"
+                        src="@/assets/lippu_ja_tunnuslause-uai-516x81.jpg"
+                        max-height="96"
+                        max-width="256"
+                        contain
+                      >
+                      </v-img>
+                      <v-img
+                        class="tekijalogot"
+                        src="@/assets/ely_logo.png"
                         max-height="96"
                         max-width="256"
                         contain
