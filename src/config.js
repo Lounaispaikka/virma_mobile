@@ -17,6 +17,7 @@ export let searchConfig = {
   // Search form options (Hakulomakkeen vaihtoehdot)
   // TODO it would be better to get these from database
   // instead of hard coding them here, but that requires keeping database 'tidy'
+  // select distinct(class2_fi) from routes where class2_fi is not null;
   routeTypes: [
     "Kulttuuriulkoilureitti",
     "Kuntoreitti",
@@ -27,6 +28,7 @@ export let searchConfig = {
     "Retkeilyreitti",
     "Retkilatu"
   ],
+  // select distinct(class2_fi) from points where class2_fi is not null;
   pointTypes: [
     "Ankkuripaikka",
     "Hätäsatama",
@@ -201,7 +203,7 @@ export let welcomeContent = {
       bgColor: "#58a291",
       imageName: "",
       internalFunction: "",
-      externalLink: "https://valonia.fi/virmaesite"
+      externalLink: "https://spark.adobe.com/page/xTQLTjHhUkeqf/"
     }
   ]
 };
