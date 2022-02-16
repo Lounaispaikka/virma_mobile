@@ -738,7 +738,7 @@ export let layersMenuContent = {
           legend: {
             imageName: ""
           }
-        },
+        }/*,
         {
           name: "Turun bussipysäkit",
           id: 1184,
@@ -760,7 +760,7 @@ export let layersMenuContent = {
           legend: {
             imageName: ""
           }
-        }
+        }*/
       ]
     }
    
