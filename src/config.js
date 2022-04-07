@@ -26,7 +26,7 @@ export let searchConfig = {
     "Melontareitti",
     "Pyöräilyreitti",
     "Retkeilyreitti",
-    "Retkilatu"
+    "Latu"
   ],
   // select distinct(class2_fi) from points where class2_fi is not null;
   pointTypes: [
@@ -253,7 +253,7 @@ export let helpDialogSymbols = {
       imageName: "retkeilyreitti_60px.png"
     },
     {
-      key: "Retkilatu",
+      key: "Latu",
       description:
         "Retkihiihtoon tarkoitettu latupohja. Yleensä perinteisen tyylin latu. Retkiladun ura voi olla merkitty myös vesialueelle, jolloin latu tehdään jäätilanteen niin salliessa.",
       imageName: "retkilatu_60px.png"
@@ -640,7 +640,7 @@ export let layersMenuContent = {
           }
         },
         {
-          name: "Retkilatu",
+          name: "Latu",
           id: 1305,
           type: "wms",
           visible: true,
