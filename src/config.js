@@ -160,7 +160,7 @@ export let welcomeContent = {
   cardHeight: "200px",
   items: [
     {
-      name: "Kuvakilpailu", // Text which is shown on top of the 'box'
+      name: "Osallistu kuvahaasteeseen", // Text which is shown on top of the 'box'
       id: null, // layer id:s are logged to console when layersMenuContent:logLayerInfoToConsole = true
       // columnWidth uses 12-point grid (https://vuetifyjs.com/en/components/grids/) where 12 is full width, 6 is half width etc.
       columnWidth: 6, // on xs (<600px) always 12, this overrides when >600px
