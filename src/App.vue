@@ -1265,11 +1265,9 @@
                     </template>
 
                     <template v-else>
-                      <v-card-actions class="">
+                      <v-card-actions class="" style="position: fixed; z-index: 1">
                         <v-btn
                           color="success"
-                          class="mr-2"
-                          width="120px"
                           @click="
                             closeDialog('search');
                             zoomToSearchResults();
@@ -1280,10 +1278,6 @@
 
                         <v-btn
                           color="warning"
-                          class="mt-3"
-                          style="z-index: 1"
-                          fixed
-                          cols="12"
                           @click="resetSelectedSearchResults"
                           :disabled="
                             selectedSearchResultCount > 0 ? false : true
@@ -1292,7 +1286,7 @@
                           Tyhjennä valinnat
                         </v-btn>
                       </v-card-actions>
-
+                      <div style="margin-bottom: 5em"></div>
                       <!-- Points -->
                       <v-card
                         color="#bcdad3"
