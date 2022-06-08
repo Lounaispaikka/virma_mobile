@@ -1267,6 +1267,18 @@
                     <template v-else>
                       <v-card-actions class="">
                         <v-btn
+                          color="success"
+                          class="mr-2"
+                          width="120px"
+                          @click="
+                            closeDialog('search');
+                            zoomToSearchResults();
+                          "
+                        >
+                          Näytä valitut
+                        </v-btn>
+
+                        <v-btn
                           color="warning"
                           class="mt-3"
                           style="z-index: 1"
@@ -1313,6 +1325,14 @@
                           v-on:toggle-select-all="allSearchResultsSelected"
                           :footer-props="{
                             itemsPerPageText: 'Rivejä yhdellä sivulla',
+                            
+                          }"
+                          no-results-text='Ei kohteita'
+                          no-data-text='Ei kohteita'
+                          loading-text="Ladataan"
+                          :header-props="{
+                            sortByText: 'Suodata',
+                            
                           }"
                         >
                           <template v-slot:[`footer.page-text`]="props">
@@ -1380,6 +1400,13 @@
                           v-on:toggle-select-all="allSearchResultsSelected"
                           :footer-props="{
                             itemsPerPageText: 'Rivejä yhdellä sivulla',
+                          }"
+                          no-results-text='Ei kohteita'
+                          no-data-text='Ei kohteita'
+                          loading-text="Ladataan"
+                          :header-props="{
+                            sortByText: 'Suodata',
+                            
                           }"
                         >
                           <template v-slot:[`footer.page-text`]="props">
@@ -1530,7 +1557,7 @@
                       class="white--text align-end"
                       :height="welcomeContent.cardHeight"
                     >
-                      <v-card-title v-text="card.name"></v-card-title>
+                      <v-card-title v-text="card.name" style="text-shadow: 1px 0px 3px #000000, 0px 1px 3px #000000"></v-card-title>
                     </v-img>
                   </v-card>
                 </v-col>
