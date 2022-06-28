@@ -159,7 +159,7 @@ export let welcomeContent = {
   defaultBgColor: "#26c6da",
   cardHeight: "200px",
   items: [
-    {
+/*    {
       name: "Osallistu kuvahaasteeseen", // Text which is shown on top of the 'box'
       id: null, // layer id:s are logged to console when layersMenuContent:logLayerInfoToConsole = true
       // columnWidth uses 12-point grid (https://vuetifyjs.com/en/components/grids/) where 12 is full width, 6 is half width etc.
@@ -168,12 +168,12 @@ export let welcomeContent = {
       imageName: "kilpailu.jpg", // place images to /src/assets/
       internalFunction: "", // can be used to invoke a function in App.vue (see item 'Ohjeet ja karttaselitteet': "showHelpDialog")
       externalLink: "https://www.lyyti.fi/reg/Virma_kuvahaaste_6931" // can be used to open external link in new tab (see item 'Lue lisää Virmasta': "https://valonia.fi/virmaesite")
-    },
+    },*/
     {
       name: "Retkeilyreitit", // Text which is shown on top of the 'box'
       id: 1304, // layer id:s are logged to console when layersMenuContent:logLayerInfoToConsole = true
       // columnWidth uses 12-point grid (https://vuetifyjs.com/en/components/grids/) where 12 is full width, 6 is half width etc.
-      columnWidth: 6, // on xs (<600px) always 12, this overrides when >600px
+      columnWidth: 12, // on xs (<600px) always 12, this overrides when >600px
       bgColor: "", // overrides defaultBgColor if set, use hex code ('#26c6da')
       imageName: "Hierkonpolku_DSC_9195_Terhi Ajosenpää_800px.jpg", // place images to /src/assets/
       internalFunction: "", // can be used to invoke a function in App.vue (see item 'Ohjeet ja karttaselitteet': "showHelpDialog")
