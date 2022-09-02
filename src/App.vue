@@ -1557,6 +1557,13 @@
                 </v-col>
               </v-row>
             </v-container>
+
+            <p>
+              <v-icon>mdi-account-multiple</v-icon>
+              <a href="https://virma.lounaistieto.fi/">Virman ylläpito</a> 
+              on osoitteessa <a href="https://virma.lounaistieto.fi/">virma.lounaistieto.fi</a>.
+            </p>
+
           </v-card-text>
         </v-card>
       </v-dialog>
