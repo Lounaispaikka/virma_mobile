@@ -223,6 +223,11 @@ export let welcomeContent = {
 export let helpDialogSymbols = {
   routes: [
     {
+      key: "Hevosreitti",
+      description: "Ratsastukseen tarkoitettu reitti erilaisilla polku- ja tiepohjilla.",
+      imageName: "hevosreitti_60px.png"
+    },
+    {
       key: "Kulttuuriulkoilureitti",
       description:
         "Yleisesti kulttuuriympäristöön, kulttuuriperintöön ja kulttuurimaisemaan pohjautuva reitti. Reitti voi kulkea paikoin myös hyvin urbaanissa ympäristössä.",
@@ -239,6 +244,11 @@ export let helpDialogSymbols = {
       description:
         "Suhteellisen lyhyt luonnossa kulkeva polku, jonka varrella on yleensä luontoon ja polun ympäristöön liittyviä opastauluja. Opastussisältö voi olla myös digitaalista mobiililaitteilla luettavaa.",
       imageName: "luontopolku_60px.png"
+    },
+    {
+      key: "Maastopyöräreitti",
+      description: "Pyöräilyyn tarkoitettu reitti metsäpoluilla ja maastourilla.",
+      imageName: "maastopyorareitti_60px.png"
     },
     {
       key: "Matkailureitti",
@@ -563,7 +573,32 @@ export let layersMenuContent = {
         backgroundColor: "#bcdad3", // color of expansion panel
         class: "" // possible css-class(es) (propably usually classes in Vuetify, used for vertical spacing between expansion panels)
       },
-      subContent: []
+      subContent: [
+/*
+        {
+          name: "Luontopolku",
+          id: 1300,
+          type: "wms",
+          visible: true,
+          checked: true,
+          renderAs: "checkbox",
+          legend: {
+            imageName: "luontopolku_60px.png" // place images to /src/assets/mapsymbols
+          }
+        },
+        {
+          name: "Matkailureitti",
+          id: 1301,
+          type: "wms",
+          visible: true,
+          checked: true,
+          renderAs: "checkbox",
+          legend: {
+            imageName: "matkailureitti_60px.png"
+          }
+        }
+*/
+      ]
     },
 
     {
@@ -578,7 +613,8 @@ export let layersMenuContent = {
         backgroundColor: "#bcdad3",
         class: ""
       },
-      subContent: []
+      subContent: [  
+    ]
     },
 
     // Routes (Reitit)
