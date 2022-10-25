@@ -1556,13 +1556,14 @@
                   </v-card>
                 </v-col>
               </v-row>
+              <v-row dense>
+                <p>
+                  <v-icon>mdi-hammer</v-icon>
+                  <a href="https://virma.lounaistieto.fi/">Ylläpito</a> 
+                </p>
+              </v-row>
             </v-container>
 
-            <p>
-              <v-icon>mdi-account-multiple</v-icon>
-              <a href="https://virma.lounaistieto.fi/">Virman ylläpito</a> 
-              on osoitteessa <a href="https://virma.lounaistieto.fi/">virma.lounaistieto.fi</a>.
-            </p>
 
           </v-card-text>
         </v-card>
@@ -1627,6 +1628,10 @@
                             >virma@lounaistieto.fi</a
                           >
                         </p>
+                        <p>
+                  <v-icon>mdi-hammer</v-icon>
+                  Karttadatan ylläpitäjien palvelu <a href="https://virma.lounaistieto.fi/">täällä</a>!
+                </p>
                       </div>
                     </v-col>
                   </v-row>
@@ -2449,6 +2454,7 @@ export default {
      * @returns {Undefined} - Does not return anything
      */
     initOskariChannel: function () {
+      console.log("initOskariChannel()");
       var IFRAME_DOMAIN = "https://karttapalvelu.lounaistieto.fi";
       var iFrame = document.getElementById("map");
       /* global OskariRPC */
@@ -2458,9 +2464,13 @@ export default {
       this.layersMenuContent = layersMenuContent;
       var findMatchingConfigLayer = this.findMatchingConfigLayer;
       var self = this;
+      console.log("initOskariChannel();!");
+      window.oskari_channel = channel;
 
       channel.onReady(function () {
+        console.log("channel.onReady();!");
         channel.getAllLayers(function (layers) {
+          console.log("channel.getAllLayers();!");
           if (layersMenuContent.logLayerInfoToConsole) {
             console.log(
               `\nOskarilayers from Karttapalvelu: ${layers.length} layer(s)\n********************************************\n`
@@ -2568,6 +2578,7 @@ export default {
 
         // Handle click events of vector features (show feature info box)
         channel.handleEvent("FeatureEvent", function (data) {
+          console.log("FeatureEvent",data.operation);
           if (data.operation == "click") {
             self.showInfoForVectorFeature(data);
           }
