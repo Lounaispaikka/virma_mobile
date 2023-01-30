@@ -17,16 +17,17 @@ export let searchConfig = {
   // Search form options (Hakulomakkeen vaihtoehdot)
   // TODO it would be better to get these from database
   // instead of hard coding them here, but that requires keeping database 'tidy'
-  // select distinct(class2_fi) from routes where class2_fi is not null;
+  // select distinct(class2_fi) from routes where class2_fi is not null order by class2_fi;
   routeTypes: [
+    "Hevosreitti",
     "Kulttuuriulkoilureitti",
     "Kuntoreitti",
+    "Latu",
     "Luontopolku",
     "Matkailureitti",
     "Melontareitti",
     "Pyöräilyreitti",
-    "Retkeilyreitti",
-    "Latu"
+    "Retkeilyreitti"
   ],
   // select distinct(class2_fi) from points where class2_fi is not null;
   pointTypes: [
@@ -240,6 +241,12 @@ export let helpDialogSymbols = {
       imageName: "kuntoreitti_60px.png"
     },
     {
+      key: "Latu",
+      description:
+        "Retkihiihtoon tarkoitettu latupohja. Yleensä perinteisen tyylin latu. Retkiladun ura voi olla merkitty myös vesialueelle, jolloin latu tehdään jäätilanteen niin salliessa.",
+      imageName: "retkilatu_60px.png"
+    } ,
+    {
       key: "Luontopolku",
       description:
         "Suhteellisen lyhyt luonnossa kulkeva polku, jonka varrella on yleensä luontoon ja polun ympäristöön liittyviä opastauluja. Opastussisältö voi olla myös digitaalista mobiililaitteilla luettavaa.",
@@ -272,13 +279,7 @@ export let helpDialogSymbols = {
       description:
         "Patikointiin tarkoitettu, yleensä vähintään useita kilometrejä pitkä reitti, joka on yleensä maastossa viitoitettu.",
       imageName: "retkeilyreitti_60px.png"
-    },
-    {
-      key: "Latu",
-      description:
-        "Retkihiihtoon tarkoitettu latupohja. Yleensä perinteisen tyylin latu. Retkiladun ura voi olla merkitty myös vesialueelle, jolloin latu tehdään jäätilanteen niin salliessa.",
-      imageName: "retkilatu_60px.png"
-    } 
+    }
   ],
   pointsRecreation: [
     {
@@ -631,6 +632,51 @@ export let layersMenuContent = {
         class: "mb-4"
       },
       subContent: [
+       
+        {
+          name: "Hevosreitti",
+          id: 1305,
+          type: "wms",
+          visible: false,
+          checked: false,
+          renderAs: "checkbox",
+          legend: {
+            imageName: "kulttuuriulkoilureitti_60px.png"
+          }
+        },
+        {
+          name: "Kulttuuriulkoilureitti",
+          id: 1306,
+          type: "wms",
+          visible: true,
+          checked: true,
+          renderAs: "checkbox",
+          legend: {
+            imageName: "kulttuuriulkoilureitti_60px.png"
+          }
+        },
+        {
+          name: "Kuntoreitti",
+          id: 1307,
+          type: "wms",
+          visible: true,
+          checked: true,
+          renderAs: "checkbox",
+          legend: {
+            imageName: "kuntoreitti_60px.png"
+          }
+        },
+        {
+          name: "Latu",
+          id: 1305,
+          type: "wms",
+          visible: true,
+          checked: true,
+          renderAs: "checkbox",
+          legend: {
+            imageName: "retkilatu_60px.png"
+          }
+        },        
         {
           name: "Luontopolku",
           id: 1300,
@@ -641,7 +687,7 @@ export let layersMenuContent = {
           legend: {
             imageName: "luontopolku_60px.png" // place images to /src/assets/mapsymbols
           }
-        },
+        }, // Maastopyöräilyreitti?
         {
           name: "Matkailureitti",
           id: 1301,
@@ -686,39 +732,6 @@ export let layersMenuContent = {
             imageName: "retkeilyreitti_60px.png"
           }
         },
-        {
-          name: "Latu",
-          id: 1305,
-          type: "wms",
-          visible: true,
-          checked: true,
-          renderAs: "checkbox",
-          legend: {
-            imageName: "retkilatu_60px.png"
-          }
-        },
-        {
-          name: "Kuntoreitti",
-          id: 1307,
-          type: "wms",
-          visible: true,
-          checked: true,
-          renderAs: "checkbox",
-          legend: {
-            imageName: "kuntoreitti_60px.png"
-          }
-        },
-        {
-          name: "Kulttuuriulkoilureitti",
-          id: 1306,
-          type: "wms",
-          visible: true,
-          checked: true,
-          renderAs: "checkbox",
-          legend: {
-            imageName: "kulttuuriulkoilureitti_60px.png"
-          }
-        }
       ]
     },
 
