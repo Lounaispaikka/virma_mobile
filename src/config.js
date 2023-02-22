@@ -193,6 +193,7 @@ export let welcomeContent = {
     {
       name: "Virkistyskohteet",
       id: 1349,
+      showLayerGroup: 1349,
       columnWidth: 6,
       bgColor: "",
       imageName: "Hierkonpolku_DSC_9174_Terhi Ajosenpää_800px.jpg",
@@ -565,8 +566,10 @@ export let layersMenuContent = {
     {
       nameXs: "Varsinais-Suomen", // May be empty if there is none
       name: "Virkistyskohteet",
-      id: 1349, // layer id:s are logged to console when logLayerInfoToConsole = true. null when type is 'virtual'
-      type: "wms",
+      id: null, //OLD: 1349  // layer id:s are logged to console when logLayerInfoToConsole = true. null when type is 'virtual'
+      type: "virtual",
+      layerGroup: 1349,
+      wmsId: 1349,
       visible: false, // visibility on startup (and also used for 'eye')
       checked: null, // null unless renderAs == "checkbox" (used for checkbox state (also for 'select all') / not really config -> basically shouldn't be here)
       renderAs: "accordion",
@@ -575,30 +578,65 @@ export let layersMenuContent = {
         class: "" // possible css-class(es) (propably usually classes in Vuetify, used for vertical spacing between expansion panels)
       },
       subContent: [
-/*
+
         {
-          name: "Luontopolku",
-          id: 1300,
+          name: "Opastuspalvelut ja parkkipaikat",
+          id: 1648,
           type: "wms",
           visible: true,
           checked: true,
           renderAs: "checkbox",
           legend: {
-            imageName: "luontopolku_60px.png" // place images to /src/assets/mapsymbols
+            imageName: "opastuskeskus_original.jpg"
           }
         },
         {
-          name: "Matkailureitti",
-          id: 1301,
+          name: "Ruokailu ja yöpyminen",
+          id: 1644,
           type: "wms",
           visible: true,
           checked: true,
           renderAs: "checkbox",
           legend: {
-            imageName: "matkailureitti_60px.png"
+            imageName: "keittokatos_original.jpg"
+          }
+        },
+        {
+          name: "Uiminen ja muut",
+          id: 1645,
+          type: "wms",
+          visible: true,
+          checked: true,
+          renderAs: "checkbox",
+          legend: {
+            imageName: "uimapaikka_original.jpg"
+          }
+        },
+        
+        {
+          name: "Varattavat ja maksulliset palvelut",
+          id: 1647,
+          type: "wms",
+          visible: true,
+          checked: true,
+          renderAs: "checkbox",
+          legend: {
+            imageName: "tupa_original.jpg"
+          }
+        },
+        
+        {
+          name: "Veneily",
+          id: 1640,
+          type: "wms",
+          visible: true,
+          checked: true,
+          renderAs: "checkbox",
+          legend: {
+            imageName: "retkisatama_original.jpg"
           }
         }
-*/
+
       ]
     },
 
@@ -635,7 +673,7 @@ export let layersMenuContent = {
        
         {
           name: "Hevosreitti",
-          id: 1305,
+          id: 1630,
           type: "wms",
           visible: false,
           checked: false,

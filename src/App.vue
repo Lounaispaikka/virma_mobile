@@ -2770,6 +2770,8 @@ export default {
           turnParentsVisible(parentLayer.parent);
         }
       }
+      
+      window.discourageBackNavigation();
 
       if (clickTarget.externalLink.length > 0) {
         // Open external link
@@ -2778,6 +2780,15 @@ export default {
         // Call internal function (like showHelpDialog etc.)
         this[clickTarget.internalFunction]();
         this.dialogWelcome = false;
+      } else if (clickTarget.showLayerGroup) {
+        
+        for (let i = 0; i < this.layersMenuContent.layers.length; i++) {
+          const layer = this.layersMenuContent.layers[i];
+          layer.visible = layer.layerGroup==clickTarget.showLayerGroup;
+          
+          this.toggleVisibility(layer, true);
+        }
+        this.dialogWelcome = false;   
       } else {
         // Normal wms-layers
         // Turn off (not visible) and uncheck all items in menu structure
@@ -2788,7 +2799,7 @@ export default {
         }
 
         // Find right menu-item (map layer)
-        var self = this;
+        let self = this;
         const matchingConfigLayer = (function (oskariLayer) {
           for (let i = 0; i < self.layersMenuContent.layers.length; i++) {
             const configLayer = self.layersMenuContent.layers[i];
@@ -3871,8 +3882,14 @@ export default {
 
   created() {
     // Confirm page leave
+    var canLeave=true;
+    window.discourageBackNavigation=function() {
+      canLeave=false;
+    }
     window.addEventListener("beforeunload", (event) => {
       // Cancel the event as stated by the standard.
+      if (canLeave) return;
+      
       event.preventDefault();
       // Chrome requires returnValue to be set
       event.returnValue = "";
