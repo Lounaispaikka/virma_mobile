@@ -6,8 +6,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      NODE_OPTIONS: "--openssl-legacy-provider"
     steps:
       - name: Checkout source code
         uses: actions/checkout@master
@@ -21,11 +19,16 @@ jobs:
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
       - name: Install
+        env:
+          NODE_OPTIONS: "--openssl-legacy-provider"
         run: npm ci
-        
       - name: Lint
+        env:
+          NODE_OPTIONS: "--openssl-legacy-provider"
         run: npm run lint
       - name: Build
+        env:
+          NODE_OPTIONS: "--openssl-legacy-provider"
         run: npm run build
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
