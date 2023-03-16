@@ -56,7 +56,10 @@ export let searchConfig = {
     "Rantautumispaikka",
     "Retkeilyä palveleva parkkipaikka",
     "Retki- tai luonnonsatama",
-    "Ruokapalvelu",
+    "Ruokapalvelu", // TODO: remove
+    "Myymälä tai kauppa",
+    "Kahvila",
+    "Ravintola",
     "Sauna",
     "Suojasatama",
     "Talviuimapaikka",
