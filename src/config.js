@@ -13,7 +13,7 @@ export let searchConfig = {
 
   // Geoserver point layer name to search from (Geoserver-taso, josta hakutoiminto etsii kohteita)
   geoserverPointsTypeName: "virma:virma_kohteet_kooste",
-  
+
   // Search form options (Hakulomakkeen vaihtoehdot)
   // TODO it would be better to get these from database
   // instead of hard coding them here, but that requires keeping database 'tidy'
@@ -160,16 +160,16 @@ export let welcomeContent = {
   defaultBgColor: "#26c6da",
   cardHeight: "200px",
   items: [
-/*    {
-      name: "Osallistu kuvahaasteeseen", // Text which is shown on top of the 'box'
-      id: null, // layer id:s are logged to console when layersMenuContent:logLayerInfoToConsole = true
-      // columnWidth uses 12-point grid (https://vuetifyjs.com/en/components/grids/) where 12 is full width, 6 is half width etc.
-      columnWidth: 6, // on xs (<600px) always 12, this overrides when >600px
-      bgColor: "", // overrides defaultBgColor if set, use hex code ('#26c6da')
-      imageName: "kilpailu.jpg", // place images to /src/assets/
-      internalFunction: "", // can be used to invoke a function in App.vue (see item 'Ohjeet ja karttaselitteet': "showHelpDialog")
-      externalLink: "https://www.lyyti.fi/reg/Virma_kuvahaaste_6931" // can be used to open external link in new tab (see item 'Lue lisää Virmasta': "https://valonia.fi/virmaesite")
-    },*/
+    /*    {
+          name: "Osallistu kuvahaasteeseen", // Text which is shown on top of the 'box'
+          id: null, // layer id:s are logged to console when layersMenuContent:logLayerInfoToConsole = true
+          // columnWidth uses 12-point grid (https://vuetifyjs.com/en/components/grids/) where 12 is full width, 6 is half width etc.
+          columnWidth: 6, // on xs (<600px) always 12, this overrides when >600px
+          bgColor: "", // overrides defaultBgColor if set, use hex code ('#26c6da')
+          imageName: "kilpailu.jpg", // place images to /src/assets/
+          internalFunction: "", // can be used to invoke a function in App.vue (see item 'Ohjeet ja karttaselitteet': "showHelpDialog")
+          externalLink: "https://www.lyyti.fi/reg/Virma_kuvahaaste_6931" // can be used to open external link in new tab (see item 'Lue lisää Virmasta': "https://valonia.fi/virmaesite")
+        },*/
     {
       name: "Retkeilyreitit", // Text which is shown on top of the 'box'
       id: 1304, // layer id:s are logged to console when layersMenuContent:logLayerInfoToConsole = true
@@ -246,7 +246,7 @@ export let helpDialogSymbols = {
       description:
         "Retkihiihtoon tarkoitettu latupohja. Yleensä perinteisen tyylin latu. Retkiladun ura voi olla merkitty myös vesialueelle, jolloin latu tehdään jäätilanteen niin salliessa.",
       imageName: "retkilatu_60px.png"
-    } ,
+    },
     {
       key: "Luontopolku",
       description:
@@ -284,165 +284,201 @@ export let helpDialogSymbols = {
   ],
   pointsRecreation: [
     {
+      group: "Veneily",
       key: "Ankkuripaikka",
       description: "Suojainen paikka, jonne voi ankkuroitua.",
       imageName: "satama_tai_ankkuripaikka_bw.png"
     },
     {
+      group: "Veneily",
       key: "Hätäsatama",
       description: "Hätätilassa käytettävä satamapaikka.",
       imageName: "satama_tai_ankkuripaikka_bw.png"
     },
     {
+      group: "Ruokailu ja yöpyminen",
       key: "Jätepiste",
       description:
         "Retkeilijöiden käyttöön tarkoitettu jäte- tai kierrätyspiste.",
       imageName: "jätepiste_bw.png"
     },
     {
+      group: "Uiminen ja muut",
       key: "Kalastuspaikka",
       description: "Erityisesti kalastukseen tarkoitettu paikka",
       imageName: "kalastuspaikka_bw.png"
     },
     {
+      group: "Varattavat ja maksulliset palvelut",
       key: "Keittokatos-/ruoanlaittopaikka",
       description:
         "Katettu tulipaikka, jossa on mahdollisuus grillata tai tehdä ruokaa",
       imageName: "keittokatos_bw.png"
     },
     {
+      group: "Ruokailu ja yöpyminen",
       key: "Levähdyspaikka",
       description:
         "Yleensä penkki tai penkkipöytäyhdistelmä, jossa voi levähtää reittiä kulkiessa. Ei tulentekomahdollisuutta.",
       imageName: "levähdyspaikka_bw.png"
     },
     {
+      group: "Uiminen ja muut",
       key: "Luonnonmuistomerkki tai näköalapaikka",
       description:
         "Luonnon erityislaatuinen kohde tai luontainen näköalapaikka esim. linnavuori tai muu korkea paikka.",
       imageName: "luonnonmuistomerkki_bw.png"
     },
     {
+      group: "Uiminen ja muut",
       key: "Luonto-tai lintutorni",
       description: "Lintujen tai maiseman tarkasteluun tarkoitettu torni",
       imageName: "lintutorni_bw.png"
     },
     {
+      group: "Opastuspalvelut ja parkkipaikat",
       key: "Opastuskeskus",
       description:
         "Piste, joka tarjoaa tietoa esim. reitistä tai kohteesta. Usein rakennus tai laajempi infokokonaisuus. Opastuskeskuksessa on yleensä myös henkilökuntaa ainakin osan ajasta.",
       imageName: "opastuskeskus_bw.png"
     },
     {
+      group: "Opastuspalvelut ja parkkipaikat",
       key: "Opastuspiste",
       description:
         "Piste, joka tarjoaa tietoa esim. reitistä tai kohteesta. Ei henkilökuntaa.",
       imageName: "opastuspiste_bw.png"
     },
     {
+      group: "Uiminen ja muut",
       key: "Polttopuusuoja",
       description:
         "Polttopuuhuollettujen tulipaikkojen ja laavujen polttopuiden säilytykseen tarkoitettu vaja.",
       imageName: "polttopuusuoja_bw.png"
     },
     {
+      group: "Uiminen ja muut",
       key: "Päivälaavu tai -kota",
       description: "Päiväkäyttöön tarkoitettu laavu tai kota.",
       imageName: "päivälaavu_bw.png"
     },
     {
+      group: "Veneily",
       key: "Rantautumispaikka",
       description:
         "Paikka, jossa on mahdollisuus rantautua veneellä tai kanootilla",
       imageName: "rantautumispaikka_bw.png"
     },
     {
+      group: "Opastuspalvelut ja parkkipaikat",
       key: "Retkeilyä palveleva parkkipaikka",
       description:
         "Yleensä retkeilyreitin aloituspisteeseen tai virkistyskohteen yhteyteen sijoitettu parkkialue",
       imageName: "retkeilyparkkipaikka_bw.png"
     },
     {
+      group: "Veneily",
       key: "Retki- tai luonnonsatama",
       description:
         "Yleinen, kaikille avoin satama, jossa ei yleensä ole palveluita.",
       imageName: "satama_tai_ankkuripaikka_bw.png"
     },
     {
+      group: "Varattavat ja maksulliset palvelut",
       key: "Sauna",
       description:
         "Yleinen sauna, jonne voi olla pieni saunamaksu. Yleensä tällaisella saunalla on tietyt ajat, jolloin saunaan voi mennä ilman varausta. Sauna voi toimia varaussaunana osan aikaa.",
       imageName: "sauna_bw.png"
     },
     {
+      group: "Veneily",
       key: "Suojasatama",
       description: "Tuulelta suojainen satamapaikka.",
       imageName: "satama_tai_ankkuripaikka_bw.png"
     },
     {
+      group: "Uiminen ja muut",
       key: "Talviuimapaikka",
       description:
         "Yleinen uimapaikka myös talvikäyttöön. Yleensä talviuimapaikalla on myös sauna.",
       imageName: "talviuimapaikka_bw.png"
     },
     {
+      group: "Uiminen ja muut",
       key: "Telttailupaikka",
       description: "Erityisesti telttailuun tarkoitettu alue.",
       imageName: "telttailupaikka_bw.png"
     },
     {
+      group: "Uiminen ja muut",
       key: "Tulipaikka",
       description:
         "Yleensä reitin varrella tai virkistyskohteessa oleva paikka, jossa on mahdollisuus tehdä tulet. Tulipaikalla voi olla polttopuuhuolto, mutta voi myös olla että paikalle pitää ottaa omat polttopuut mukaan.",
       imageName: "tulipaikka_bw.png"
     },
     {
+      group: "Ruokailu ja yöpyminen",
       key: "Tupa",
       description: "Yöpymiseen tai päiväkäyttöön tarkoitettu sisätila.",
       imageName: "tupa_bw.png"
     },
     {
+      group: "Uiminen ja muut",
       key: "Uimapaikka",
       description: "Yleinen uimapaikka.",
       imageName: "uimapaikka_bw.png"
     },
     {
+      group: "Uiminen ja muut",
       key: "Uimaranta",
       description:
         "Yleinen uimapaikka, jossa voi olla ajoittain uimavalvontaa ja muita palveluita.",
       imageName: "uimapaikka_bw.png"
     },
     {
+      group: "Veneily",
       key: "Veneenlaskupaikka",
       description:
         "Paikka, jossa on mahdollisuus laskea vene tai kanootti trailerilta veteen ramppia pitkin",
       imageName: "veneenlaskupaikka_bw.png"
     },
     {
+      group: "Uiminen ja muut",
       key: "Virkistykseen liittyvä erityiskohde",
       description: "Muu erityinen virkistyskohde.",
       imageName: "muu_virkistyskohde_bw.png"
     },
     {
+      group: "Opastuspalvelut ja parkkipaikat",
       key: "Virkistysreitin lähtöpiste",
       description:
         "Piste joka on suunniteltu virkistysreitin lähtöpaikaksi.",
       imageName: "virkistysreitin_lähtöpiste_bw.png"
     },
     {
+      group: "Ruokailu ja yöpyminen",
       key: "Yleisö-wc tai -puucee",
       description:
         "Retkeilijöitä tai kävijöitä palveleva yleisesti avoinna oleva wc",
       imageName: "yleisöwc_bw.png"
     },
     {
+      group: "Ruokailu ja yöpyminen",
+      key: "Vesipiste",
+      description:
+        "Juotavaksi kelpaavan veden jakelupiste.",
+      imageName: "muu_virkistyskohde_bw.png"
+    },
+    {
+      group: "Ruokailu ja yöpyminen",
       key: "Yöpymislaavu tai -kota",
       description: "Yöpymiseen tarkoitettu makuulaavu tai -kota.",
       imageName: "yöpymislaavu_bw.png"
-    } 
+    }
   ],
   pointsTravel: [
     {
+      group: "Varattavat ja maksulliset palvelut",
       key: "Kulttuuripalvelu",
       description: "Matkailuun liittyvä kulttuuripalvelu.",
       imageName: "kulttuuripalvelu_bw.png"
@@ -505,7 +541,7 @@ export let helpDialogSymbols = {
       key: "Yhteysaluslaituri",
       description: "Laituri, johon liikennöi yhteysalus.",
       imageName: "yhteysaluslaituri_bw.png"
-    } 
+    }
   ]
 };
 
@@ -554,7 +590,7 @@ export let layersMenuContent = {
     // .renderAs possible values: accordion, checkbox, text
     // .visible overrides visibility set in karttajulkaisu / Karttapalvelu
 
-    
+
     // IMPORTANT! Wfs-layer functionality is not programmed yet. Here are some thoughts about it.
     // Functionality should rely on every top level wfs layer to actually have/be layer that can be turned on/off as a whole
     // even if it has (one or many) subItems/subLayers (what was just said is true for subLayers also). Otherwise it should be type: "virtual".
@@ -612,7 +648,7 @@ export let layersMenuContent = {
             imageName: "uimapaikka_original.jpg"
           }
         },
-        
+
         {
           name: "Varattavat ja maksulliset palvelut",
           id: 1647,
@@ -624,7 +660,7 @@ export let layersMenuContent = {
             imageName: "tupa_original.jpg"
           }
         },
-        
+
         {
           name: "Veneily",
           id: 1640,
@@ -652,8 +688,8 @@ export let layersMenuContent = {
         backgroundColor: "#bcdad3",
         class: ""
       },
-      subContent: [  
-    ]
+      subContent: [
+      ]
     },
 
     // Routes (Reitit)
@@ -670,16 +706,16 @@ export let layersMenuContent = {
         class: "mb-4"
       },
       subContent: [
-       
+
         {
           name: "Hevosreitti",
           id: 1630,
           type: "wms",
-          visible: false,
-          checked: false,
+          visible: true,
+          checked: true,
           renderAs: "checkbox",
           legend: {
-            imageName: "kulttuuriulkoilureitti_60px.png"
+            imageName: "hevosreitti_60px.png"
           }
         },
         {
@@ -714,7 +750,7 @@ export let layersMenuContent = {
           legend: {
             imageName: "retkilatu_60px.png"
           }
-        },        
+        },
         {
           name: "Luontopolku",
           id: 1300,
@@ -725,7 +761,18 @@ export let layersMenuContent = {
           legend: {
             imageName: "luontopolku_60px.png" // place images to /src/assets/mapsymbols
           }
-        }, // Maastopyöräilyreitti?
+        },
+        {
+          name: "Maastopyöräilyreitti",
+          id: 1631,
+          type: "wms",
+          visible: true,
+          checked: true,
+          renderAs: "checkbox",
+          legend: {
+            imageName: "maastopyorareitti_60px.png"
+          }
+        },
         {
           name: "Matkailureitti",
           id: 1301,
@@ -788,7 +835,7 @@ export let layersMenuContent = {
       },
       subContent: [
         {
-          name: "Kuhankuonon retkeilyreitistö",
+          name: "Kuhankuonon retkeilyreitistö", //TODO: https://karttapalvelu.lounaistieto.fi/action?id=226&lang=fi&srs=EPSG%3A3067&action_route=DescribeLayer 
           id: 226,
           type: "wms",
           visible: false,
@@ -797,18 +844,18 @@ export let layersMenuContent = {
           legend: {
             imageName: ""
           }
+        },
+        {
+          name: "Harjureitti",
+          id: 1356,
+          type: "wms",
+          visible: false,
+          checked: false,
+          renderAs: "checkbox",
+          legend: {
+            imageName: ""
+          }
         }
-        // {
-        //   name: "Harjureitti",
-        //   id: 1202, // TODO get right layer from Karttapalvelu
-        //   type: "wms",
-        //   visible: false,
-        //   checked: false,
-        //   renderAs: "checkbox",
-        //   legend: {
-        //     imageName: ""
-        //   }
-        // }
       ]
     },
 
@@ -829,6 +876,17 @@ export let layersMenuContent = {
         {
           name: "Turun seudun pyörätiet",
           id: 1202,
+          type: "wms",
+          visible: false,
+          checked: false,
+          renderAs: "checkbox",
+          legend: {
+            imageName: ""
+          }
+        },
+        {
+          name: "Turun seudun pääpyöräilyreitit",
+          id: 1555,
           type: "wms",
           visible: false,
           checked: false,

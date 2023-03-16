@@ -124,8 +124,7 @@
                 id="map"
                 :src="mapSrc"
                 allow="geolocation"
-                style="
-                  position: absolute;
+                style=" position: absolute;
                   top: 0;
                   left: 0;
                   bottom: 0;
@@ -1551,7 +1550,7 @@
                       class="white--text align-end"
                       :height="welcomeContent.cardHeight"
                     >
-                      <v-card-title v-text="card.name" style="text-shadow: 1px 0px 3px #000000, 0px 1px 3px #000000"></v-card-title>
+                      <v-card-title style="text-shadow: 1px 0px 3px #000000, 0px 1px 3px #000000">{{card.name}}</v-card-title>
                     </v-img>
                   </v-card>
                 </v-col>
@@ -1852,39 +1851,40 @@
                   </v-row>
 
                   <!-- Virkistyskohteet -->
-                  <v-row class="d-flex align-start mt-8">
-                    <v-col cols="12" class="d-flex">
-                      <div class="ml-10">
-                        <p class="text-h6 mb-1">Virkistyskohteet</p>
-                      </div>
-                    </v-col>
-                  </v-row>
+                  <div v-for="group in pointsRecreationGroups" :key="group.name">
+                    <v-row class="d-flex align-start mt-8">
+                      <v-col cols="12" class="d-flex">
+                        <div class="ml-10">
+                          <p class="text-h6 mb-1">{{group.name}} (Virkistyskohteet)</p>
+                        </div>
+                      </v-col>
+                    </v-row>
 
-                  <v-row
-                    class="d-flex align-start"
-                    v-for="point in helpDialogSymbols.pointsRecreation"
-                    :key="point.key"
-                  >
-                    <v-col cols="2" class="d-flex">
-                      <div class="mx-auto">
-                        <v-img
-                          :src="
-                            point.imageName.length == 0
-                              ? ''
-                              : require(`@/assets/mapsymbols/${point.imageName}`)
-                          "
-                          :alt="point.key"
-                          max-width="40px"
-                          max-height="40px"
-                        ></v-img>
-                      </div>
-                    </v-col>
-                    <v-col cols="10">
-                      <p class="font-weight-bold mb-1">{{ point.key }}</p>
-                      {{ point.description }}
-                    </v-col>
-                  </v-row>
-
+                    <v-row
+                      class="d-flex align-start"
+                      v-for="point in group.points"
+                      :key="point.key"
+                    >
+                      <v-col cols="2" class="d-flex">
+                        <div class="mx-auto">
+                          <v-img
+                            :src="
+                              point.imageName.length == 0
+                                ? ''
+                                : require(`@/assets/mapsymbols/${point.imageName}`)
+                            "
+                            :alt="point.key"
+                            max-width="40px"
+                            max-height="40px"
+                          ></v-img>
+                        </div>
+                      </v-col>
+                      <v-col cols="10">
+                        <p class="font-weight-bold mb-1">{{ point.key }}</p>
+                        {{ point.description }}
+                      </v-col>
+                    </v-row>
+                  </div>
                   <!-- Matkailukohteet -->
                   <v-row class="d-flex align-start mt-8">
                     <v-col cols="12" class="d-flex">
@@ -2273,6 +2273,22 @@ import { mapConfig } from "./config.js";
 import { welcomeContent } from "./config.js";
 import { helpDialogSymbols } from "./config.js";
 
+//TODO: Proper group metadata for images, descriptions, etc
+var groupBy = function(xs, key) {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
+
+var pointsRecreationGroups = [];
+for (const [key, value] of Object.entries(groupBy(helpDialogSymbols.pointsRecreation,"group"))) {
+  pointsRecreationGroups.push({
+    "name": key,
+    "points": value 
+  })
+}
+
 export default {
   props: {},
 
@@ -2355,6 +2371,7 @@ export default {
     layersMenuContent: {}, // loaded from config.js
     welcomeContent: {}, // loaded from config.js in mounted-property
     helpDialogSymbols: helpDialogSymbols,
+    pointsRecreationGroups: pointsRecreationGroups,
   }),
 
   computed: {
