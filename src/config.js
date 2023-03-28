@@ -626,7 +626,7 @@ export let layersMenuContent = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            imageName: "opastuskeskus_original.jpg"
+            imageName: ""
           }
         },
         {
@@ -637,7 +637,7 @@ export let layersMenuContent = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            imageName: "keittokatos_original.jpg"
+            imageName: ""
           }
         },
         {
@@ -648,7 +648,7 @@ export let layersMenuContent = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            imageName: "uimapaikka_original.jpg"
+            imageName: ""
           }
         },
 
@@ -660,7 +660,7 @@ export let layersMenuContent = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            imageName: "tupa_original.jpg"
+            imageName: ""
           }
         },
 
@@ -672,7 +672,7 @@ export let layersMenuContent = {
           checked: true,
           renderAs: "checkbox",
           legend: {
-            imageName: "retkisatama_original.jpg"
+            imageName: ""
           }
         }
 
