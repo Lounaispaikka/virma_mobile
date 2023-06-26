@@ -19,6 +19,15 @@ var store = {
   }
 };
 
+// TODO: This is probably the better way
+/*
+import { createRouter, createWebHistory } from 'vue-router'
+
+const router2 = createRouter({
+  history: createWebHistory(),
+  routes: []
+});
+*/
 const router = new VueRouter({
   mode: "history"
 });

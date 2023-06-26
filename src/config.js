@@ -24,6 +24,7 @@ export let searchConfig = {
     "Kuntoreitti",
     "Latu",
     "Luontopolku",
+    "Maastopyöräilyreitti",
     "Matkailureitti",
     "Melontareitti",
     "Pyöräilyreitti",
@@ -575,7 +576,7 @@ export let backGroundMaps = {
 
 // Content of the layers menu except backgroundmaps (Tasot-valikon sisältö poislukien taustakartat) 
 export let layersMenuContent = {
-  logLayerInfoToConsole: false, // Karttapalvelu map layer id:s are logged to console when logLayerInfoToConsole = true
+  logLayerInfoToConsole: true, // Karttapalvelu map layer id:s are logged to console when logLayerInfoToConsole = true
   layersLoaded: false, // Not actually config, but belongs to object, don't change by hand
   parentPointersSet: false, // Not actually config, but belongs to object, don't change by hand
   openOnStartUp: [], // Use the same way as in backGroundMaps
@@ -622,8 +623,8 @@ export let layersMenuContent = {
           name: "Opastuspalvelut ja parkkipaikat",
           id: 1648,
           type: "wms",
-          visible: true,
-          checked: true,
+          visible: false,
+          checked: false,
           renderAs: "checkbox",
           legend: {
             imageName: ""
@@ -633,8 +634,8 @@ export let layersMenuContent = {
           name: "Ruokailu ja yöpyminen",
           id: 1644,
           type: "wms",
-          visible: true,
-          checked: true,
+          visible: false,
+          checked: false,
           renderAs: "checkbox",
           legend: {
             imageName: ""
@@ -644,8 +645,8 @@ export let layersMenuContent = {
           name: "Uiminen ja muut",
           id: 1645,
           type: "wms",
-          visible: true,
-          checked: true,
+          visible: false,
+          checked: false,
           renderAs: "checkbox",
           legend: {
             imageName: ""
@@ -656,8 +657,8 @@ export let layersMenuContent = {
           name: "Varattavat ja maksulliset palvelut",
           id: 1647,
           type: "wms",
-          visible: true,
-          checked: true,
+          visible: false,
+          checked: false,
           renderAs: "checkbox",
           legend: {
             imageName: ""
@@ -668,8 +669,8 @@ export let layersMenuContent = {
           name: "Veneily",
           id: 1640,
           type: "wms",
-          visible: true,
-          checked: true,
+          visible: false,
+          checked: false,
           renderAs: "checkbox",
           legend: {
             imageName: ""
@@ -699,6 +700,7 @@ export let layersMenuContent = {
     {
       nameXs: "Varsinais-Suomen",
       name: "Virkistysreitit",
+      ref: "virre1",
       id: null,
       type: "virtual",
       visible: true,
@@ -858,6 +860,22 @@ export let layersMenuContent = {
           legend: {
             imageName: ""
           }
+        },
+        {
+          name: "Teijon virkistysreitit ja palvelut",
+          id: 1682,
+          type: "wms",
+          visible: false,
+          checked: false,
+          zoomto: { // TODO
+            zoom:8,
+            lat: 6684924.44,
+            lon: 277881.22
+          },
+          renderAs: "checkbox",
+          legend: {
+            imageName: ""
+          }
         }
       ]
     },
@@ -868,6 +886,7 @@ export let layersMenuContent = {
       name: "Muut karttatasot",
       id: null,
       type: "virtual",
+      ref: "muut",
       visible: false,
       checked: null,
       renderAs: "accordion",
@@ -875,21 +894,11 @@ export let layersMenuContent = {
         backgroundColor: "#e6e6e6",
         class: "mb-4"
       },
+      ignoredIds: [1184,1183,1349],
       subContent: [
         {
           name: "Turun seudun pyörätiet",
           id: 1202,
-          type: "wms",
-          visible: false,
-          checked: false,
-          renderAs: "checkbox",
-          legend: {
-            imageName: ""
-          }
-        },
-        {
-          name: "Turun seudun pääpyöräilyreitit",
-          id: 1555,
           type: "wms",
           visible: false,
           checked: false,

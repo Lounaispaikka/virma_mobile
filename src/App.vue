@@ -112,6 +112,17 @@
                 >
                   <v-icon>mdi-magnify-minus</v-icon>
                 </v-btn>
+
+                <v-btn
+                  fab
+                  class="mb-2 no-blur"
+                  color="#58a291"
+                  dark
+                  style="display: block"
+                  @click="sharePosition"
+                >
+                  <v-icon>mdi-share-variant</v-icon>
+                </v-btn>
               </v-col>
             </v-row>
           </div>
@@ -124,7 +135,8 @@
                 id="map"
                 :src="mapSrc"
                 allow="geolocation"
-                style=" position: absolute;
+                style="
+                  position: absolute;
                   top: 0;
                   left: 0;
                   bottom: 0;
@@ -314,7 +326,7 @@
                     class="ml-4 mt-0 py-0"
                   >
                     <template v-slot:label>
-                      <div>Valitse kaikki / poista valinnat</div>
+                      <div>Valitse kaikki</div>
                     </template>
                   </v-checkbox>
                 </div>
@@ -509,7 +521,7 @@
     <template v-else>
       <v-dialog
         v-model="dialogLayers"
-        persistent
+        
         scrollable
         max-width="700"
         :fullscreen="$vuetify.breakpoint.xsOnly"
@@ -771,10 +783,7 @@
                                           style="height: 20px"
                                           ><template v-slot:label>
                                             <span
-                                              class="
-                                                d-inline-block
-                                                text-truncate
-                                              "
+                                              class="d-inline-block text-truncate"
                                               style="max-width: 250px"
                                             >
                                               {{ item.name }}
@@ -918,7 +927,6 @@
     <template>
       <v-dialog
         v-model="dialogSearch"
-        persistent
         scrollable
         max-width="1600px"
         :fullscreen="$vuetify.breakpoint.xsOnly"
@@ -1264,7 +1272,10 @@
                     </template>
 
                     <template v-else>
-                      <v-card-actions class="" style="position: fixed; z-index: 1">
+                      <v-card-actions
+                        class=""
+                        style="position: fixed; z-index: 1"
+                      >
                         <v-btn
                           color="success"
                           @click="
@@ -1318,14 +1329,12 @@
                           v-on:toggle-select-all="allSearchResultsSelected"
                           :footer-props="{
                             itemsPerPageText: 'Rivejä yhdellä sivulla',
-                            
                           }"
-                          no-results-text='Ei kohteita'
-                          no-data-text='Ei kohteita'
+                          no-results-text="Ei kohteita"
+                          no-data-text="Ei kohteita"
                           loading-text="Ladataan"
                           :header-props="{
                             sortByText: 'Suodata',
-                            
                           }"
                         >
                           <template v-slot:[`footer.page-text`]="props">
@@ -1394,12 +1403,11 @@
                           :footer-props="{
                             itemsPerPageText: 'Rivejä yhdellä sivulla',
                           }"
-                          no-results-text='Ei kohteita'
-                          no-data-text='Ei kohteita'
+                          no-results-text="Ei kohteita"
+                          no-data-text="Ei kohteita"
                           loading-text="Ladataan"
                           :header-props="{
                             sortByText: 'Suodata',
-                            
                           }"
                         >
                           <template v-slot:[`footer.page-text`]="props">
@@ -1448,7 +1456,7 @@
     <template v-if="Object.entries(clickedVectorFeature).length > 0">
       <v-dialog
         v-model="dialogVectorFeatureInfo"
-        persistent
+        
         scrollable
         max-width="700"
       >
@@ -1496,9 +1504,61 @@
       </v-dialog>
     </template>
 
+
+    <!-- Show feature info -dialog -->
+    <template v-if="Object.entries(clickedFeatures).length > 0">
+      <v-dialog
+        v-model="dialogFeatureInfo"
+        
+        scrollable
+        max-width="700"
+        content-class="kohdedialog"
+        
+      >
+        <v-card>
+          <v-toolbar flat>
+            <v-spacer></v-spacer>
+            <v-toolbar-title>Kohteiden tiedot<span v-if="Object.entries(clickedFeatures).length > 1"> ({{Object.entries(clickedFeatures).length}} kategoriaa)</span></v-toolbar-title>
+            <v-spacer></v-spacer>
+
+            <v-btn icon @click="sharePosition" title="Jaa">
+              <v-icon>mdi-share-variant</v-icon>
+            </v-btn>
+            <v-btn icon @click.stop="closeDialog('feature')">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+
+          <v-card-text>
+              <v-card width="100%" max-width="650px" flat class="">
+                
+                  <div class="kohde"
+                    v-for="featu in clickedFeatures"
+                    :key="featu.layer.id"
+                  >
+                    <h2><v-img
+                                          v-if="
+                                            featu.layer.hasOwnProperty('legend') && featu.layer.legend.imageName.length > 0
+                                          "
+                                          :src="require(`@/assets/mapsymbols/${featu.layer.legend.imageName}`)
+                                          "
+                                          :alt="featu.name"
+                                          max-width="40px"
+                                          max-height="40px"
+                                          class="kohdeh2img"
+                                        ></v-img>
+                                         {{featu.layer.name}}</h2>
+                    <div class="kohdehtml" v-html="featu.content"></div>
+                  </div>
+              </v-card>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </template>
+
     <!-- Welcome-dialog -->
     <template>
-      <v-dialog v-model="dialogWelcome" persistent scrollable max-width="700">
+      <v-dialog v-model="dialogWelcome" scrollable max-width="700">
         <v-card>
           <v-toolbar flat>
             <v-spacer></v-spacer>
@@ -1550,7 +1610,12 @@
                       class="white--text align-end"
                       :height="welcomeContent.cardHeight"
                     >
-                      <v-card-title style="text-shadow: 1px 0px 3px #000000, 0px 1px 3px #000000">{{card.name}}</v-card-title>
+                      <v-card-title
+                        style="
+                          text-shadow: 1px 0px 3px #000000, 0px 1px 3px #000000;
+                        "
+                        >{{ card.name }}</v-card-title
+                      >
                     </v-img>
                   </v-card>
                 </v-col>
@@ -1558,12 +1623,10 @@
               <v-row dense>
                 <p>
                   <v-icon>mdi-hammer</v-icon>
-                  <a href="https://virma.lounaistieto.fi/">Ylläpito</a> 
+                  <a href="https://virma.lounaistieto.fi/">Ylläpito</a>
                 </p>
               </v-row>
             </v-container>
-
-
           </v-card-text>
         </v-card>
       </v-dialog>
@@ -1573,7 +1636,7 @@
     <template>
       <v-dialog
         v-model="dialogHelp"
-        persistent
+        
         scrollable
         max-width="1000px"
         :fullscreen="$vuetify.breakpoint.xsOnly"
@@ -1601,6 +1664,7 @@
                 show-arrows
                 centered
               >
+              
                 <v-tab><v-icon>mdi-shape</v-icon> Toiminnot</v-tab>
                 <v-tab><v-icon>mdi-windsock</v-icon> Karttasymbolit</v-tab>
                 <v-tab><v-icon>mdi-account-multiple</v-icon> Tekijät</v-tab>
@@ -1608,6 +1672,7 @@
                   ><v-icon>mdi-sprout</v-icon> Vastuullisen retkeilijän
                   ohjeet</v-tab
                 >
+                <v-tab><v-icon>mdi-cellphone-information</v-icon> Muita palveluita</v-tab>
               </v-tabs>
             </template>
           </v-toolbar>
@@ -1628,9 +1693,10 @@
                           >
                         </p>
                         <p>
-                  <v-icon>mdi-hammer</v-icon>
-                  Karttadatan ylläpitäjien palvelu <a href="https://virma.lounaistieto.fi/">täällä</a>!
-                </p>
+                          <v-icon>mdi-hammer</v-icon>
+                          Karttadatan ylläpitäjien palvelu
+                          <a href="https://virma.lounaistieto.fi/">täällä</a>!
+                        </p>
                       </div>
                     </v-col>
                   </v-row>
@@ -1851,11 +1917,16 @@
                   </v-row>
 
                   <!-- Virkistyskohteet -->
-                  <div v-for="group in pointsRecreationGroups" :key="group.name">
+                  <div
+                    v-for="group in pointsRecreationGroups"
+                    :key="group.name"
+                  >
                     <v-row class="d-flex align-start mt-8">
                       <v-col cols="12" class="d-flex">
                         <div class="ml-10">
-                          <p class="text-h6 mb-1">{{group.name}} (Virkistyskohteet)</p>
+                          <p class="text-h6 mb-1">
+                            {{ group.name }} (Virkistyskohteet)
+                          </p>
                         </div>
                       </v-col>
                     </v-row>
@@ -2188,6 +2259,46 @@
                   </v-row>
                 </v-container>
               </v-tab-item>
+
+              <v-tab-item>
+                <v-container fluid>
+                  <v-row class="d-flex align-start">
+                    <v-col cols="12" class="">
+                      <h1>Muut palvelut</h1>
+                      <br/>
+                      <p class="text">
+                        Retkikartta:
+                        <a href="https://www.retkikartta.fi/">retkikartta.fi</a>
+                      </p>
+
+                      <p class="text">
+                        Luontoon.fi:
+                        <a href="https://www.luontoon.fi/">luontoon.fi</a>
+                      </p>
+
+                      <p class="text">
+                        Liikuntapaikat.fi:
+                        <a href="https://liikuntapaikat.fi">Lipas.fi</a>
+                      </p>
+
+                      <p class="text">
+                        Visitfinland data:
+                        <a href="https://datahub.visitfinland.com/demo"
+                          >datahub.visitfinland.com</a
+                        >
+                      </p>
+
+                      <p class="text">
+                        openskimap (openstreetmap data):
+                        <a
+                          href="https://openskimap.org/#13.07/60.42398/22.22666"
+                          >openskimap.org</a
+                        >
+                      </p>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-tab-item>
             </v-tabs-items>
           </v-card-text>
         </v-card>
@@ -2262,6 +2373,130 @@ tbody tr:nth-of-type(odd) {
   margin: 12px;
   padding: 12px;
 }
+
+.kohde:nth-of-type(n+2) {
+    /*border-top: 1px solid #333;*/
+    margin-top: 1em;
+    padding-top: 1em;
+}
+
+.v-dialog.kohdedialog {
+    margin: 0;
+}
+.v-dialog.kohdedialog .v-card__text {
+    padding: 0;
+}
+
+.kohdehtml {
+    /*padding-left: 1em;*/
+}
+.kohdeh2img {
+  margin-right: 0.4em;
+}
+.kohde h2 {
+
+    width: 100%;
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #000;
+    background: #eee;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    margin-bottom: 1em;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.kohdehtml img { 
+    max-height: 20em;
+    object-fit:cover; 
+    width: 100%;
+}
+
+.kohdehtml img:hover { 
+    object-fit:contain;
+}
+.kohdehtml img:focus { 
+    object-fit:contain;
+}
+
+.kohdehtml h3 { 
+    font-size: x-large;
+    padding-top: 0;
+    padding-bottom: 0.4em;
+}
+
+.kohdehtml h3:nth-of-type(n+2) {
+    padding-top: 1em;
+}
+
+
+/* Fix tables */
+
+
+.kohdehtml table { 
+    width: 100%;
+    padding-top: 1em;
+}
+.kohdehtml td:nth-of-type(1) { 
+    font-weight: bold;
+}
+
+
+
+
+
+   
+    
+.kohdehtml      dl {
+        border: 1px solid #bdc8ca;
+        background-color: #f7fafa;
+    }
+.kohdehtml      .ie7 dl {
+        overflow: hidden;
+    }
+ .kohdehtml     dt,
+ .kohdehtml     dd {
+        box-sizing: border-box;
+        padding: 10px;
+    }
+.kohdehtml      dd ~ dt,
+.kohdehtml      dd ~ dd {
+        border-top: 1px solid #bdc8ca;
+    }
+.kohdehtml      dt {
+        float: left;
+        width: 35%;
+        padding-bottom: 0;
+    }
+
+.kohdehtml      dd {
+        margin-left: 35%;
+        border-left: 1px dotted #bdc8ca;
+        background-color: #fff;
+    }
+
+ .kohdehtml     dd:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+ .kohdehtml     .row2 + .kohdehtml dd:after {
+        content:none;
+    }
+
+
+
+
+
+
+
+
+
+
+
 </style>
 
 <script>
@@ -2289,6 +2524,11 @@ for (const [key, value] of Object.entries(groupBy(helpDialogSymbols.pointsRecrea
   })
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+//TODO: BUG: can layers be strings?
+const requested_layers = (urlParams.get('layers')?urlParams.get('layers').split(" "):[]).map(x=>parseInt(x));
+const show_welcome_dialog = urlParams.get('intro')!='0' && requested_layers.length==0;
+
 export default {
   props: {},
 
@@ -2302,10 +2542,14 @@ export default {
     mapSrc: mapConfig.mapAddress,
     dialogLayers: false,
     dialogSearch: false,
+    allLayersCache: {},
     dialogVectorFeatureInfo: false,
+    dialogFeatureInfo: false,
     clickedVectorFeature: {},
+    clickedFeatures: [],
+    previousClickCoords: [],
     dialogSearchTabs: null,
-    dialogWelcome: true,
+    dialogWelcome: show_welcome_dialog,
     dialogHelp: false,
     dialogHelpTabs: null,
     searchOptions: {
@@ -2372,6 +2616,7 @@ export default {
     welcomeContent: {}, // loaded from config.js in mounted-property
     helpDialogSymbols: helpDialogSymbols,
     pointsRecreationGroups: pointsRecreationGroups,
+    guardingBackButton: false,
   }),
 
   computed: {
@@ -2419,59 +2664,77 @@ export default {
       },
       deep: true,
     },
+    dialogSearch: {
+      handler(val) {
+        if (!val) {
+          //this.$router.back();
+        }
+      },
+    },
 
     // Remove layers-hash from url when page is resized from mobile to desktop
     // and push it to url when desktop -> mobile (if layers are open when page resizes)
     "$vuetify.breakpoint.mobile"(mobile) {
-      if (!mobile && this.$route.hash == "#layers") {
-        this.$router.replace("");
+      if (!mobile) {
         this.dialogLayers = true;
       } else if (mobile && this.dialogLayers == true) {
-        this.$router.push("#layers");
-      }
-    },
-
-    // Monitors url-hashes and toggles dialogs according to hash
-    "$route.hash"(newHash, oldHash) {
-      if (newHash === "#search") {
-        this.dialogSearch = true;
-      } else if (oldHash === "#search") {
-        this.dialogSearch = false;
-      }
-
-      if (newHash === "#layers") {
-        this.dialogLayers = true;
-      } else if (oldHash === "#layers" && !this.$vuetify.breakpoint.mobile) {
-        // Don't do anything, just catch...
-        // The idea here is to not close layers if layout changes from mobile to desktop.
-        // Only time that there is #layers-hash in desktop, should be when changing
-        // from mobile to desktop.
-      } else if (oldHash === "#layers") {
         this.dialogLayers = false;
       }
-
-      if (newHash === "#help") {
-        this.dialogHelp = true;
-      } else if (oldHash === "#help") {
-        this.dialogHelp = false;
-      }
-
-      if (newHash === "#feature-info") {
-        this.dialogVectorFeatureInfo = true;
-      } else if (oldHash === "#feature-info") {
-        this.dialogVectorFeatureInfo = false;
-      }
     },
+
+
   },
 
+
   methods: {
+
+    // We want a single back button press to close all dialogs as if the user pressed esc, otherwise leave the webpage.
+    // nested dialogs are not supported
+    // router is overkill for this
+    guardBackButton: function(guard) {
+      
+      guard=guard?true:false
+
+      if (this.guardingBackButton==guard) return;
+      this.guardingBackButton = guard;
+      if (!guard) {
+        console.log("Stopping guarding back button with history");
+        history.back();
+        return;
+      }
+
+      console.log("guarding back button with history");
+      let self = this;
+      history.pushState(null, null, document.URL)
+      window.addEventListener('popstate', function () {
+          //history.pushState(null, null, document.URL)
+          
+          console.log("back button pressed, closing dialogs",self.guardingBackButton?"":"NO GUARD");
+          if (!self.guardingBackButton) return;
+          
+          self.guardingBackButton = false;
+
+          self.dialogSearch = false;
+          if (self.$vuetify.breakpoint.mobile) {
+            self.dialogLayers = false;
+          }
+          self.dialogFeatureInfo = false;
+          self.dialogVectorFeatureInfo = false;
+          self.dialogHelp = false;
+          // Welcome dialog gets no guard, but hide it anyway
+          self.dialogWelcome = false;
+      });
+    },
+
+
     /**
      * @description Initializes the application and creates Oskari iFrame
      *
      * @returns {Undefined} - Does not return anything
      */
     initOskariChannel: function () {
-      console.log("initOskariChannel()");
+      const myPromise = new Promise((resolve) => {
+
       var IFRAME_DOMAIN = "https://karttapalvelu.lounaistieto.fi";
       var iFrame = document.getElementById("map");
       /* global OskariRPC */
@@ -2481,13 +2744,20 @@ export default {
       this.layersMenuContent = layersMenuContent;
       var findMatchingConfigLayer = this.findMatchingConfigLayer;
       var self = this;
-      console.log("initOskariChannel();!");
+
+      // for easy debugging
       window.oskari_channel = channel;
+      window.virma_app = self;
 
       channel.onReady(function () {
-        console.log("channel.onReady();!");
+        console.log("channel.onReady()!");
+ 
+      
+        if (urlParams.get("X")) {
+          channel.postRequest('MapMoveRequest', [urlParams.get("X"), urlParams.get("Y"), urlParams.get("zoom")]);
+        }       
         channel.getAllLayers(function (layers) {
-          console.log("channel.getAllLayers();!");
+          console.log("channel.getAllLayers()!",layers);
           if (layersMenuContent.logLayerInfoToConsole) {
             console.log(
               `\nOskarilayers from Karttapalvelu: ${layers.length} layer(s)\n********************************************\n`
@@ -2501,12 +2771,19 @@ export default {
             console.log(`***************************************\n`);
           }
 
+          //TODO: request mode does not toggle UI elements on yet
+          const layer_request_mode = requested_layers.length>0;
           for (const oskariLayer of layers) {
-            // Set all layers to not-visible at first
+            
+            
+
+            // Set all layers to not-visible at first unless this is a share map feature
+            const layer_requested = requested_layers.includes(oskariLayer.id);
             channel.postRequest("MapModulePlugin.MapLayerVisibilityRequest", [
               oskariLayer.id,
-              false,
+              layer_requested
             ]);
+            //if (!requested_layers.includes(oskariLayer.id)) continue;
 
             const matchingConfigLayer = (function (oskariLayer) {
               for (let i = 0; i < self.layersMenuContent.layers.length; i++) {
@@ -2516,32 +2793,80 @@ export default {
                   return result;
                 }
               }
-              return null;
             })(oskariLayer);
 
-            if (matchingConfigLayer != null) {
-              if (layersMenuContent.logLayerInfoToConsole) {
-                console.log(
-                  `+++ Match for Oskarilayer: ${oskariLayer.id} ${oskariLayer.name}`
-                );
+            const isBackground = (function (oskariLayer) {
+              for (let i = 0; i < self.backGroundMaps.layers.length; i++) {
+                const bgLayer = self.backGroundMaps.layers[i];
+                if (bgLayer.id==oskariLayer.id) {
+                  return true;
+                } 
               }
+            })(oskariLayer);
 
-              self.setOskariLayerVisibilityAccordingToConfig(
-                oskariLayer,
-                matchingConfigLayer
-              );
-            } else {
+            self.allLayersCache[oskariLayer.id]={...matchingConfigLayer,...oskariLayer};
+
+            if (matchingConfigLayer) {
               if (layersMenuContent.logLayerInfoToConsole) {
                 console.log(
-                  `--- NO MATCH in config-layers for Oskarilayer: ${oskariLayer.id} ${oskariLayer.name} (may still be background map)`
+                  `+++ Match for Oskarilayer: ${oskariLayer.id} ${oskariLayer.name}`,matchingConfigLayer
                 );
               }
+              if (!layer_request_mode) {
+                self.setOskariLayerVisibilityAccordingToConfig(
+                  oskariLayer,
+                  matchingConfigLayer
+                );
+              } else {
+                //console.log("setting",matchingConfigLayer);
+                matchingConfigLayer.checked = layer_requested;
+                matchingConfigLayer.visible = layer_requested;
+              }
+            } else {
+              
+              
+              
+              if (!isBackground) {
+                if (layersMenuContent.logLayerInfoToConsole) {
+                  console.log(
+                    `--- NO MATCH in config-layers for Oskarilayer: ${oskariLayer.id} ${oskariLayer.name} `
+                  );
+                }
+                self.pushOtherLayer(layersMenuContent,{
+                    name: oskariLayer.name,
+                    id: oskariLayer.id,
+                    type: "wms",
+                    visible: false,
+                    checked: false,
+                    renderAs: "checkbox",
+                    legend: {
+                      imageName: ""
+                    }
+                  });
+                }
             }
           }
-
           // Show selected background map
-          self.toggleBackgroundMaps();
+          if (requested_layers.length<2) {
+            self.toggleBackgroundMaps();
+          }
           self.layersMenuContent.layersLoaded = true;
+
+          const lat = parseFloat(urlParams.get("lat"));
+          const lon = parseFloat(urlParams.get("lon"));
+          if (!isNaN(lat)) {
+            console.log("requesting featureinfo",lat,lon);
+            channel.getMapBbox((box)=> {
+              if (lon<=box.left || lon>=box.right || lat<=box.bottom || lat>=box.top) {
+                console.log("out of bounds? Maybe purposefully");
+                //TODO: channel.postRequest('MapMoveRequest', [lon,lat]);
+                return;
+              }
+              channel.postRequest('MapModulePlugin.GetFeatureInfoRequest', [lon, lat]);
+
+            })
+          }
+          resolve();
         });
 
         channel.handleEvent(
@@ -2593,6 +2918,41 @@ export default {
           }
         );
 
+        channel.handleEvent("MapClickedEvent", function (data) {
+          console.log("MapClickedEvent",data);
+          self.previousClickCoords = data;
+        });
+        
+        let previous_datalocation = {};
+        channel.handleEvent("DataForMapLocationEvent", function (data) {
+          const new_click = data.x!=previous_datalocation.x || data.y!=previous_datalocation.y;
+          
+          data.layer=self.allLayersCache[data.layerId];
+
+          console.log("DataForMapLocation:",data);
+          if (new_click) {
+            console.log("  new dialog!");
+            previous_datalocation = data;
+            self.clickedFeatures.length=0;
+          }
+          if (data.type!="text") {
+            console.log("INVALID data type:",data);
+            return;
+          }
+          if (data.content.indexOf("GeoServer")!=-1) {
+            self.clickedFeatures.push({
+              content: "<h1>Tapahtui odottamaton virhe.</h1>",
+              type: "text",
+              layer: {id: 0,name: "VIRHE"},
+            });    
+          } else {
+            self.clickedFeatures.push(data);
+          }
+          self.showInfoForFeature(data);
+
+        });
+        
+        
         // Handle click events of vector features (show feature info box)
         channel.handleEvent("FeatureEvent", function (data) {
           console.log("FeatureEvent",data.operation);
@@ -2601,6 +2961,32 @@ export default {
           }
         });
       });
+    });
+    return myPromise;
+    },
+
+    pushOtherLayer: function (layersMenuContent,newLayer) {
+      const others_layermenu = (function () {
+        for (let i = 0; i < layersMenuContent.layers.length; i++) {
+          const configLayer = layersMenuContent.layers[i];
+          if (configLayer.ref == "muut") {
+            return configLayer;
+          }
+        }
+      })();
+      if (others_layermenu.ignoredIds.includes(newLayer.id)) {
+        return;
+      }
+      window.others_layermenu=others_layermenu;
+      for (const existingLayer of others_layermenu.subContent) {
+        if (existingLayer.id==newLayer.id) {
+          return;
+        }
+      }
+      newLayer.parent = layersMenuContent;
+      others_layermenu.subContent.push(newLayer);
+      others_layermenu.subContent.sort((a,b)=>a.name>b.name);
+      
     },
 
     /**
@@ -2627,6 +3013,63 @@ export default {
       });
     },
 
+    sharePosition: function () {
+      const oskari_channel = this.channel;
+      oskari_channel.getMapPosition((mappos) => {
+
+        oskari_channel.getAllLayers((layerlist) => {
+
+          const visible_ids = layerlist
+            .filter(xx => { return xx.visible })
+            .map(layer => layer.id);
+
+          const mode_EPSG = mappos["srsName"] == 'EPSG:3067'; 
+
+          let click = this.previousClickCoords.lat?{
+            "lat": parseFloat(this.previousClickCoords.lat).toFixed(mode_EPSG?2:6),
+            "lon": parseFloat(this.previousClickCoords.lon).toFixed(mode_EPSG?2:6)
+          }:{};
+
+          // .
+          let searchParams = new URLSearchParams({
+            ...mappos,
+            ...click,
+            //intro: 0,
+            layers: visible_ids.join(" ")
+          });
+          if (mode_EPSG) {
+            searchParams.delete("srsName");
+          }
+          searchParams.set("X",parseFloat(searchParams.get("centerX")).toFixed(mode_EPSG?2:6));
+          searchParams.set("Y",parseFloat(searchParams.get("centerY")).toFixed(mode_EPSG?2:6));
+          searchParams.delete("centerX");
+          searchParams.delete("centerY");
+          searchParams.delete("scale");
+          let url = new URL(location.origin);
+          searchParams.forEach((value, key) => {
+            url.searchParams.append(key, value);
+          });
+          console.log("share link:",url.toString());
+
+          const shareData = {
+            title: "Virma karttajakolinkki",
+            text: "Virma karttajakolinkki",
+            url: url.toString(),
+          };
+          if (navigator.share) {
+            navigator.share(shareData);
+          } else {
+            navigator.clipboard.writeText(url.toString()).then(function() {
+                alert('Kopioitu');
+            }, function(err) {
+                console.error(err);
+            });
+          }
+
+        });
+      });
+    },
+
     /**
      * @description Open or close dialog.
      * Works by adding hash to url so that route-watcher can toggle appropriate dialog.
@@ -2641,42 +3084,34 @@ export default {
      * @returns {Undefined} - Does not return anything
      */
     toggleDialog: function (dialog, open) {
-      if (open) {
-        this.$router.push("#" + dialog);
-      } else {
-        this.$router.back();
+      console.log("toggleDialog",dialog,open?'open':'close');
+      
+      this.guardBackButton(open);
+
+      if (dialog=="feature") {
+        this.dialogFeatureInfo=open;
+        return;
       }
+      if (dialog=="feature-info") {
+        this.dialogVectorFeatureInfo=open;
+        return;
+      }
+
+      let dlgVar = "dialog"+dialog.charAt(0).toUpperCase() +
+            dialog.slice(1);
+          
+        this[dlgVar]=open;
+      
     },
 
     /**
-     * @description Close dialog and remove the hash from url.
-     * Doesn't navigate back like toggleDialog("..", false), but instead just closes dialog
-     * and clears hash (like it should be in 'main' view).
-     * In other words, back-button works with both, but toggleDialog creates 'linear' history:
-     * "<empty>" -> "layers" -> "search" (and now backbutton) -> "layers" -> "<empty>"
-     * where as close dialog may have root address in the middle of history stack:
-     * "<empty>" -> "layers" -> "search" -> "<empty>" (here closeDialog is called) -> "help"
-     *
+     * @description Close dialog 
      * @param {String} dialog - dialog name to close as one of the:
      * "search", "layers", "help", "feature-info".
      * @returns {Undefined} - Does not return anything
      */
     closeDialog: function (dialog) {
-      if (this.$route.hash == "#feature-info") {
-        // (feature-info is different pattern than others)
-        this.dialogVectorFeatureInfo = false;
-      } else {
-        eval(
-          "this.dialog" +
-            dialog.charAt(0).toUpperCase() +
-            dialog.slice(1) +
-            "= false"
-        );
-      }
-      // #navigation is used just as temporary hash because othervise .replace would replace
-      // last real hash and back-button would navigate to one before last one
-      this.$router.push("#navigation");
-      this.$router.replace("");
+      return this.toggleDialog(dialog,false);
     },
 
     /**
@@ -2685,13 +3120,19 @@ export default {
      * @param {Object} data - Object in search results
      * @returns {Undefined} - Does not return anything
      */
-    showInfoForVectorFeature: function (data) {
+     showInfoForVectorFeature: function (data) {
       console.log(data);
       // save data here and refer to it in dialog-template
       this.clickedVectorFeature = data.features[0].geojson.features[0];
       this.toggleDialog("feature-info", true);
     },
 
+    showInfoForFeature: function () {
+      this.channel.postRequest('InfoBox.HideInfoBoxRequest');
+      if (!this.dialogFeatureInfo) {
+        this.toggleDialog("feature", true);
+      }
+    },
     /**
      * @description Find config-layer item whose id-property matches
      * oskariLayer parameter (Object.id or number)
@@ -2781,10 +3222,12 @@ export default {
      * @returns {Undefined} - Does not return anything
      */
     handleWelcomeDialogClick: function (clickTarget) {
+      let self = this;
       function turnParentsVisible(parentLayer) {
         if (parentLayer != null) {
           parentLayer.visible = true;
           turnParentsVisible(parentLayer.parent);
+          self.updateChecked(parentLayer);
         }
       }
       
@@ -2840,6 +3283,7 @@ export default {
           );
           // Turn also (all) parents on
           turnParentsVisible(matchingConfigLayer.parent);
+          this.updateChecked(matchingConfigLayer);
         }
         this.dialogWelcome = false;
       }
@@ -2867,7 +3311,8 @@ export default {
     toggleVisibility: function (eventTarget, toggleCheckBox = false) {
       let channel = this.channel;
       let toggleToVisible = eventTarget.visible;
-
+      const forceEnableChildren = eventTarget.checkedSubContentCount == 0 && toggleToVisible;
+      console.log("toggleVisibility",toggleToVisible?'toggleToVisible':"!toggleToVisible",eventTarget,eventTarget.checkedSubContentCount);
       function toggleVisibilityOrGoDeeper(item) {
         // NOTE! item refers to layer structure from config, which is separate from actual Oskari-layer items (objects)
         // this also means that item.visible != Oskari-layer item.visible
@@ -2879,24 +3324,37 @@ export default {
           // "Simple items" which are layers themselves
           if (item.type == "wms") {
             if (toggleToVisible) {
-              if (item.renderAs == "checkbox" && item.checked) {
-                channel.postRequest(
-                  "MapModulePlugin.MapLayerVisibilityRequest",
-                  [item.id, true]
-                );
+              if (item.renderAs == "checkbox" && (item.checked || forceEnableChildren)) {
+                item.checked = true;
+                if (item.id) {
+                  channel.postRequest(
+                    "MapModulePlugin.MapLayerVisibilityRequest",
+                    [item.id, true]
+                  );
+                } else {
+                  console.log("FIXME: nesting");
+                }
                 item.visible = true;
               } else if (item.renderAs == "accordion") {
-                channel.postRequest(
-                  "MapModulePlugin.MapLayerVisibilityRequest",
-                  [item.id, true]
-                );
+                if (item.id) {
+                  channel.postRequest(
+                    "MapModulePlugin.MapLayerVisibilityRequest",
+                    [item.id, true]
+                  );
+                } else {
+                  console.log("FIXME: nesting");
+                }
                 item.visible = true;
               }
             } else {
-              channel.postRequest("MapModulePlugin.MapLayerVisibilityRequest", [
-                item.id,
-                false,
-              ]);
+              if (item.id) {
+                channel.postRequest("MapModulePlugin.MapLayerVisibilityRequest", [
+                  item.id,
+                  false,
+                ]);
+              } else {
+                console.log("FIXME: nesting");
+              }
               item.visible = false;
               if (toggleCheckBox && item.checked != null) {
                 item.checked = false;
@@ -2911,12 +3369,16 @@ export default {
           // "Not so simple items" that has to be travelled
           item.subContent.forEach(function (subItem) {
             toggleVisibilityOrGoDeeper(subItem);
-            return;
+            //console.log("subItem",subItem);
           });
+          return;
+        } else {
+          console.log("FIXME: unhandled?");
         }
       }
 
       toggleVisibilityOrGoDeeper(eventTarget);
+      this.updateChecked(eventTarget);
     },
 
     /**
@@ -2946,6 +3408,10 @@ export default {
               layer.checked = true;
             }
 
+            if (item.parent) {
+              item.parent.visible=true;
+            }
+
             if (this.allParentsVisible(item)) {
               channel.postRequest("MapModulePlugin.MapLayerVisibilityRequest", [
                 item.id,
@@ -2962,10 +3428,17 @@ export default {
 
             // Uncheck 'select all' if some (or  all) of subcontent is unchecked
             layer.checked = false;
+          } else {
+          console.log("renderAs type unknown",item);
           }
         } else {
-          // item.type something else
+          console.log("item type unknown",item);
         }
+      }
+      if (layer) {
+        this.updateChecked(layer);
+      } else {
+        console.log("No layer?",item,item.parent);
       }
     },
 
@@ -3163,6 +3636,7 @@ export default {
      * @returns {Undefined} - Does not return anything
      */
     toggleBackgroundMaps: function () {
+      
       if (!this.backGroundMaps.visible) {
         // Hide all layers
         // There are only few backgroundlayers so it's ok to do forEach
@@ -3204,14 +3678,13 @@ export default {
      * false if any of the parents visible-property is false
      */
     allParentsVisible: function (configLayerItem) {
-      if (configLayerItem.parent === null) {
+      if (!configLayerItem.parent) {
         return configLayerItem.visible;
+      } 
+      if (configLayerItem.parent.visible) {
+        return this.allParentsVisible(configLayerItem.parent);
       } else {
-        if (configLayerItem.parent.visible) {
-          return this.allParentsVisible(configLayerItem.parent);
-        } else {
-          return false;
-        }
+        return false;
       }
     },
 
@@ -3234,47 +3707,6 @@ export default {
         }, this);
       }
       return;
-    },
-
-    /**
-     * @description Set Vue watchers for checkbox items in config.js layersMenuContent.layers
-     * (layers-menu). These watchers then update the count (checkedSubContentCount property)
-     * for checked items (which is visible in menu). Used in mounted-hook.
-     *
-     * @param {Object} node item in layersMenuContent.layers
-     * @returns {Undefined} - Does not return anything
-     */
-    setCheckedWatcher: function (node) {
-      const self = this;
-      // eslint-disable-next-line no-prototype-builtins
-      if (node.hasOwnProperty("subContent") && node.subContent.length > 0) {
-        node.checkedSubContentCount = 0;
-
-        node.subContent.forEach(function (subItem) {
-          if (subItem.id) {
-            if (subItem.type == "wms") {
-              if (subItem.renderAs == "checkbox") {
-                self.$watch(
-                  function () {
-                    return subItem.checked;
-                  },
-                  function (newValue) {
-                    if (newValue == true) {
-                      node.checkedSubContentCount++;
-                    } else {
-                      node.checkedSubContentCount--;
-                    }
-                  }
-                );
-
-                if (subItem.checked) {
-                  node.checkedSubContentCount++;
-                }
-              }
-            }
-          }
-        });
-      }
     },
 
     /**
@@ -3853,10 +4285,56 @@ export default {
       // };
       // channel.postRequest("StartUserLocationTrackingRequest", [options]);
     },
-  },
 
+    // TODO: BUG: HACK: Vue $watch would display counts one step from the past if ran in postInit
+    
+    // so this was set up to update the counters eagerly until the root cause is figured out
+    updateChecked(node) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (!node.hasOwnProperty("subContent") || node.subContent.length == 0) {
+        return;
+      }
+      let checkedSubContentCount = 0;
+      for (const subItem of node.subContent) {
+        if (subItem.id && subItem.type == "wms" && subItem.renderAs == "checkbox" && subItem.checked) {
+          checkedSubContentCount++;
+        }
+      }
+      node.checkedSubContentCount = checkedSubContentCount;
+      //console.log("checkedSubContentCount",checkedSubContentCount,node);
+    },
+
+    // postInit is required to let unknown layers load before we set their pointers and watches
+    postInit() {
+      let self = this; 
+      // Set parent pointers for layers-menu-items
+      // and Vue watchers for checked state of checkbox items (for counting checked menu items)
+
+       
+      self.layersMenuContent.layers.forEach(function (layer) {
+        layer.parent = null; // top-level nodes
+        self.setParentPointer(layer);
+        
+        // Initialize Select / deselect all state
+        if (self.allSubContentSelected(layer)) {
+          layer.checked = true;
+        }
+        self.updateChecked(layer);
+      });
+      console.log("postInit()");
+
+      // Create Oskari vector layers for search results to come
+      self.channel.postRequest("VectorLayerRequest", [
+        { layerId: "selectedSearchResultRoutes" },
+      ]);
+      self.channel.postRequest("VectorLayerRequest", [
+        { layerId: "selectedSearchResultPoints" },
+      ]);
+
+    },
+  },
+  
   mounted: function () {
-    let self = this;
     this.dialogLayers = !this.$vuetify.breakpoint.mobile;
 
     // Ensure in app start that there is no hash in url
@@ -3864,35 +4342,14 @@ export default {
     if (this.$route.hash != "") {
       this.$router.replace("");
     }
-
-    this.initOskariChannel();
+    let self = this;
+    this.initOskariChannel().then(()=>{console.log("self==this",self==this); self.postInit()});
 
     // Define EPSG3067 coordinate system for proj4.js (coordinate tranforms)
     proj4.defs(
       "EPSG:3067",
       "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
     );
-
-    // Set parent pointers for layers-menu-items
-    // and Vue watchers for checked state of checkbox items (for counting checked menu items)
-    this.layersMenuContent.layers.forEach(function (layer) {
-      layer.parent = null; // top-level nodes
-      self.setParentPointer(layer);
-      self.setCheckedWatcher(layer);
-
-      // Initialize Select / deselect all state
-      if (self.allSubContentSelected(layer)) {
-        layer.checked = true;
-      }
-    });
-
-    // Create Oskari vector layers for search results to come
-    this.channel.postRequest("VectorLayerRequest", [
-      { layerId: "selectedSearchResultRoutes" },
-    ]);
-    this.channel.postRequest("VectorLayerRequest", [
-      { layerId: "selectedSearchResultPoints" },
-    ]);
 
     this.welcomeContent = welcomeContent;
   },
@@ -3904,11 +4361,9 @@ export default {
       canLeave=false;
     }
     window.addEventListener("beforeunload", (event) => {
-      // Cancel the event as stated by the standard.
       if (canLeave) return;
       
       event.preventDefault();
-      // Chrome requires returnValue to be set
       event.returnValue = "";
     });
   },
