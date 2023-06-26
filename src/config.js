@@ -576,7 +576,7 @@ export let backGroundMaps = {
 
 // Content of the layers menu except backgroundmaps (Tasot-valikon sisältö poislukien taustakartat) 
 export let layersMenuContent = {
-  logLayerInfoToConsole: true, // Karttapalvelu map layer id:s are logged to console when logLayerInfoToConsole = true
+  logLayerInfoToConsole: false, // Karttapalvelu map layer id:s are logged to console when logLayerInfoToConsole = true
   layersLoaded: false, // Not actually config, but belongs to object, don't change by hand
   parentPointersSet: false, // Not actually config, but belongs to object, don't change by hand
   openOnStartUp: [], // Use the same way as in backGroundMaps
