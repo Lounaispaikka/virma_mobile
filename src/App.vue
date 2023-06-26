@@ -1530,7 +1530,7 @@
           </v-toolbar>
 
           <v-card-text>
-              <v-card width="100%" max-width="650px" flat class="">
+              <v-card width="100%" flat class="">
                 
                   <div class="kohde"
                     v-for="featu in clickedFeatures"
