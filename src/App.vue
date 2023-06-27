@@ -1521,6 +1521,9 @@
             <v-toolbar-title>Kohteiden tiedot<span v-if="Object.entries(clickedFeatures).length > 1"> ({{Object.entries(clickedFeatures).length}} kategoriaa)</span></v-toolbar-title>
             <v-spacer></v-spacer>
 
+            <v-btn icon @click="googleMaps" title="Google Maps">
+              <v-icon>mdi-directions</v-icon>
+            </v-btn>
             <v-btn icon @click="sharePosition" title="Jaa">
               <v-icon>mdi-share-variant</v-icon>
             </v-btn>
@@ -3067,6 +3070,29 @@ export default {
           }
 
         });
+      });
+    },
+
+    googleMaps: function () {
+      const oskari_channel = this.channel;
+      oskari_channel.getMapPosition((mappos) => {
+
+          if (!this.previousClickCoords.lat) return;
+
+          let lat = parseFloat(this.previousClickCoords.lat);
+          let lon = parseFloat(this.previousClickCoords.lon);
+
+          let transform = proj4(mappos["srsName"],"WGS84", [
+            lon,
+            lat,
+          ])
+            
+          lon = transform[0];
+          lat = transform[1];
+          let url = "https://www.google.com/maps/dir/?api=1&destination="+lat+','+lon;
+          
+          window.open(url, "_blank");
+
       });
     },
 
