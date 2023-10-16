@@ -1581,7 +1581,7 @@
               virkistyskohteita ja -reittejä.<br />
               Voit tutkia reaaliaikaisesti omaa sijaintiasi reitillä tai
               esimerkiksi etsiä lähimmät uimarannat tai matkailupalvelut. Löydät
-              palvelusta jo yli 1000 kohdetta, ja määrä kasvaa koko ajan.
+              palvelusta jo yli 2000 kohdetta, ja määrä kasvaa koko ajan.
             </p>
             <p>
               Tästä pääset suoraan suosituimpiin reitteihimme sekä kohteisiin!
