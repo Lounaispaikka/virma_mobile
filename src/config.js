@@ -897,28 +897,6 @@ export let layersMenuContent = {
       ignoredIds: [1184,1183,1349],
       subContent: [
         {
-          name: "Turun seudun pyörätiet",
-          id: 1202,
-          type: "wms",
-          visible: false,
-          checked: false,
-          renderAs: "checkbox",
-          legend: {
-            imageName: ""
-          }
-        },
-        {
-          name: "Muinaisjäännökset",
-          id: 1233, // https://karttapalvelu.lounaistieto.fi/action?action_route=GetAppSetup&lang=fi&uuid=f18aacd7-765a-4b08-8996-8aa0d27eb2a9&_=1684918479412
-          type: "wms",
-          visible: false,
-          checked: false,
-          renderAs: "checkbox",
-          legend: {
-            imageName: ""
-          }
-        },
-        {
           name: "Rakennetun ympäristön kohdeinventoinnit",
           id: 1299,
           type: "wms",
@@ -928,29 +906,7 @@ export let layersMenuContent = {
           legend: {
             imageName: ""
           }
-        }/*,
-        {
-          name: "Turun bussipysäkit",
-          id: 1184,
-          type: "wms",
-          visible: false,
-          checked: false,
-          renderAs: "checkbox",
-          legend: {
-            imageName: ""
-          }
-        },
-        {
-          name: "Turun bussireitit",
-          id: 1183,
-          type: "wms",
-          visible: false,
-          checked: false,
-          renderAs: "checkbox",
-          legend: {
-            imageName: ""
-          }
-        }*/
+        }
       ]
     }
 
