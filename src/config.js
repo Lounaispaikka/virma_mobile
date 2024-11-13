@@ -862,6 +862,17 @@ export let layersMenuContent = {
           }
         },
         {
+          name: "Pyhiinvaellusreitit",
+          id: 1861,
+          type: "wms",
+          visible: false,
+          checked: false,
+          renderAs: "checkbox",
+          legend: {
+            imageName: ""
+          }
+        },
+        {
           name: "Teijon virkistysreitit ja palvelut",
           id: 1682,
           type: "wms",
