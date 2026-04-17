@@ -1629,6 +1629,16 @@
                   <a href="https://virma.lounaistieto.fi/">Ylläpito</a>
                 </p>
               </v-row>
+              <v-row dense>
+                <v-col cols="12" class="d-flex flex-wrap justify-center">
+                  <v-img
+                    src="@/assets/eu.png"
+                    max-height="96"
+                    max-width="256"
+                    contain
+                  ></v-img>
+                </v-col>
+              </v-row>
             </v-container>
           </v-card-text>
         </v-card>
@@ -2084,6 +2094,18 @@
                           >
                         </p>
                       </div>
+                    </v-col>
+                  </v-row>
+
+                  <v-row class="d-flex align-start">
+                    <v-col cols="12" class="d-flex flex-wrap justify-left">
+                      <v-img
+                        class="tekijalogot"
+                        src="@/assets/eu.png"
+                        max-height="144"
+                        max-width="384"
+                        contain
+                      ></v-img>
                     </v-col>
                   </v-row>
 

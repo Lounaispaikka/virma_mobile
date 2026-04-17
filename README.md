@@ -1,5 +1,7 @@
 # Virma Kartta
 
+![EU Logo](./src/assets/eu.png)
+
 https://kartta.virma.fi
 
 
@@ -164,3 +166,10 @@ Then you also have to add new type into search form options:
 ##### Add new background map
 
 Background maps are same kind of layers in 'Karttaupotus' as all the other layers, so read corresponding sections above, but add background map layer to config.js:backGroundMaps:layers instead.
+
+
+### Acknowledgements
+
+![EU Logo](./src/assets/eu.png)
+
+Some changes produced as part of the [Digiretki](https://tt.utu.fi/sweng/digiretki/) project.
